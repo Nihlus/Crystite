@@ -1,0 +1,5 @@
+<Project>
+  <ItemGroup>
+    <PackageVersion Include="Grapevine" Version="4.2.2" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,16 @@
+<Project>
+    <!-- Stuff that should probably live in Remora.Neos.Sdk -->
+    <ItemGroup>
+        <NeosReference Update="@(NeosReference)">
+            <Visible>false</Visible>
+        </NeosReference>
+    </ItemGroup>
+
+    <!-- Transform NeosReference items into real assembly references -->
+    <ItemGroup>
+        <Reference Include="@(NeosReference)">
+            <Name>%(NeosReference.Identity)</Name>
+            <HintPath>$(NeosAssemblyPath)\%(Identity).dll</HintPath>
+        </Reference>
+    </ItemGroup>
+</Project>
