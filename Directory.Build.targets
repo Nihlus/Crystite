@@ -1,17 +1,55 @@
 <Project>
     <!-- Stuff that should probably live in Remora.Neos.Sdk -->
-    <ItemGroup>
-        <NeosReference Update="@(NeosReference)">
+    <PropertyGroup Condition="'$(NeosPath)'==''">
+        <NeosPath>$(MSBuildThisFileDirectory)/NeosVR/</NeosPath>
+        <NeosPath Condition="Exists('C:/Program Files (x86)/Steam/steamapps/common/NeosVR/')">C:/Program Files (x86)/Steam/steamapps/common/NeosVR/</NeosPath>
+        <NeosPath Condition="Exists('$(HOME)/.steam/steam/steamapps/common/NeosVR/')">$(HOME)/.steam/steam/steamapps/common/NeosVR/</NeosPath>
+    </PropertyGroup>
+
+    <ItemDefinitionGroup>
+        <NeosReference>
             <Visible>false</Visible>
         </NeosReference>
-    </ItemGroup>
+    </ItemDefinitionGroup>
 
-    <!-- Transform NeosReference items into real assembly references -->
+    <Choose>
+        <When Condition="'$(NeosTarget)' == 'headless'">
+            <ItemGroup>
+                <Reference Include="NeosModLoader">
+                    <HintPath Condition="Exists('$(NeosReferencePath)/../nml/NeosModLoaderHeadless.dll')">$(NeosPath)/Libraries/NeosModLoaderHeadless.dll</HintPath>
+                    <HintPath Condition="Exists('$(NeosPath)/Libraries/NeosModLoaderHeadless.dll')">$(NeosPath)/Libraries/NeosModLoaderHeadless.dll</HintPath>
+                    <Private>false</Private>
+                </Reference>
+            </ItemGroup>
+        </When>
+        <Otherwise>
+            <ItemGroup>
+                <Reference Include="NeosModLoader">
+                    <HintPath Condition="Exists('$(NeosReferencePath)/../nml/NeosModLoader.dll')">$(NeosPath)/Libraries/NeosModLoader.dll</HintPath>
+                    <HintPath Condition="Exists('$(NeosPath)/Libraries/NeosModLoader.dll')">$(NeosPath)/Libraries/NeosModLoader.dll</HintPath>
+                    <Private>false</Private>
+                </Reference>
+            </ItemGroup>
+        </Otherwise>
+    </Choose>
+
+    <PropertyGroup>
+        <NeosAssemblyPath>$(NeosPath)/Neos_Data/Managed</NeosAssemblyPath>
+        <NeosAssemblyPath Condition="'$(NeosTarget)' == 'headless'">$(NeosPath)</NeosAssemblyPath>
+    </PropertyGroup>
+
+    <!--
+        Transform NeosReference items into real assembly references, either to our bundled reference assemblies or to
+        real ones from an installation.
+     -->
     <ItemGroup>
         <Reference Include="@(NeosReference)">
             <Name>%(NeosReference.Identity)</Name>
-            <HintPath Condition="Exists('$(NeosAssemblyPath)\%(Identity).dll')">$(NeosAssemblyPath)\%(Identity).dll</HintPath>
-            <HintPath Condition="Exists('$(NeosAssemblyPath)\%(Identity).exe')">$(NeosAssemblyPath)\%(Identity).exe</HintPath>
+            <HintPath Condition="Exists('$(NeosReferencePath)/$(NeosTarget)/%(Identity).dll')">$(NeosReferencePath)/$(NeosTarget)/%(Identity).dll</HintPath>
+            <HintPath Condition="Exists('$(NeosReferencePath)/$(NeosTarget)/%(Identity).exe')">$(NeosReferencePath)/$(NeosTarget)/%(Identity).exe</HintPath>
+            <HintPath Condition="Exists('$(NeosAssemblyPath)/%(Identity).dll')">$(NeosAssemblyPath)/%(Identity).dll</HintPath>
+            <HintPath Condition="Exists('$(NeosAssemblyPath)/%(Identity).exe')">$(NeosAssemblyPath)/%(Identity).exe</HintPath>
+            <Private>false</Private>
         </Reference>
     </ItemGroup>
 </Project>

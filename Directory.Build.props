@@ -1,30 +1,7 @@
 <Project>
     <!-- Stuff that should probably go into Remora.Neos.Sdk -->
-    <PropertyGroup Condition="'$(NeosPath)'==''">
-        <NeosPath>$(MSBuildThisFileDirectory)NeosVR/</NeosPath>
-        <NeosPath Condition="Exists('C:\Program Files (x86)\Steam\steamapps\common\NeosVR\')">C:\Program Files (x86)\Steam\steamapps\common\NeosVR\</NeosPath>
-        <NeosPath Condition="Exists('$(HOME)/.steam/steam/steamapps/common/NeosVR/')">$(HOME)/.steam/steam/steamapps/common/NeosVR/</NeosPath>
-    </PropertyGroup>
-
     <PropertyGroup>
-        <NeosAssemblyPath>$(NeosPath)Neos_Data\Managed</NeosAssemblyPath>
-        <NeosAssemblyPath Condition="'$(NeosHeadless)' == 'true'">$(NeosPath)</NeosAssemblyPath>
+        <NeosTarget Condition="'$(NeosTarget)' == ''">client</NeosTarget>
+        <NeosReferencePath>$(MSBuildThisFileDirectory)/ref</NeosReferencePath>
     </PropertyGroup>
-
-    <Choose>
-        <When Condition="'$(NeosHeadless)' == 'true'">
-            <ItemGroup>
-                <Reference Include="NeosModLoader">
-                    <HintPath>$(NeosPath)Libraries/NeosModLoaderHeadless.dll</HintPath>
-                </Reference>
-            </ItemGroup>
-        </When>
-        <Otherwise>
-            <ItemGroup>
-                <Reference Include="NeosModLoader">
-                    <HintPath>$(NeosPath)Libraries/NeosModLoader.dll</HintPath>
-                </Reference>
-            </ItemGroup>
-        </Otherwise>
-    </Choose>
 </Project>
