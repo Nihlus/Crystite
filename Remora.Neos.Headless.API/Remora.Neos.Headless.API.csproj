@@ -14,7 +14,7 @@
         <LibraryFrameworks>net462</LibraryFrameworks>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
-    
+
     <PropertyGroup>
         <Headless>false</Headless>
     </PropertyGroup>
@@ -25,6 +25,7 @@
 
     <ItemGroup>
         <NeosReference Include="BaseX" />
+        <NeosReference Include="CloudX.Shared" />
         <NeosReference Include="FrooxEngine" />
     </ItemGroup>
 </Project>
