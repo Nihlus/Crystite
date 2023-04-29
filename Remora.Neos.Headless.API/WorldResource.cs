@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using CloudX.Shared;
 using FrooxEngine;
 using Grapevine;
+using NeosHeadless;
 using Remora.Neos.Headless.API.Extensions;
 
 namespace Remora.Neos.Headless.API;
@@ -22,15 +23,21 @@ namespace Remora.Neos.Headless.API;
 [RestResource]
 public class WorldResource
 {
+    private readonly NeosHeadlessConfig _config;
+    private readonly Engine _engine;
     private readonly WorldManager _worldManager;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WorldResource"/> class.
     /// </summary>
+    /// <param name="config">The client configuration.</param>
+    /// <param name="engine">The game engine.</param>
     /// <param name="worldManager">The world manager.</param>
-    public WorldResource(WorldManager worldManager)
+    public WorldResource(NeosHeadlessConfig config, Engine engine, WorldManager worldManager)
     {
         _worldManager = worldManager;
+        _config = config;
+        _engine = engine;
     }
 
     /// <summary>
@@ -117,13 +124,16 @@ public class WorldResource
             return;
         }
 
-        lock (h.Config)
+        lock (_config)
         {
-            h.Config.StartWorlds = h.Config.StartWorlds ?? new List<WorldStartupParameters>();
-            h.Config.StartWorlds.Add(startInfo);
+            _config.StartWorlds ??= new List<WorldStartupParameters>();
+            _config.StartWorlds.Add(startInfo);
         }
 
-        await new WorldHandler(handler.Engine, handler.Config, startInfo).Start();
+        // that's the way it is, chief
+        // ReSharper disable once InconsistentlySynchronizedField
+        await new WorldHandler(_engine, _config, startInfo).Start();
+
         await context.Response.SendResponseAsync(HttpStatusCode.Created);
     }
 

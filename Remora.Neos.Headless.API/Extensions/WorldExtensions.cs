@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System.Text.Json;
 using FrooxEngine;
 using Remora.Neos.Headless.API.Objects;
 
