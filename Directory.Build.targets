@@ -16,7 +16,7 @@
         <When Condition="'$(NeosTarget)' == 'headless'">
             <ItemGroup>
                 <Reference Include="NeosModLoader">
-                    <HintPath Condition="Exists('$(NeosReferencePath)/../nml/NeosModLoaderHeadless.dll')">$(NeosPath)/Libraries/NeosModLoaderHeadless.dll</HintPath>
+                    <HintPath Condition="Exists('$(NeosReferencePath)/nml/NeosModLoaderHeadless.dll')">$(NeosReferencePath)/nml/NeosModLoaderHeadless.dll</HintPath>
                     <HintPath Condition="Exists('$(NeosPath)/Libraries/NeosModLoaderHeadless.dll')">$(NeosPath)/Libraries/NeosModLoaderHeadless.dll</HintPath>
                     <Private>false</Private>
                 </Reference>
@@ -25,7 +25,7 @@
         <Otherwise>
             <ItemGroup>
                 <Reference Include="NeosModLoader">
-                    <HintPath Condition="Exists('$(NeosReferencePath)/../nml/NeosModLoader.dll')">$(NeosPath)/Libraries/NeosModLoader.dll</HintPath>
+                    <HintPath Condition="Exists('$(NeosReferencePath)/nml/NeosModLoader.dll')">$(NeosReferencePath)/nml/NeosModLoader.dll</HintPath>
                     <HintPath Condition="Exists('$(NeosPath)/Libraries/NeosModLoader.dll')">$(NeosPath)/Libraries/NeosModLoader.dll</HintPath>
                     <Private>false</Private>
                 </Reference>
