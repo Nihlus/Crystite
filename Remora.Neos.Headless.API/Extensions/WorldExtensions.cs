@@ -5,7 +5,6 @@
 //
 
 using FrooxEngine;
-using Remora.Neos.Headless.API.Objects;
 
 namespace Remora.Neos.Headless.API.Extensions;
 

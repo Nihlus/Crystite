@@ -6,7 +6,7 @@
 
 using System.Text.Json.Serialization;
 
-namespace Remora.Neos.Headless.API.Objects;
+namespace Remora.Neos.Headless.API;
 
 /// <summary>
 /// Represents information about a world passed over the REST API.
