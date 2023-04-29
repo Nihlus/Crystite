@@ -218,8 +218,8 @@ public class WorldResource
     /// </summary>
     /// <param name="context">The HTTP context.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [RestRoute("PATCH", "/worlds/{id}/name")]
-    public async Task SetWorldNameAsync(IHttpContext context)
+    [RestRoute("PATCH", "/worlds/{id}")]
+    public async Task ModifyWorldAsync(IHttpContext context)
     {
         var worldId = context.Request.PathParameters["id"];
         var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
@@ -230,104 +230,44 @@ public class WorldResource
         }
 
         var data = await context.Request.ParseFormUrlEncodedData();
-        if (!data.TryGetValue("name", out var name))
+        if (data.Count <= 0)
         {
             await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
             return;
         }
 
-        world.Name = name;
-
-        await context.Response.SendResponseAsync(HttpStatusCode.Ok);
-    }
-
-    /// <summary>
-    /// Set the access level of the world identified by "id".
-    /// </summary>
-    /// <param name="context">The HTTP context.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [RestRoute("PATCH", "/worlds/{id}/access-level")]
-    public async Task SetWorldAccessLevelAsync(IHttpContext context)
-    {
-        var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
-        if (world is null)
+        if (data.TryGetValue("name", out var name))
         {
-            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
-            return;
+            world.Name = name;
         }
 
-        var data = await context.Request.ParseFormUrlEncodedData();
-        if (!data.TryGetValue("access-level", out var rawAccessLevel) || !Enum.TryParse<SessionAccessLevel>(rawAccessLevel, out var accessLevel))
+        if (data.TryGetValue("description", out var description))
         {
-            await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
-            return;
+            world.Description = description;
         }
 
-        world.AccessLevel = accessLevel;
-
-        await context.Response.SendResponseAsync(HttpStatusCode.Ok);
-    }
-
-    /// <summary>
-    /// Set the description of the world identified by "id".
-    /// </summary>
-    /// <param name="context">The HTTP context.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [RestRoute("PATCH", "/worlds/{id}/description")]
-    public async Task SetWorldDescriptionAsync(IHttpContext context)
-    {
-        var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
-        if (world is null)
+        if (data.TryGetValue("access-level", out var rawAccessLevel))
         {
-            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
-            return;
+            if (!Enum.TryParse<SessionAccessLevel>(rawAccessLevel, out var accessLevel))
+            {
+                await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+                return;
+            }
+
+            world.AccessLevel = accessLevel;
         }
 
-        var data = await context.Request.ParseFormUrlEncodedData();
-        if (!data.TryGetValue("description", out var description))
+        if (data.TryGetValue("away-kick-interval", out var rawAwayKickInterval))
         {
-            await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
-            return;
+            if (!float.TryParse(rawAwayKickInterval, out var awayKickIntervalValue))
+            {
+                await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+                return;
+            }
+
+            world.AwayKickEnabled = awayKickIntervalValue > 0.0;
+            world.AwayKickMinutes = awayKickIntervalValue;
         }
-
-        world.Description = description;
-
-        await context.Response.SendResponseAsync(HttpStatusCode.Ok);
-    }
-
-    /// <summary>
-    /// Set the away kick interval of the world identified by "id".
-    /// </summary>
-    /// <param name="context">The HTTP context.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [RestRoute("GET", "/worlds/{id}/away-kick-interval")]
-    public async Task SetWorldAwayKickIntervalAsync(IHttpContext context)
-    {
-        var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
-        if (world is null)
-        {
-            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
-            return;
-        }
-
-        var data = await context.Request.ParseFormUrlEncodedData();
-        if (!data.TryGetValue("away-kick-interval", out var rawAwayKickInterval))
-        {
-            await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
-            return;
-        }
-
-        if (!float.TryParse(rawAwayKickInterval, out var awayKickIntervalValue))
-        {
-            await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
-            return;
-        }
-
-        world.AwayKickEnabled = awayKickIntervalValue > 0.0;
-        world.AwayKickMinutes = awayKickIntervalValue;
 
         await context.Response.SendResponseAsync(HttpStatusCode.Ok);
     }
@@ -387,7 +327,7 @@ public class WorldResource
     /// <param name="context">The HTTP context.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [RestRoute("GET", "/worlds/focused")]
-    public async Task GetFocusedWorldsAsync(IHttpContext context)
+    public async Task GetFocusedWorldAsync(IHttpContext context)
     {
         var world = _worldManager.FocusedWorld;
         if (world is null)
