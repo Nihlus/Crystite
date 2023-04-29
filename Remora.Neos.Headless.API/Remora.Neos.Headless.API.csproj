@@ -7,8 +7,14 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <Description>Enables programmatic control of the headless client via a REST API</Description>
+    </PropertyGroup>
+    
+    <PropertyGroup>
         <LibraryFrameworks>net462</LibraryFrameworks>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
