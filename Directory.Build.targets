@@ -52,4 +52,19 @@
             <Private>false</Private>
         </Reference>
     </ItemGroup>
+
+    <!-- Fix output directories and filter out non-nuget dependency assemblies from the output -->
+    <Target Name="AdjustCopiedReferences" AfterTargets="ResolveReferences">
+        <ItemGroup>
+            <ReferenceCopyLocalPaths Condition=" '%(ReferenceCopyLocalPaths.NuGetPackageId)' != '' "
+                                     Update="%(ReferenceCopyLocalPaths)"
+                                     DestinationSubDirectory="nml_libs\" />
+        </ItemGroup>
+
+        <ItemGroup>
+            <ReferenceCopyLocalPaths Condition=" '%(ReferenceCopyLocalPaths.NuGetPackageId)' == '' "
+                                     Remove="%(ReferenceCopyLocalPaths.Identity)"/>
+        </ItemGroup>
+    </Target>
+
 </Project>
