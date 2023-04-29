@@ -10,7 +10,8 @@
     <ItemGroup>
         <Reference Include="@(NeosReference)">
             <Name>%(NeosReference.Identity)</Name>
-            <HintPath>$(NeosAssemblyPath)\%(Identity).dll</HintPath>
+            <HintPath Condition="Exists('$(NeosAssemblyPath)\%(Identity).dll')">$(NeosAssemblyPath)\%(Identity).dll</HintPath>
+            <HintPath Condition="Exists('$(NeosAssemblyPath)\%(Identity).exe')">$(NeosAssemblyPath)\%(Identity).exe</HintPath>
         </Reference>
     </ItemGroup>
 </Project>
