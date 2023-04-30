@@ -62,6 +62,19 @@ An enumeration of session access levels.
 
   > This type is defined by NeosVR in CloudX.Shared.
 
+### RestUserRole
+An enumeration of available roles.
+
+| Name       | Value  |
+|------------|--------|
+| Admin      | 1      | 
+| Builder    | 2      |
+| Moderator  | 3      |
+| Guest      | 4      |
+| Spectator  | 5      |
+
+  > NeosVR does not define a true enumeration for this type; the values here
+  > have been picked for this mod only.
 
 ## Routes
 ### `GET` /worlds `200 OK`
@@ -285,6 +298,93 @@ A [RestUser](#restuser) object.
 }
 ```
 
+### `POST` /worlds/[{id}](#restworld)/users/[{id}](#restuser)/kick `204 No Content`
+Kicks the given user from the given world.
+
+#### Parameters
+None.
+
+#### Returns
+Nothing.
+
+#### Errors
+* `404 Not Found` if
+  1. no world with the given ID was found OR
+  2. no user with the given ID was found
+* `401 Forbidden` if
+  1. the kicked user is the host OR
+  2. the current user doesn't have permission to kick
+
+### `POST` /worlds/[{id}](#restworld)/users/[{id}](#restuser)/ban `204 No Content`
+Bans the given user from all sessions hosted by this server.
+
+#### Parameters
+None.
+
+#### Returns
+Nothing.
+
+#### Errors
+* `404 Not Found` if
+  1. no world with the given ID was found OR
+  2. no user with the given ID was found
+* `401 Forbidden` if
+  1. the banned user is the host OR
+  2. the current user doesn't have permission to ban
+
+### `POST` /worlds/[{id}](#restworld)/users/[{id}](#restuser)/silence `204 No Content`
+Silences or unsilences the given user in the given world.
+
+#### Parameters
+| Field    | Type | Description                         |
+|----------|------|-------------------------------------|
+| silenced | bool | whether the user should be silenced |
+
+#### Returns
+Nothing.
+
+#### Errors
+* `404 Not Found` if
+  1. no world with the given ID was found OR
+  2. no user with the given ID was found
+* `400 Bad Request` if 
+  1. `silenced` is not present OR
+  2. `silenced` is not a boolean
+
+### `POST` /worlds/[{id}](#restworld)/users/[{id}](#restuser)/respawn `204 No Content`
+Respawns the given user in the given world.
+
+#### Parameters
+None.
+
+#### Returns
+Nothing.
+
+#### Errors
+* `404 Not Found` if
+  1. no world with the given ID was found OR
+  2. no user with the given ID was found
+
+### `PUT` /worlds/[{id}](#restworld)/users/[{id}](#restuser)/role `204 No Content`
+Sets the role of the given user in the given world.
+
+#### Parameters
+| Field | Type                          | Description        |
+|-------|-------------------------------|--------------------|
+| role  | [RestUserRole](#restuserrole) | the role to assign |
+
+#### Returns
+Nothing.
+
+#### Errors
+* `404 Not Found` if
+  1. no world with the given ID was found OR
+  2. no user with the given ID was found
+* `400 Bad Request` if 
+  1. `role` is not set OR
+  2. `role` is not a recognized value
+* `403 Forbidden` if the role is higher than the host's role
+
 ### `GET` /worlds/focused `200 OK`
 Gets the currently focused world.
 
@@ -310,7 +410,6 @@ A [RestWorld](#restworld) object.
 Sets the currently focused world.
 
 #### Parameters
-
 | Field  | Type   | Description                    |
 |--------|--------|--------------------------------|
 | ?id    | string | the id of the world to focus   |

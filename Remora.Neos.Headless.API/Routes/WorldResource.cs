@@ -405,6 +405,216 @@ internal sealed class WorldResource
     }
 
     /// <summary>
+    /// Kicks the user identified by "user-id" in the world identified by "id".
+    /// </summary>
+    /// <param name="context">The HTTP context.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [RestRoute("POST", "/worlds/{id}/users/{user-id}/kick")]
+    public async Task KickWorldUserAsync(IHttpContext context)
+    {
+        var worldId = context.Request.PathParameters["id"];
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
+        if (world is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        var userId = context.Request.PathParameters["user-id"];
+        var user = world.AllUsers.FirstOrDefault(u => u.UserID == userId);
+        if (user is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        if (user.IsHost || !user.LocalUser.CanKick())
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.Forbidden);
+            return;
+        }
+
+        user.Kick();
+
+        await context.Response.SendResponseAsync(HttpStatusCode.NoContent);
+    }
+
+    /// <summary>
+    /// Bans the user identified by "user-id" in the world identified by "id".
+    /// </summary>
+    /// <param name="context">The HTTP context.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [RestRoute("POST", "/worlds/{id}/users/{user-id}/ban")]
+    public async Task BanWorldUserAsync(IHttpContext context)
+    {
+        var worldId = context.Request.PathParameters["id"];
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
+        if (world is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        var userId = context.Request.PathParameters["user-id"];
+        var user = world.AllUsers.FirstOrDefault(u => u.UserID == userId);
+        if (user is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        if (user.IsHost || !user.LocalUser.CanBan())
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.Forbidden);
+            return;
+        }
+
+        user.Ban();
+
+        await context.Response.SendResponseAsync(HttpStatusCode.NoContent);
+    }
+
+    /// <summary>
+    /// Silences or unsilences the user identified by "user-id" in the world identified by "id".
+    /// </summary>
+    /// <param name="context">The HTTP context.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [RestRoute("POST", "/worlds/{id}/users/{user-id}/silence")]
+    public async Task SilenceUnsilenceWorldUserAsync(IHttpContext context)
+    {
+        var worldId = context.Request.PathParameters["id"];
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
+        if (world is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        var userId = context.Request.PathParameters["user-id"];
+        var user = world.AllUsers.FirstOrDefault(u => u.UserID == userId);
+        if (user is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        var data = await context.Request.ParseFormUrlEncodedData();
+        if (data.TryGetValue("silenced", out var rawSilenced) || !bool.TryParse(rawSilenced, out var silenced))
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+            return;
+        }
+
+        user.IsSilenced = silenced;
+
+        await context.Response.SendResponseAsync(HttpStatusCode.NoContent);
+    }
+
+    /// <summary>
+    /// Respawns the user identified by "user-id" in the world identified by "id".
+    /// </summary>
+    /// <param name="context">The HTTP context.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [RestRoute("POST", "/worlds/{id}/users/{user-id}/respawn")]
+    public async Task RespawnWorldUserAsync(IHttpContext context)
+    {
+        var worldId = context.Request.PathParameters["id"];
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
+        if (world is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        var userId = context.Request.PathParameters["user-id"];
+        var user = world.AllUsers.FirstOrDefault(u => u.UserID == userId);
+        if (user is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        user.Root?.Slot.Destroy();
+
+        await context.Response.SendResponseAsync(HttpStatusCode.NoContent);
+    }
+
+    /// <summary>
+    /// Sets the role of the user identified by "user-id" in the world identified by "id".
+    /// </summary>
+    /// <param name="context">The HTTP context.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [RestRoute("PUT", "/worlds/{id}/users/{user-id}/role")]
+    public async Task SetWorldUserRoleAsync(IHttpContext context)
+    {
+        var worldId = context.Request.PathParameters["id"];
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
+        if (world is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        var userId = context.Request.PathParameters["user-id"];
+        var user = world.AllUsers.FirstOrDefault(u => u.UserID == userId);
+        if (user is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        var data = await context.Request.ParseFormUrlEncodedData();
+        if (!data.TryGetValue("role", out var rawRestUserRole))
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+            return;
+        }
+
+        if (!Enum.TryParse<RestUserRole>(rawRestUserRole, out var restUserRole))
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+            return;
+        }
+
+        var role = user.World.Permissions.Roles.FirstOrDefault<PermissionSet>
+        (
+            r => r.RoleName.Value.Equals(restUserRole.ToString(), StringComparison.InvariantCultureIgnoreCase)
+        );
+
+        if (role is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+            return;
+        }
+
+        if (role > user.World.HostUser.Role)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.Forbidden);
+            return;
+        }
+
+        user.Role = role;
+        user.World.Permissions.AssignDefaultRole(user, role);
+
+        await context.Response.SendResponseAsync(HttpStatusCode.NoContent);
+    }
+
+    /// <summary>
     /// Get the currently focused world.
     /// </summary>
     /// <param name="context">The HTTP context.</param>
