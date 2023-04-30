@@ -5,6 +5,7 @@
 //
 
 using System.Text.Json.Serialization;
+using CloudX.Shared;
 
 namespace Remora.Neos.Headless.API;
 
@@ -15,5 +16,6 @@ public record RestWorld
 (
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("name")] string Name,
-    [property: JsonPropertyName("description")] string Description
+    [property: JsonPropertyName("description")] string Description,
+    [property: JsonPropertyName("access_level")] SessionAccessLevel AccessLevel
 );

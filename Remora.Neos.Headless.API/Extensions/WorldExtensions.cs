@@ -24,7 +24,8 @@ public static class WorldExtensions
         (
             world.CorrespondingWorldId,
             world.Name,
-            world.Description
+            world.Description,
+            world.AccessLevel
         );
     }
 }
