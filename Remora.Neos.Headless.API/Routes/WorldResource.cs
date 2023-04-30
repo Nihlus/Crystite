@@ -23,6 +23,7 @@ namespace Remora.Neos.Headless.API;
 [RestResource]
 public class WorldResource
 {
+    private readonly JobService _jobService;
     private readonly NeosHeadlessConfig _config;
     private readonly Engine _engine;
     private readonly WorldManager _worldManager;
@@ -30,11 +31,13 @@ public class WorldResource
     /// <summary>
     /// Initializes a new instance of the <see cref="WorldResource"/> class.
     /// </summary>
+    /// <param name="jobService">The job service.</param>
     /// <param name="config">The client configuration.</param>
     /// <param name="engine">The game engine.</param>
     /// <param name="worldManager">The world manager.</param>
-    public WorldResource(NeosHeadlessConfig config, Engine engine, WorldManager worldManager)
+    public WorldResource(JobService jobService, NeosHeadlessConfig config, Engine engine, WorldManager worldManager)
     {
+        _jobService = jobService;
         _worldManager = worldManager;
         _config = config;
         _engine = engine;
@@ -77,6 +80,10 @@ public class WorldResource
     /// <summary>
     /// Start a world.
     /// </summary>
+    /// <remarks>
+    /// This is an asynchronous route; it returns a job object that needs to be polled in order to determine when the
+    /// action has completed.
+    /// </remarks>
     /// <param name="context">The HTTP context.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [RestRoute("POST", "/worlds")]
@@ -131,15 +138,25 @@ public class WorldResource
         }
 
         // that's the way it is, chief
-        // ReSharper disable once InconsistentlySynchronizedField
-        await new WorldHandler(_engine, _config, startInfo).Start();
+        var job = _jobService.CreateJob
+        (
+            $"start world {startInfo.LoadWorldURL ?? startInfo.LoadWorldPresetName}",
+            _ => new WorldHandler(_engine, _config, startInfo).Start()
+        );
 
-        await context.Response.SendResponseAsync(HttpStatusCode.Created);
+        var json = JsonSerializer.Serialize(job);
+
+        context.Response.StatusCode = HttpStatusCode.Created;
+        await context.Response.SendResponseAsync(json);
     }
 
     /// <summary>
     /// Save the world identified by "id".
     /// </summary>
+    /// <remarks>
+    /// This is an asynchronous route; it returns a job object that needs to be polled in order to determine when the
+    /// action has completed.
+    /// </remarks>
     /// <param name="context">The HTTP context.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [RestRoute("GET", "/worlds/{id}/save")]
@@ -159,10 +176,14 @@ public class WorldResource
             return;
         }
 
-        // TODO: This can take a very long time - implement remote task system
-        await Userspace.SaveWorldAuto(world, SaveType.Overwrite, false);
+        var job = _jobService.CreateJob
+        (
+            $"save world {world.Name}",
+            _ => Userspace.SaveWorldAuto(world, SaveType.Overwrite, false)
+        );
 
-        await context.Response.SendResponseAsync(HttpStatusCode.Ok);
+        var json = JsonSerializer.Serialize(job);
+        await context.Response.SendResponseAsync(json);
     }
 
     /// <summary>
@@ -189,6 +210,10 @@ public class WorldResource
     /// <summary>
     /// Restart the world identified by "id".
     /// </summary>
+    /// <remarks>
+    /// This is an asynchronous route; it returns a job object that needs to be polled in order to determine when the
+    /// action has completed.
+    /// </remarks>
     /// <param name="context">The HTTP context.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [RestRoute("GET", "/worlds/{id}/restart")]
@@ -209,8 +234,14 @@ public class WorldResource
             return;
         }
 
-        _ = await handler.Restart();
-        await context.Response.SendResponseAsync(HttpStatusCode.Ok);
+        var job = _jobService.CreateJob
+        (
+            $"restart world {world.Name}",
+            _ => handler.Restart()
+        );
+
+        var json = JsonSerializer.Serialize(job);
+        await context.Response.SendResponseAsync(json);
     }
 
     /// <summary>
