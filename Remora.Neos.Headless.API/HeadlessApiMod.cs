@@ -55,6 +55,8 @@ public class HeadlessApiMod : NeosMod
     {
         base.OnEngineInit();
 
+        Engine.Current.OnShutdown += OnEngineShutdown;
+
         var modConfig = GetConfiguration() ?? throw new InvalidOperationException();
 
         if (!modConfig.TryGetValue(_listenAddressKey, out var listenAddress))
@@ -91,5 +93,11 @@ public class HeadlessApiMod : NeosMod
 
         _server = serverBuilder.Build();
         _server.Start();
+    }
+
+    private void OnEngineShutdown()
+    {
+        _server.Stop();
+        _server.Dispose();
     }
 }
