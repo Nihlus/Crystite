@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using CloudX.Shared;
 using FrooxEngine;
 using Grapevine;
+using JetBrains.Annotations;
 using NeosHeadless;
 using Remora.Neos.Headless.API.Extensions;
 
@@ -21,7 +22,8 @@ namespace Remora.Neos.Headless.API;
 /// Defines API routes for NeosVR worlds.
 /// </summary>
 [RestResource]
-public class WorldResource
+[PublicAPI]
+internal sealed class WorldResource
 {
     private readonly JobService _jobService;
     private readonly NeosHeadlessConfig _config;

@@ -5,13 +5,15 @@
 //
 
 using System.Text.Json.Serialization;
+using JetBrains.Annotations;
 
 namespace Remora.Neos.Headless.API;
 
 /// <summary>
 /// Represents information about a world passed over the REST API.
 /// </summary>>
-public record RestUser
+[PublicAPI]
+public sealed record RestUser
 (
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("name")] string Name,

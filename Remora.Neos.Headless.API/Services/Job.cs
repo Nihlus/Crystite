@@ -8,6 +8,7 @@ using System;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace Remora.Neos.Headless.API;
 
@@ -18,7 +19,8 @@ namespace Remora.Neos.Headless.API;
 /// <param name="Description">The human-readable description of the job.</param>
 /// <param name="Action">The associated programmatic action.</param>
 /// <param name="TokenSource">The cancellation token source associated with the job.</param>
-public record Job
+[PublicAPI]
+public sealed record Job
 (
     [property: JsonPropertyName("id")] Guid Id,
     [property: JsonPropertyName("description")] string Description,

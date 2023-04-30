@@ -11,7 +11,7 @@ namespace Remora.Neos.Headless.API.Extensions;
 /// <summary>
 /// Defines extension methods for the <see cref="World"/> class.
 /// </summary>
-public static class WorldExtensions
+internal static class WorldExtensions
 {
     /// <summary>
     /// Converts a <see cref="World"/> to a <see cref="RestWorld"/>.

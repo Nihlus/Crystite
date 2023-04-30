@@ -11,7 +11,7 @@ namespace Remora.Neos.Headless.API.Extensions;
 /// <summary>
 /// Defines extension methods for the <see cref="User"/> class.
 /// </summary>
-public static class UserExtensions
+internal static class UserExtensions
 {
     /// <summary>
     /// Converts a <see cref="User"/> to a <see cref="RestUser"/>.

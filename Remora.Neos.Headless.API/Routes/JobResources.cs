@@ -8,6 +8,7 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Grapevine;
+using JetBrains.Annotations;
 
 namespace Remora.Neos.Headless.API;
 
@@ -15,7 +16,8 @@ namespace Remora.Neos.Headless.API;
 /// Defines API routes for long-running jobs.
 /// </summary>
 [RestResource]
-public class JobResources
+[PublicAPI]
+internal sealed class JobResources
 {
     private readonly JobService _jobService;
 

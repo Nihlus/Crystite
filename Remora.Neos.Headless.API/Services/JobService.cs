@@ -15,7 +15,7 @@ namespace Remora.Neos.Headless.API;
 /// <summary>
 /// Acts as a container and manager for long-running jobs.
 /// </summary>
-public class JobService
+internal sealed class JobService
 {
     private readonly ConcurrentDictionary<Guid, Job> _jobs = new();
 

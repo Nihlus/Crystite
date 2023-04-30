@@ -6,13 +6,15 @@
 
 using System.Text.Json.Serialization;
 using CloudX.Shared;
+using JetBrains.Annotations;
 
 namespace Remora.Neos.Headless.API;
 
 /// <summary>
 /// Represents information about a world passed over the REST API.
 /// </summary>
-public record RestWorld
+[PublicAPI]
+public sealed record RestWorld
 (
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("name")] string Name,

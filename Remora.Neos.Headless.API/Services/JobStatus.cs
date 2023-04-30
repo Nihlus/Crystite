@@ -4,11 +4,14 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
+using JetBrains.Annotations;
+
 namespace Remora.Neos.Headless.API;
 
 /// <summary>
 /// Enumerates valid states for a job.
 /// </summary>
+[PublicAPI]
 public enum JobStatus
 {
     /// <summary>
