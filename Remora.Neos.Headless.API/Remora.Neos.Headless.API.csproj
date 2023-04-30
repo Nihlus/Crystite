@@ -19,9 +19,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <NeosPath>/home/jarl/headless/var/lib/neosvr/NeosVR</NeosPath>
         <NeosTarget>headless</NeosTarget>
-        <CopyToNeosOnBuild>true</CopyToNeosOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
