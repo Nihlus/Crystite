@@ -69,7 +69,7 @@ public class HeadlessApiMod : NeosMod
         }
 
         var configField = Assembly.GetAssembly(typeof(WorldHandler))
-            .GetType("Program")
+            .GetType("NeosHeadless.Program")
             .GetField("config", BindingFlags.NonPublic | BindingFlags.Static)
             ?? throw new InvalidOperationException();
 
