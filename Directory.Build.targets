@@ -67,4 +67,19 @@
         </ItemGroup>
     </Target>
 
+    <!-- Copy to the Neos run directory if requested -->
+    <Target Name="CopyToNeos" Condition="Exists('$(NeosPath)/nml_mods') And '$(CopyToNeosOnBuild)' == 'true'" AfterTargets="CopyFilesToOutputDirectory">
+        <ItemGroup>
+            <NeosModFiles Include="$(OutputPath)/*.dll"/>
+            <NeosModFiles Include="$(OutputPath)/*.pdb"/>
+            <NeosModFiles Include="$(OutputPath)/*.xml"/>
+            <NeosDependencyFiles Include="$(OutputPath)/nml_libs/*.dll"/>
+            <NeosDependencyFiles Include="$(OutputPath)/nml_libs/*.pdb"/>
+            <NeosDependencyFiles Include="$(OutputPath)/nml_libs/*.xml"/>
+        </ItemGroup>
+
+        <Copy SourceFiles="@(NeosModFiles)" DestinationFolder="$(NeosPath)/nml_mods" />
+        <Copy SourceFiles="@(NeosDependencyFiles)" DestinationFolder="$(NeosPath)/nml_libs" />
+    </Target>
+
 </Project>
