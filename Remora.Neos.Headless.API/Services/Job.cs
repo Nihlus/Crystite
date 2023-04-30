@@ -30,11 +30,12 @@ public record Job
     /// Gets the status of the job.
     /// </summary>
     [JsonInclude]
-    public string Status => this.Action.IsCanceled
-        ? "canceled"
+    [JsonPropertyName("status")]
+    public JobStatus Status => this.Action.IsCanceled
+        ? JobStatus.Canceled
         : this.Action.IsFaulted
-            ? "faulted"
+            ? JobStatus.Faulted
             : this.Action.IsCompleted
-                ? "completed"
-                : "running";
+                ? JobStatus.Completed
+                : JobStatus.Running;
 }
