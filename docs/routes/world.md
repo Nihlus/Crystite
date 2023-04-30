@@ -77,7 +77,7 @@ An enumeration of available roles.
   > have been picked for this mod only.
 
 ## Routes
-### `GET` /worlds `200 OK`
+### `GET` /worlds `200 Ok`
 Gets the worlds currently loaded by the client.
 
 #### Parameters
@@ -106,7 +106,7 @@ None.
 ]
 ```
 
-### `GET` /worlds/[{id}](#restworld) `200 OK`
+### `GET` /worlds/[{id}](#restworld) `200 Ok`
 Gets a specific world currently loaded by the client.
 
 #### Parameters
@@ -155,7 +155,7 @@ An asynchronous [Job](job.md#job).
 }
 ```
 
-### `POST` /worlds/[{id}](#restworld)/save `200 OK`
+### `POST` /worlds/[{id}](#restworld)/save `200 Ok`
 Saves the world identified by `id`.
 
 #### Parameters
@@ -189,7 +189,7 @@ Nothing.
 #### Errors
 * `404 Not Found` if no world with the given ID was found
 
-### `POST` /worlds/[{id}](#restworld)/restart `200 OK`
+### `POST` /worlds/[{id}](#restworld)/restart `200 Ok`
 Restarts the world identified by `id`.
 
 #### Parameters
@@ -211,7 +211,7 @@ An asynchronous [Job](job.md#job).
 }
 ```
 
-### `PATCH` /worlds/[{id}](#restworld) `200 OK`
+### `PATCH` /worlds/[{id}](#restworld) `200 Ok`
 Modifies properties of the world identified by `id`.
 
 #### Parameters
@@ -248,7 +248,7 @@ The updated [RestWorld](#restworld).
 }
 ```
 
-### `GET` /worlds/[{id}](#restworld)/users `200 OK`
+### `GET` /worlds/[{id}](#restworld)/users `200 Ok`
 Gets the users currently in the world identified by `id`.
 
 #### Parameters
@@ -273,7 +273,7 @@ An array of [RestUser](#restuser) objects.
 ]
 ```
 
-### `GET` /worlds/[{id}](#restworld)/users/[{id}](#restuser) `200 OK`
+### `GET` /worlds/[{id}](#restworld)/users/[{id}](#restuser) `200 Ok`
 Gets a specific user currently in the world identified by `id`.
 
 #### Parameters
@@ -385,7 +385,7 @@ Nothing.
   2. `role` is not a recognized value
 * `403 Forbidden` if the role is higher than the host's role
 
-### `GET` /worlds/focused `200 OK`
+### `GET` /worlds/focused `200 Ok`
 Gets the currently focused world.
 
 #### Parameters
@@ -406,7 +406,7 @@ A [RestWorld](#restworld) object.
 }
 ```
 
-### `PUT` /worlds/focused `200 OK`
+### `PUT` /worlds/focused `200 Ok`
 Sets the currently focused world.
 
 #### Parameters

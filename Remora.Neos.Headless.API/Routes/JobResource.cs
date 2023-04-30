@@ -17,15 +17,15 @@ namespace Remora.Neos.Headless.API;
 /// </summary>
 [RestResource]
 [PublicAPI]
-internal sealed class JobResources
+internal sealed class JobResource
 {
     private readonly JobService _jobService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="JobResources"/> class.
+    /// Initializes a new instance of the <see cref="JobResource"/> class.
     /// </summary>
     /// <param name="jobService">The job service.</param>
-    public JobResources(JobService jobService)
+    public JobResource(JobService jobService)
     {
         _jobService = jobService;
     }
