@@ -51,7 +51,7 @@ public class WorldResource
     [RestRoute("GET", "/worlds")]
     public async Task GetWorldsAsync(IHttpContext context)
     {
-        var worlds = _worldManager.Worlds.Select(w => w.ToRestWorld());
+        var worlds = _worldManager.Worlds.Where(w => !w.IsUserspace()).Select(w => w.ToRestWorld());
 
         var json = JsonSerializer.Serialize(worlds);
         await context.Response.SendResponseAsync(json);
@@ -66,7 +66,10 @@ public class WorldResource
     public async Task GetWorldAsync(IHttpContext context)
     {
         var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
         if (world is null)
         {
             await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
@@ -159,11 +162,14 @@ public class WorldResource
     /// </remarks>
     /// <param name="context">The HTTP context.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [RestRoute("GET", "/worlds/{id}/save")]
+    [RestRoute("POST", "/worlds/{id}/save")]
     public async Task SaveWorldAsync(IHttpContext context)
     {
         var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
         if (world is null)
         {
             await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
@@ -191,11 +197,14 @@ public class WorldResource
     /// </summary>
     /// <param name="context">The HTTP context.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [RestRoute("GET", "/worlds/{id}/close")]
+    [RestRoute("DELETE", "/worlds/{id}")]
     public async Task CloseWorldAsync(IHttpContext context)
     {
         var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
         if (world is null)
         {
             await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
@@ -204,7 +213,7 @@ public class WorldResource
 
         world.Destroy();
 
-        await context.Response.SendResponseAsync(HttpStatusCode.Ok);
+        await context.Response.SendResponseAsync(HttpStatusCode.NoContent);
     }
 
     /// <summary>
@@ -216,11 +225,14 @@ public class WorldResource
     /// </remarks>
     /// <param name="context">The HTTP context.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [RestRoute("GET", "/worlds/{id}/restart")]
+    [RestRoute("POST", "/worlds/{id}/restart")]
     public async Task RestartWorldAsync(IHttpContext context)
     {
         var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
         if (world is null)
         {
             await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
@@ -253,7 +265,10 @@ public class WorldResource
     public async Task ModifyWorldAsync(IHttpContext context)
     {
         var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
         if (world is null)
         {
             await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
@@ -277,7 +292,7 @@ public class WorldResource
             world.Description = description;
         }
 
-        if (data.TryGetValue("access-level", out var rawAccessLevel))
+        if (data.TryGetValue("access_level", out var rawAccessLevel))
         {
             if (!Enum.TryParse<SessionAccessLevel>(rawAccessLevel, out var accessLevel))
             {
@@ -288,7 +303,7 @@ public class WorldResource
             world.AccessLevel = accessLevel;
         }
 
-        if (data.TryGetValue("away-kick-interval", out var rawAwayKickInterval))
+        if (data.TryGetValue("away_kick_interval", out var rawAwayKickInterval))
         {
             if (!float.TryParse(rawAwayKickInterval, out var awayKickIntervalValue))
             {
@@ -296,11 +311,18 @@ public class WorldResource
                 return;
             }
 
-            world.AwayKickEnabled = awayKickIntervalValue > 0.0;
+            if (awayKickIntervalValue < 0.0)
+            {
+                await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+                return;
+            }
+
+            world.AwayKickEnabled = awayKickIntervalValue >= 0.0;
             world.AwayKickMinutes = awayKickIntervalValue;
         }
 
-        await context.Response.SendResponseAsync(HttpStatusCode.Ok);
+        var json = JsonSerializer.Serialize(world.ToRestWorld());
+        await context.Response.SendResponseAsync(json);
     }
 
     /// <summary>
@@ -312,7 +334,10 @@ public class WorldResource
     public async Task GetWorldUsersAsync(IHttpContext context)
     {
         var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
         if (world is null)
         {
             await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
@@ -333,7 +358,10 @@ public class WorldResource
     public async Task GetWorldUserAsync(IHttpContext context)
     {
         var worldId = context.Request.PathParameters["id"];
-        var world = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
         if (world is null)
         {
             await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
@@ -384,7 +412,7 @@ public class WorldResource
         var data = await context.Request.ParseFormUrlEncodedData();
         if (data.TryGetValue("id", out var worldId))
         {
-            var worldById = _worldManager.Worlds.FirstOrDefault(w => w.CorrespondingWorldId == worldId);
+            var worldById = _worldManager.Worlds.FirstOrDefault(w => w.SessionId == worldId);
             if (worldById is null)
             {
                 await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
@@ -430,6 +458,7 @@ public class WorldResource
 
         _worldManager.FocusWorld(world);
 
-        await context.Response.SendResponseAsync(HttpStatusCode.Ok);
+        var json = JsonSerializer.Serialize(world.ToRestWorld());
+        await context.Response.SendResponseAsync(json);
     }
 }
