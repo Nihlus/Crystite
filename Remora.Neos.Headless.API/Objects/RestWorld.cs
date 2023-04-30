@@ -17,5 +17,8 @@ public record RestWorld
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("description")] string Description,
-    [property: JsonPropertyName("access_level")] SessionAccessLevel AccessLevel
+    [property: JsonPropertyName("access_level")] SessionAccessLevel AccessLevel,
+    [property: JsonPropertyName("away_kick_interval")] float AwayKickInterval,
+    [property: JsonPropertyName("hide_from_listing")] bool HideFromListing,
+    [property: JsonPropertyName("max_users")] int MaxUsers
 );

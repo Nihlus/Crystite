@@ -25,7 +25,10 @@ public static class WorldExtensions
             world.CorrespondingWorldId,
             world.Name,
             world.Description,
-            world.AccessLevel
+            world.AccessLevel,
+            world.AwayKickMinutes,
+            world.HideFromListing,
+            world.MaxUsers
         );
     }
 }

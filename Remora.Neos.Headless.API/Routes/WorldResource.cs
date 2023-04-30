@@ -321,6 +321,28 @@ public class WorldResource
             world.AwayKickMinutes = awayKickIntervalValue;
         }
 
+        if (data.TryGetValue("hide_from_listing", out var rawHideFromListing))
+        {
+            if (!bool.TryParse(rawHideFromListing, out var hideFromListing))
+            {
+                await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+                return;
+            }
+
+            world.HideFromListing = hideFromListing;
+        }
+
+        if (data.TryGetValue("max_users", out var rawMaxUsers))
+        {
+            if (!int.TryParse(rawMaxUsers, out var maxUsers) || maxUsers is < 1 or > 256)
+            {
+                await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+                return;
+            }
+
+            world.MaxUsers = maxUsers;
+        }
+
         var json = JsonSerializer.Serialize(world.ToRestWorld());
         await context.Response.SendResponseAsync(json);
     }

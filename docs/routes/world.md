@@ -6,11 +6,15 @@ focusing, saving, closing or modifying them.
 ### RestWorld
 A subset of fields from Neos's `World` object.
 
-| Field       | Type   | Description                  |
-|-------------|--------|------------------------------|
-| id          | string | the session ID of the world  |
-| name        | string | the name of the world        |
-| description | string | the description of the world |
+| Field              | Type                                       | Description                                              |
+|--------------------|--------------------------------------------|----------------------------------------------------------|
+| id                 | string                                     | the session ID of the world                              |
+| name               | string                                     | the name of the world                                    |
+| description        | string                                     | the description of the world                             |
+| access_level       | [SessionAccessLevel](#SessionAccessLevel)  | the access level of the session                          |
+| away_kick_interval | float                                      | the kick interval for away users (in minutes)            |
+| hide_from_listing  | bool                                       | whether the world is hidden from public listing          |
+| max_users          | int                                        | the maximum number of users allowed in the world (1-256) |
 
 #### Examples
 ```json
@@ -199,12 +203,14 @@ Modifies properties of the world identified by `id`.
 
 #### Parameters
 
-| Field               | Type                                       | Description                                       |
-|---------------------|--------------------------------------------|---------------------------------------------------|
-| ?name               | string                                     | the new name of the world                         |
-| ?description        | string                                     | the new description of the world                  |
-| ?access_level       | [SessionAccessLevel](#SessionAccessLevel)  | the new access level of the world.                |
-| ?away_kick_interval | float                                      | the new kick interval for away users (in minutes) |
+| Field               | Type                                        | Description                                              |
+|---------------------|---------------------------------------------|----------------------------------------------------------|
+| ?name               | string                                      | the new name of the world                                |
+| ?description        | string                                      | the new description of the world                         |
+| ?access_level       | [SessionAccessLevel](#SessionAccessLevel)   | the new access level of the world.                       |
+| ?away_kick_interval | float                                       | the new kick interval for away users (in minutes)        |
+| ?hide_from_listing  | bool                                        | whether the world is hidden from public listing          |
+| ?max_users          | int                                         | the maximum number of users allowed in the world (1-256) |
 
   > While all parameters to this route are optional, at least one must be set.
 

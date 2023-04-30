@@ -19,11 +19,13 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <NeosPath>/home/jarl/headless/var/lib/neosvr/NeosVR</NeosPath>
         <NeosTarget>headless</NeosTarget>
+        <CopyToNeosOnBuild>true</CopyToNeosOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Grapevine" />
+        <PackageReference Include="Grapevine" />
     </ItemGroup>
 
     <ItemGroup>
