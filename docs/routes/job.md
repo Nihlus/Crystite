@@ -7,7 +7,7 @@ An asynchronous job descriptor.
 |-------------|-------------------------|-----------------------------------------|
 | id          | guid                    | the ID of the job                       |
 | description | string                  | a human-readable description of the job |
-| status      | [JobStatus](#JobStatus) | the current status of the job           |
+| status      | [JobStatus](#jobstatus) | the current status of the job           |
 
 #### Examples
 ```json
@@ -19,7 +19,7 @@ An asynchronous job descriptor.
 ```
 
 ### JobStatus
-An enumeration of valid values for the `status` field of the [Job](#Job) object.
+An enumeration of valid values for the `status` field of the [Job](#job) object.
 
 | Name      | Value |
 |-----------|-------|
@@ -30,7 +30,7 @@ An enumeration of valid values for the `status` field of the [Job](#Job) object.
 
 
 ## Routes
-### `GET` /jobs/[{id}](#Job)
+### `GET` /jobs/[{id}](#job)
 Gets information about a specific job currently being executed by the client.
 
 > Note that retrieving a completed job counts as taking receipt of its
@@ -40,7 +40,7 @@ Gets information about a specific job currently being executed by the client.
 None
 
 #### Returns
-A [Job](#Job) object.
+A [Job](#job) object.
 
 #### Errors
 * `400 Bad Request` if the ID cannot be parsed as a GUID

@@ -6,15 +6,15 @@ focusing, saving, closing or modifying them.
 ### RestWorld
 A subset of fields from Neos's `World` object.
 
-| Field              | Type                                       | Description                                              |
-|--------------------|--------------------------------------------|----------------------------------------------------------|
-| id                 | string                                     | the session ID of the world                              |
-| name               | string                                     | the name of the world                                    |
-| description        | string                                     | the description of the world                             |
-| access_level       | [SessionAccessLevel](#SessionAccessLevel)  | the access level of the session                          |
-| away_kick_interval | float                                      | the kick interval for away users (in minutes)            |
-| hide_from_listing  | bool                                       | whether the world is hidden from public listing          |
-| max_users          | int                                        | the maximum number of users allowed in the world (1-256) |
+| Field              | Type                                      | Description                                              |
+|--------------------|-------------------------------------------|----------------------------------------------------------|
+| id                 | string                                    | the session ID of the world                              |
+| name               | string                                    | the name of the world                                    |
+| description        | string                                    | the description of the world                             |
+| access_level       | [SessionAccessLevel](#sessionaccesslevel) | the access level of the session                          |
+| away_kick_interval | float                                     | the kick interval for away users (in minutes)            |
+| hide_from_listing  | bool                                      | whether the world is hidden from public listing          |
+| max_users          | int                                       | the maximum number of users allowed in the world (1-256) |
 
 #### Examples
 ```json
@@ -71,7 +71,7 @@ Gets the worlds currently loaded by the client.
 None.
 
 #### Returns
-An array of [RestWorld](#RestWorld) objects. The array may be empty if no worlds
+An array of [RestWorld](#restworld) objects. The array may be empty if no worlds
 are loaded.
 
 #### Errors
@@ -93,14 +93,14 @@ None.
 ]
 ```
 
-### `GET` /worlds/[{id}](#RestWorld) `200 OK`
+### `GET` /worlds/[{id}](#restworld) `200 OK`
 Gets a specific world currently loaded by the client.
 
 #### Parameters
 None
 
 #### Returns
-A [RestWorld](#RestWorld) object.
+A [RestWorld](#restworld) object.
 
 #### Errors
 * `404 Not Found` if no world with the given session ID is loaded by the
@@ -127,7 +127,7 @@ Starts a new world.
 > `url` and `template` are mutually exclusive.
 
 #### Returns
-An asynchronous [Job](#Job).
+An asynchronous [Job](job.md#job).
 
 #### Errors
 * `404 Not Found` if no known template was found with the given name
@@ -142,14 +142,14 @@ An asynchronous [Job](#Job).
 }
 ```
 
-### `POST` /worlds/[{id}](#RestWorld)/save `200 OK`
+### `POST` /worlds/[{id}](#restworld)/save `200 OK`
 Saves the world identified by `id`.
 
 #### Parameters
 None.
 
 #### Returns
-An asynchronous [Job](#Job).
+An asynchronous [Job](job.md#job).
 
 #### Errors
 * `404 Not Found` if no world with the given ID was found
@@ -164,7 +164,7 @@ An asynchronous [Job](#Job).
 }
 ```
 
-### `DELETE` /worlds/[{id}](#RestWorld) `204 No Content`
+### `DELETE` /worlds/[{id}](#restworld) `204 No Content`
 Closes the world identified by `id`.
 
 #### Parameters
@@ -176,14 +176,14 @@ Nothing.
 #### Errors
 * `404 Not Found` if no world with the given ID was found
 
-### `POST` /worlds/[{id}](#RestWorld)/restart `200 OK`
+### `POST` /worlds/[{id}](#restworld)/restart `200 OK`
 Restarts the world identified by `id`.
 
 #### Parameters
 None.
 
 #### Returns
-An asynchronous [Job](#Job).
+An asynchronous [Job](job.md#job).
 
 #### Errors
 * `404 Not Found` if no world with the given ID was found OR it does not have
@@ -198,31 +198,33 @@ An asynchronous [Job](#Job).
 }
 ```
 
-### `PATCH` /worlds/[{id}](#RestWorld) `200 OK`
+### `PATCH` /worlds/[{id}](#restworld) `200 OK`
 Modifies properties of the world identified by `id`.
 
 #### Parameters
 
-| Field               | Type                                        | Description                                              |
-|---------------------|---------------------------------------------|----------------------------------------------------------|
-| ?name               | string                                      | the new name of the world                                |
-| ?description        | string                                      | the new description of the world                         |
-| ?access_level       | [SessionAccessLevel](#SessionAccessLevel)   | the new access level of the world.                       |
-| ?away_kick_interval | float                                       | the new kick interval for away users (in minutes)        |
-| ?hide_from_listing  | bool                                        | whether the world is hidden from public listing          |
-| ?max_users          | int                                         | the maximum number of users allowed in the world (1-256) |
+| Field               | Type                                      | Description                                              |
+|---------------------|-------------------------------------------|----------------------------------------------------------|
+| ?name               | string                                    | the new name of the world                                |
+| ?description        | string                                    | the new description of the world                         |
+| ?access_level       | [SessionAccessLevel](#sessionaccesslevel) | the new access level of the world.                       |
+| ?away_kick_interval | float                                     | the new kick interval for away users (in minutes)        |
+| ?hide_from_listing  | bool                                      | whether the world is hidden from public listing          |
+| ?max_users          | int                                       | the maximum number of users allowed in the world (1-256) |
 
   > While all parameters to this route are optional, at least one must be set.
 
 #### Returns
-The updated [RestWorld](#RestWorld).
+The updated [RestWorld](#restworld).
 
 #### Errors
 * `404 Not Found` if no world with the given ID was found
 * `400 Bad Request` if 
   1. no parameters are provided OR
   2. `access_level` is not a recognized value OR
-  3. `away_kick_interval` is not a number greater than or equal to zero
+  3. `hide_from_listing` is not a boolean OR
+  4. `away_kick_interval` is not a number greater than or equal to zero OR
+  5. `max_users` is not within 1 and 256
 
 #### Examples
 ```json
@@ -233,14 +235,14 @@ The updated [RestWorld](#RestWorld).
 }
 ```
 
-### `GET` /worlds/[{id}](#RestWorld)/users `200 OK`
+### `GET` /worlds/[{id}](#restworld)/users `200 OK`
 Gets the users currently in the world identified by `id`.
 
 #### Parameters
 None.
 
 #### Returns
-An array of [RestUser](#RestUser) objects.
+An array of [RestUser](#restuser) objects.
 
 #### Errors
 * `404 Not Found` if no world with the given ID was found
@@ -258,14 +260,14 @@ An array of [RestUser](#RestUser) objects.
 ]
 ```
 
-### `GET` /worlds/[{id}](#RestWorld)/users/[{id}](#RestUser) `200 OK`
+### `GET` /worlds/[{id}](#restworld)/users/[{id}](#restuser) `200 OK`
 Gets a specific user currently in the world identified by `id`.
 
 #### Parameters
 None.
 
 #### Returns
-A [RestUser](#RestUser) object.
+A [RestUser](#restuser) object.
 
 #### Errors
 * `404 Not Found` if 
@@ -290,7 +292,7 @@ Gets the currently focused world.
 None
 
 #### Returns
-A [RestWorld](#RestWorld) object.
+A [RestWorld](#restworld) object.
 
 #### Errors
 * `404 Not Found` if no world is currently focused
@@ -318,7 +320,7 @@ Sets the currently focused world.
   > At least one of `id`, `name`, or `index` must be set.
 
 #### Returns
-A [RestWorld](#RestWorld) object.
+A [RestWorld](#restworld) object.
 
 #### Errors
 * `404 Not Found` if no world is currently focused
