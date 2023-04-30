@@ -9,8 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using BaseX;
 using CloudX.Shared;
 using FrooxEngine;
+using FrooxEngine.LogiX.ProgramFlow;
 using Grapevine;
 using JetBrains.Annotations;
 using NeosHeadless;
@@ -694,5 +696,78 @@ internal sealed class WorldResource
 
         var json = JsonSerializer.Serialize(world.ToRestWorld());
         await context.Response.SendResponseAsync(json);
+    }
+
+    /// <summary>
+    /// Sends a dynamic impulse to the given world.
+    /// </summary>
+    /// <param name="context">The HTTP context.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [RestRoute("POST", "/worlds/{id}/impulses/{tag}")]
+    public async Task SendImpulseAsync(IHttpContext context)
+    {
+        var worldId = context.Request.PathParameters["id"];
+        var world = _worldManager.Worlds
+            .Where(w => !w.IsUserspace())
+            .FirstOrDefault(w => w.SessionId == worldId);
+
+        if (world is null)
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        var tag = context.Request.PathParameters["tag"];
+
+        var data = await context.Request.ParseFormUrlEncodedData();
+
+        if (!data.TryGetValue("value", out var value))
+        {
+            var list = Pool.BorrowList<DynamicImpulseReceiver>();
+            {
+                world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
+                foreach (var dynamicImpulseReceiver in list)
+                {
+                    dynamicImpulseReceiver.Impulse.Trigger();
+                }
+            }
+            Pool.Return(ref list);
+        }
+        else if (float.TryParse(value, out var floatValue))
+        {
+            var list = Pool.BorrowList<DynamicImpulseReceiverWithValue<float>>();
+            {
+                world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
+                foreach (var dynamicImpulseReceiver in list)
+                {
+                    dynamicImpulseReceiver.Trigger(floatValue);
+                }
+            }
+            Pool.Return(ref list);
+        }
+        else if (!int.TryParse(value, out var intValue))
+        {
+            var list = Pool.BorrowList<DynamicImpulseReceiverWithValue<int>>();
+            {
+                world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
+                foreach (var dynamicImpulseReceiver in list)
+                {
+                    dynamicImpulseReceiver.Trigger(intValue);
+                }
+            }
+            Pool.Return(ref list);
+        }
+        else
+        {
+            var list = Pool.BorrowList<DynamicImpulseReceiverWithValue<string>>();
+            {
+                world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
+                foreach (var dynamicImpulseReceiver in list)
+                {
+                    dynamicImpulseReceiver.Trigger(value);
+                }
+            }
+            Pool.Return(ref list);
+        }
     }
 }

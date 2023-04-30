@@ -432,3 +432,21 @@ A [RestWorld](#restworld) object.
   "description": "A place for things"
 }
 ```
+
+### `POST` /worlds/[{id}](#restworld)/impulses/{tag} `204 No Content`
+Sends a dynamic impulse to the given world. The path component `tag` identifies
+the impulse tag to trigger.
+
+#### Parameters
+| Field   | Type               | Description                                |
+|---------|--------------------|--------------------------------------------|
+| ?value  | float, int, string | the value to send to the impulse receivers |
+
+  > `value` can be omitted entirely or be either a float, an int, or a string.
+  > Different impulse receivers will fire depending on the type of the value.
+
+#### Returns
+Nothing.
+
+#### Errors
+* `404 Not Found` if no world with the given ID was found 
