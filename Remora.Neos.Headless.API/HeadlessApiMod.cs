@@ -9,6 +9,7 @@ using System.Reflection;
 using FrooxEngine;
 using Grapevine;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NeosHeadless;
 using NeosModLoader;
 
@@ -77,13 +78,16 @@ public class HeadlessApiMod : NeosMod
 
         serverBuilder.ConfigureServer = s =>
         {
-            s.Prefixes.Add($"http://{listenAddress}:{listenPort}");
+            s.Prefixes.Add($"http://{listenAddress}:{listenPort}/");
+            s.Router.Options.SendExceptionMessages = true;
         };
 
         serverBuilder.ConfigureServices = s => s
+            .AddLogging(l => l.ClearProviders())
             .AddSingleton(Engine.Current)
-            .AddSingleton(Engine.Current.WorldManager)
-            .AddSingleton((NeosHeadlessConfig)configField.GetValue(null));
+            .AddSingleton(serv => serv.GetRequiredService<Engine>().WorldManager)
+            .AddSingleton((NeosHeadlessConfig)configField.GetValue(null))
+            .AddSingleton<JobService>();
 
         _server = serverBuilder.Build();
         _server.Start();
