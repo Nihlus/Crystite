@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: JobResources.cs
+//  SPDX-FileName: JobResource.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //

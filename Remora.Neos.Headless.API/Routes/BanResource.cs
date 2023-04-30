@@ -63,12 +63,12 @@ internal sealed class BanResource
     [RestRoute("POST", "/bans/{id}")]
     public async Task BanUserAsync(IHttpContext context)
     {
-        var idOrUsername = context.Request.PathParameters["id"];
+        var userIdOrName = context.Request.PathParameters["id"];
 
-        var getUser = await _engine.Cloud.GetUser(idOrUsername);
+        var getUser = await _engine.Cloud.GetUser(userIdOrName);
         if (!getUser.IsOK)
         {
-            getUser = await _engine.Cloud.GetUserByName(idOrUsername);
+            getUser = await _engine.Cloud.GetUserByName(userIdOrName);
             if (!getUser.IsOK)
             {
                 await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
@@ -95,12 +95,12 @@ internal sealed class BanResource
     [RestRoute("DELETE", "/bans/{id}")]
     public async Task UnbanUserAsync(IHttpContext context)
     {
-        var idOrUsername = context.Request.PathParameters["id"];
+        var userIdOrName = context.Request.PathParameters["id"];
 
-        var getUser = await _engine.Cloud.GetUser(idOrUsername);
+        var getUser = await _engine.Cloud.GetUser(userIdOrName);
         if (!getUser.IsOK)
         {
-            getUser = await _engine.Cloud.GetUserByName(idOrUsername);
+            getUser = await _engine.Cloud.GetUserByName(userIdOrName);
             if (!getUser.IsOK)
             {
                 await context.Response.SendResponseAsync(HttpStatusCode.NotFound);

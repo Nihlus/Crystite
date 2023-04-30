@@ -67,7 +67,7 @@ internal sealed class FriendResource
         var friends = new List<Friend>();
         _engine.Cloud.Friends.GetFriends(friends);
 
-        var idOrUsername = context.Request.PathParameters["id"];
+        var userIdOrName = context.Request.PathParameters["id"];
 
         var data = await context.Request.ParseFormUrlEncodedData();
         if (!data.TryGetValue("status", out var rawStatus) || !Enum.TryParse<FriendStatus>(rawStatus, out var friendStatus))
@@ -76,10 +76,10 @@ internal sealed class FriendResource
             return;
         }
 
-        var friendRequest = friends.FirstOrDefault(f => f.FriendUserId == idOrUsername);
+        var friendRequest = friends.FirstOrDefault(f => f.FriendUserId == userIdOrName);
         if (friendRequest is null)
         {
-            friendRequest = friends.FirstOrDefault(f => string.Equals(idOrUsername, f.FriendUsername, StringComparison.InvariantCultureIgnoreCase));
+            friendRequest = friends.FirstOrDefault(f => string.Equals(userIdOrName, f.FriendUsername, StringComparison.InvariantCultureIgnoreCase));
             if (friendRequest is null)
             {
                 await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
