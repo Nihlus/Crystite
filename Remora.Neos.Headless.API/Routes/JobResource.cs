@@ -53,4 +53,30 @@ internal sealed class JobResource
         var json = JsonSerializer.Serialize(job);
         await context.Response.SendResponseAsync(json);
     }
+
+    /// <summary>
+    /// Cancels a job identified by its ID.
+    /// </summary>
+    /// <param name="context">The HTTP context.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [RestRoute("DELETE", "/jobs/{id}")]
+    public async Task CancelJobAsync(IHttpContext context)
+    {
+        if (!Guid.TryParse(context.Request.PathParameters["id"], out var jobId))
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.BadRequest);
+            return;
+        }
+
+        if (!_jobService.TryGetJob(jobId, out var job))
+        {
+            await context.Response.SendResponseAsync(HttpStatusCode.NotFound);
+            return;
+        }
+
+        job.TokenSource.Cancel();
+
+        var json = JsonSerializer.Serialize(job);
+        await context.Response.SendResponseAsync(json);
+    }
 }

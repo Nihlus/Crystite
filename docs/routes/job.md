@@ -54,3 +54,24 @@ A [Job](#job) object.
     "description": "A place for things"
 }
 ```
+
+### `DELETE` /jobs/[{id}](#job)
+Cancels a specific job currently being executed by the client.
+
+> Cancelling a job is not an instant operation; it is merely a request for the
+> ongoing task. As such, requesting a cancellation may not stop the job from
+> completing.
+> 
+> As with the `GET` rote, receiving a completed job from this route counts as
+> taking receipt of its completion.
+
+#### Parameters
+None
+
+#### Returns
+A [Job](#job) object.
+
+#### Errors
+* `400 Bad Request` if the ID cannot be parsed as a GUID
+* `404 Not Found` if no job with the given ID exists
+* 
