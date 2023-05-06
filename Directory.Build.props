@@ -1,7 +1,0 @@
-<Project>
-    <!-- Stuff that should probably go into Remora.Neos.Sdk -->
-    <PropertyGroup>
-        <NeosTarget Condition="'$(NeosTarget)' == ''">client</NeosTarget>
-        <NeosReferencePath>$(MSBuildThisFileDirectory)/ref</NeosReferencePath>
-    </PropertyGroup>
-</Project>

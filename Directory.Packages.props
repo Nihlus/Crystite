@@ -1,5 +1,11 @@
 <Project>
   <ItemGroup>
     <PackageVersion Include="Grapevine" Version="5.0.0-rc.10" />
+    <PackageVersion Include="Hardware.Info" Version="11.0.1" />
+    <PackageVersion Include="Lib.Harmony" Version="2.2.2" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.5" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
+    <PackageVersion Include="System.Threading" Version="4.3.0" />
   </ItemGroup>
 </Project>

@@ -1,0 +1,50 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <Sdk Name="Remora.Sdk" Version="2.1.0" />
+    <Sdk Name="Remora.Neos.Sdk" Version="1.1.1" />
+
+    <PropertyGroup>
+        <NeosProjectType>standalone</NeosProjectType>
+        <NeosTarget>headless</NeosTarget>
+        <NeosPath>/home/jarl/headless/var/lib/neosvr/NeosVR</NeosPath>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <LegalLicense>AGPL-3.0-or-later</LegalLicense>
+        <LegalAuthor>Jarl Gullberg</LegalAuthor>
+        <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
+        <UseSPDXFileHeaders>true</UseSPDXFileHeaders>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <Description>Open-source headless client wrapper for NeosVR</Description>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <NeosReference Include="FrooxEngine" />
+        <NeosReference Include="BaseX" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Hardware.Info" />
+      <PackageReference Include="Lib.Harmony" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Configuration\" />
+    </ItemGroup>
+</Project>
