@@ -25,6 +25,7 @@ var knownNativeLibraryMappings = new Dictionary<string, string[]>
     { "freetype6", new[] { "libfreetype.so.6" } },
     { "opus", new[] { "libopus.so.0" } },
     { "dl", new[] { "libdl.so.2" } },
+    { "libdl.so", new[] { "libdl.so.2" } },
     { "zlib", new[] { "libzlib.so.1" } },
 };
 

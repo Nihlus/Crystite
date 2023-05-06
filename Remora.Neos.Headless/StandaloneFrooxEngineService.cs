@@ -67,6 +67,8 @@ public class StandaloneFrooxEngineService : BackgroundService
             _engine.RunUpdateLoop();
         }
 
+        _engine.EnvironmentShutdownCallback = () => { };
+        _engine.Shutdown();
         Userspace.ExitNeos(false);
     }
 }
