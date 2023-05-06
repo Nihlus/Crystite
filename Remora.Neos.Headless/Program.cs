@@ -18,7 +18,7 @@ using Remora.Neos.Headless;
 var harmony = new Harmony("nu.algiz.remora.neos.headless");
 harmony.PatchAll();
 
-var knownNativeLibraryMappings = new Dictionary<string, string[]>()
+var knownNativeLibraryMappings = new Dictionary<string, string[]>
 {
     { "assimp", new[] { "libassimp.so.5" } },
     { "freeimage", new[] { "libfreeimage.so.3" } },
@@ -28,7 +28,7 @@ var knownNativeLibraryMappings = new Dictionary<string, string[]>()
     { "zlib", new[] { "libzlib.so.1" } },
 };
 
-AssemblyLoadContext.Default.ResolvingUnmanagedDll += (assembly, name) =>
+AssemblyLoadContext.Default.ResolvingUnmanagedDll += (_, name) =>
 {
     if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
     {
