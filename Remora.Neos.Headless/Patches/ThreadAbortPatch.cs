@@ -5,28 +5,36 @@
 //
 
 using System.Reflection;
-using BaseX;
 using HarmonyLib;
+using JetBrains.Annotations;
 
 namespace Remora.Neos.Headless.Patches;
 
 /// <summary>
-/// Patches instances of hard thread aborts with a soft wait.
+/// Patches instances of hard thread aborts with a soft interrupt.
 /// </summary>
 [HarmonyPatch]
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public class ThreadAbortPatch
 {
     /// <summary>
     /// Gets the target method for patching.
     /// </summary>
     /// <returns>The method.</returns>
-    [HarmonyTargetMethod]
-    public static MethodBase GetTarget()
+    [HarmonyTargetMethods]
+    public static IEnumerable<MethodBase> GetTarget()
     {
-        var workerType = typeof(WorkProcessor).GetNestedType("ThreadWorker", BindingFlags.NonPublic)
+        // overall thread workers
+        var workerType = typeof(BaseX.WorkProcessor).GetNestedType("ThreadWorker", BindingFlags.NonPublic)
             ?? throw new InvalidOperationException();
 
-        return workerType.GetMethod("Abort") ?? throw new InvalidOperationException();
+        yield return workerType.GetMethod("Abort")
+                     ?? throw new InvalidOperationException();
+
+        var worldAnnouncerType = typeof(FrooxEngine.WorldAnnouncer);
+
+        yield return worldAnnouncerType.GetMethod(nameof(FrooxEngine.WorldAnnouncer.Dispose))
+                     ?? throw new InvalidOperationException();
     }
 
     /// <summary>
