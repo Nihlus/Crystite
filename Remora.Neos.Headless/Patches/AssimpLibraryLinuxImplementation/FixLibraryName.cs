@@ -1,0 +1,30 @@
+//
+//  SPDX-FileName: FixLibraryName.cs
+//  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
+//  SPDX-License-Identifier: AGPL-3.0-or-later
+//
+
+using HarmonyLib;
+using JetBrains.Annotations;
+
+namespace Remora.Neos.Headless.Patches.AssimpLibraryLinuxImplementation;
+
+/// <summary>
+/// Fixes a bad library pathname.
+/// </summary>
+[HarmonyPatch("AssimpLibraryLinuxImplementation", "NativeLoadLibrary")]
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+public class FixLibraryName
+{
+    /// <summary>
+    /// Modifies the path name.
+    /// </summary>
+    /// <param name="path">The path name argument.</param>
+    public static void Prefix(ref string path)
+    {
+        if (path is "Assimp64.so" or "Assimp32.so")
+        {
+            path = "libassimp.so.5";
+        }
+    }
+}
