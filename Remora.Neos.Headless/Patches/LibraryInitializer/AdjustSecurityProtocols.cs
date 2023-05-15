@@ -1,21 +1,22 @@
 //
-//  SPDX-FileName: LibraryInitializerPatch.cs
+//  SPDX-FileName: AdjustSecurityProtocols.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
 using System.Net;
-using System.Reflection.Emit;
 using FrooxEngine;
 using HarmonyLib;
+using JetBrains.Annotations;
 
-namespace Remora.Neos.Headless.Patches;
+namespace Remora.Neos.Headless.Patches.LibraryInitializer;
 
 /// <summary>
 /// Patches the <see cref="LibraryInitializer"/> class.
 /// </summary>
-[HarmonyPatch(typeof(LibraryInitializer), nameof(LibraryInitializer.Initialize))]
-public static class LibraryInitializerPatch
+[HarmonyPatch(typeof(FrooxEngine.LibraryInitializer), nameof(FrooxEngine.LibraryInitializer.Initialize))]
+[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+public static class AdjustSecurityProtocols
 {
     /// <summary>
     /// Patches out Sslv3 from the configured security protocols.
@@ -25,10 +26,12 @@ public static class LibraryInitializerPatch
     [HarmonyTranspiler]
     public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
+        #pragma warning disable CS0618
         var target = SecurityProtocolType.Ssl3
                      | SecurityProtocolType.Tls
                      | SecurityProtocolType.Tls11
                      | SecurityProtocolType.Tls12;
+        #pragma warning restore CS0618
 
         var replacement = SecurityProtocolType.Tls
                      | SecurityProtocolType.Tls11
