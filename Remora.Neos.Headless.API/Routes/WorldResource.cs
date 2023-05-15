@@ -148,6 +148,7 @@ internal sealed class WorldResource
         var job = _jobService.CreateJob
         (
             $"start world {startInfo.LoadWorldURL ?? startInfo.LoadWorldPresetName}",
+            // ReSharper disable once InconsistentlySynchronizedField
             _ => new WorldHandler(_engine, _config, startInfo).Start()
         );
 
