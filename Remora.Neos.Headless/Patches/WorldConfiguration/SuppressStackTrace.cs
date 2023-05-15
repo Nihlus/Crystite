@@ -18,7 +18,7 @@ namespace Remora.Neos.Headless.Patches.WorldConfiguration;
 public class SuppressStackTrace
 {
     /// <summary>
-    /// Patches out Sslv3 from the configured security protocols.
+    /// Transpiles the original IL into something new.
     /// </summary>
     /// <param name="instructions">The instructions of the method.</param>
     /// <returns>The patched code.</returns>
