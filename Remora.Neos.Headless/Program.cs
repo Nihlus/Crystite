@@ -88,6 +88,7 @@ var host = Host.CreateDefaultBuilder(args)
             .AddSingleton<IHardwareInfo, HardwareInfo>()
             .AddSingleton<ISystemInfo, HeadlessSystemInfo>()
             .AddSingleton<Engine>()
+            .AddSingleton<WorldService>()
             .AddHostedService<StandaloneFrooxEngineService>()
             .Configure<NeosHeadlessConfig>(c.Configuration.GetSection("Neos"))
             .Configure<JsonSerializerOptions>

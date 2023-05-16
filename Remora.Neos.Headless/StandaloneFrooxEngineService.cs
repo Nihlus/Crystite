@@ -5,8 +5,14 @@
 //
 
 using System.Reflection;
+using CloudX.Shared;
 using FrooxEngine;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Remora.Neos.Headless.Configuration;
+using Remora.Neos.Headless.Services;
+using WorldStartupParameters = Remora.Neos.Headless.Configuration.WorldStartupParameters;
 
 namespace Remora.Neos.Headless;
 
@@ -15,46 +21,127 @@ namespace Remora.Neos.Headless;
 /// </summary>
 public class StandaloneFrooxEngineService : BackgroundService
 {
+    private readonly ILogger<StandaloneFrooxEngineService> _log;
+    private readonly NeosHeadlessConfig _config;
     private readonly Engine _engine;
     private readonly ISystemInfo _systemInfo;
+    private readonly WorldService _worldService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StandaloneFrooxEngineService"/> class.
     /// </summary>
+    /// <param name="log">The logging instance for this type.</param>
+    /// <param name="config">The application configuration.</param>
     /// <param name="engine">The engine.</param>
     /// <param name="systemInfo">Information about the system.</param>
-    public StandaloneFrooxEngineService(Engine engine, ISystemInfo systemInfo)
+    /// <param name="worldService">The world service.</param>
+    public StandaloneFrooxEngineService
+    (
+        ILogger<StandaloneFrooxEngineService> log,
+        IOptions<NeosHeadlessConfig> config,
+        Engine engine,
+        ISystemInfo systemInfo,
+        WorldService worldService
+    )
     {
+        _log = log;
+        _config = config.Value;
         _engine = engine;
         _systemInfo = systemInfo;
+        _worldService = worldService;
     }
 
     /// <inheritdoc/>
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken ct)
     {
         var assemblyDirectory = Directory.GetParent(Assembly.GetExecutingAssembly().Location)
                                 ?? throw new InvalidOperationException();
 
+        _engine.UsernameOverride = _config.UsernameOverride;
+
         await _engine.Initialize
         (
             assemblyDirectory.FullName,
-            Path.Combine(assemblyDirectory.FullName, "Data"),
-            Path.Combine(assemblyDirectory.FullName, "Cache"),
+            _config.DataFolder ?? NeosHeadlessConfig.DefaultDataFolder,
+            _config.CacheFolder ?? NeosHeadlessConfig.DefaultCacheFolder,
             _systemInfo,
             null,
             true
         );
 
+        if (_config.UniverseID is not null)
+        {
+            _engine.WorldAnnouncer.UniverseId = _config.UniverseID;
+            Engine.Config.UniverseId = _config.UniverseID;
+        }
+
+        if (!string.IsNullOrWhiteSpace(_config.LoginCredential) && !string.IsNullOrWhiteSpace(_config.LoginPassword))
+        {
+            _log.LogInformation("Logging in as {Credential}", _config.LoginCredential);
+
+            // TODO: LoginToken?
+            var login = await _engine.Cloud.Login
+            (
+                _config.LoginCredential,
+                _config.LoginPassword,
+                null,
+                _engine.LocalDB.SecretMachineID,
+                false,
+                null,
+                null
+            );
+
+            if (!login.IsOK)
+            {
+                _log.LogWarning("Failed to log in: {Error}", login.Content);
+            }
+            else
+            {
+                _log.LogInformation("Logged in successfully");
+            }
+        }
+
+        foreach (var allowedUrlHost in _config.AllowedUrlHosts ?? Array.Empty<Uri>())
+        {
+            _log.LogInformation("Allowing host: {Host}, Port: {Port}", allowedUrlHost.Host, allowedUrlHost.Port);
+            _engine.Security.AllowHost(allowedUrlHost.Host, allowedUrlHost.Port);
+        }
+
+        await _engine.LocalDB.WriteVariableAsync
+        (
+            "Session.MaxConcurrentTransmitJobs",
+            _config.MaxConcurrentAssetTransfers
+        );
+
+        var engineLoop = EngineLoopAsync(ct);
+
         var userspaceWorld = Userspace.SetupUserspace(_engine);
-        using var tickTimer = new PeriodicTimer(TimeSpan.FromSeconds(1.0 / 60.0));
+        await userspaceWorld.Coroutines.StartTask(async () => await default(ToWorld));
 
-        _ = userspaceWorld.Coroutines.StartTask(async () => await default(ToWorld));
+        foreach (var startWorld in _config.StartWorlds ?? Array.Empty<WorldStartupParameters>())
+        {
+            var worldStart = await _worldService.StartWorld(startWorld, ct);
+            if (!worldStart.IsSuccess)
+            {
+                _log.LogWarning("Failed to start world: {Reason}", worldStart.Error);
+            }
+        }
 
-        while (!stoppingToken.IsCancellationRequested)
+        await engineLoop;
+
+        _engine.EnvironmentShutdownCallback = () => { };
+        _engine.Shutdown();
+        Userspace.ExitNeos(false);
+    }
+
+    private async Task EngineLoopAsync(CancellationToken ct = default)
+    {
+        using var tickTimer = new PeriodicTimer(TimeSpan.FromSeconds(1.0 / _config.TickRate));
+        while (!ct.IsCancellationRequested)
         {
             try
             {
-                if (!await tickTimer.WaitForNextTickAsync(stoppingToken))
+                if (!await tickTimer.WaitForNextTickAsync(ct))
                 {
                     break;
                 }
@@ -66,9 +153,5 @@ public class StandaloneFrooxEngineService : BackgroundService
 
             _engine.RunUpdateLoop();
         }
-
-        _engine.EnvironmentShutdownCallback = () => { };
-        _engine.Shutdown();
-        Userspace.ExitNeos(false);
     }
 }
