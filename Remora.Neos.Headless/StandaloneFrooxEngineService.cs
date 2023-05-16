@@ -69,6 +69,13 @@ public class StandaloneFrooxEngineService : BackgroundService
             true
         );
 
+        var userspaceWorld = Userspace.SetupUserspace(_engine);
+
+        // start the engine update loop so coroutines can proceed
+        var engineLoop = EngineLoopAsync(ct);
+
+        await userspaceWorld.Coroutines.StartTask(async () => await default(ToWorld));
+
         if (_config.UniverseID is not null)
         {
             _engine.WorldAnnouncer.UniverseId = _config.UniverseID;
@@ -113,11 +120,6 @@ public class StandaloneFrooxEngineService : BackgroundService
             _config.MaxConcurrentAssetTransfers
         );
 
-        var engineLoop = EngineLoopAsync(ct);
-
-        var userspaceWorld = Userspace.SetupUserspace(_engine);
-        await userspaceWorld.Coroutines.StartTask(async () => await default(ToWorld));
-
         foreach (var startWorld in _config.StartWorlds ?? Array.Empty<WorldStartupParameters>())
         {
             var worldStart = await _worldService.StartWorld(startWorld, ct);
@@ -151,7 +153,14 @@ public class StandaloneFrooxEngineService : BackgroundService
                 break;
             }
 
-            _engine.RunUpdateLoop();
+            try
+            {
+                _engine.RunUpdateLoop();
+            }
+            catch (Exception e)
+            {
+                _log.LogError(e, "Unexpected error during engine update loop");
+            }
         }
     }
 }

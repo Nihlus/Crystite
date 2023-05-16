@@ -10,6 +10,7 @@ using FrooxEngine;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.Configuration;
+using Remora.Neos.Headless.Extensions;
 using Remora.Results;
 using WorldStartupParameters = Remora.Neos.Headless.Configuration.WorldStartupParameters;
 
@@ -120,6 +121,8 @@ public class WorldService
         {
             return new InvalidOperationError($"Internal startup failure: {world.FailState.ToString()}");
         }
+
+        startupParameters = await world.SetParametersAsync(startupParameters, _log);
 
         var session = new ActiveSession(startupParameters, world);
 
@@ -239,7 +242,7 @@ public class WorldService
 
             var timeSinceLastSave = DateTimeOffset.UtcNow - lastSaveTime;
             var autosaveInterval = TimeSpan.FromSeconds(session.StartInfo.AutosaveInterval);
-            if (autosaveInterval > TimeSpan.Zero && timeSinceLastSave > autosaveInterval)
+            if (autosaveInterval > TimeSpan.Zero && timeSinceLastSave > autosaveInterval && Userspace.CanSave(world))
             {
                 _log.LogInformation("Autosaving {World}", world.RawName);
                 await Userspace.SaveWorldAuto(world, SaveType.Overwrite, false);
