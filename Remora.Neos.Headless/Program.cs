@@ -6,6 +6,8 @@
 
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using BaseX;
 using FrooxEngine;
 using Hardware.Info;
@@ -17,6 +19,7 @@ using Microsoft.Extensions.Options;
 using Remora.Neos.Headless;
 using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Services;
+using Serilog;
 
 var harmony = new Harmony("nu.algiz.remora.neos.headless");
 harmony.PatchAll();
@@ -68,6 +71,17 @@ AssemblyLoadContext.Default.ResolvingUnmanagedDll += (_, name) =>
 };
 
 var host = Host.CreateDefaultBuilder(args)
+    .UseSerilog((context, provider, log) =>
+    {
+        log.ReadFrom.Configuration(context.Configuration);
+
+        // Backwards compatibility
+        var config = provider.GetRequiredService<IOptions<NeosHeadlessConfig>>().Value;
+        if (config.LogsFolder is not null)
+        {
+            log.WriteTo.File(Path.Combine(config.LogsFolder, UniLog.GenerateLogName(Engine.VersionNumber)));
+        }
+    })
     .ConfigureServices
     (
         (c, s) => s
