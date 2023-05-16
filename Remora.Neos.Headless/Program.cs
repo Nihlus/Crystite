@@ -13,7 +13,10 @@ using HarmonyLib;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Remora.Neos.Headless;
+using Remora.Neos.Headless.Configuration;
+using Remora.Neos.Headless.Services;
 
 var harmony = new Harmony("nu.algiz.remora.neos.headless");
 harmony.PatchAll();
@@ -67,11 +70,21 @@ AssemblyLoadContext.Default.ResolvingUnmanagedDll += (_, name) =>
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices
     (
-        s => s
+        (c, s) => s
             .AddSingleton<IHardwareInfo, HardwareInfo>()
             .AddSingleton<ISystemInfo, HeadlessSystemInfo>()
             .AddSingleton<Engine>()
             .AddHostedService<StandaloneFrooxEngineService>()
+            .Configure<NeosHeadlessConfig>(c.Configuration.GetSection("Neos"))
+            .Configure<JsonSerializerOptions>
+            (
+                o =>
+                {
+                    o.WriteIndented = true;
+                    o.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    o.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                }
+            )
     )
     .Build();
 
