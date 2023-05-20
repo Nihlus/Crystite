@@ -77,7 +77,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         // start the engine update loop so coroutines can proceed
         var engineLoop = EngineLoopAsync(ct);
 
-        await userspaceWorld.Coroutines.StartTask(async () => await default(ToWorld));
+        await userspaceWorld.Coroutines.StartTask(static async () => await default(ToWorld));
 
         if (_config.UniverseID is not null)
         {
@@ -85,37 +85,61 @@ public class StandaloneFrooxEngineService : BackgroundService
             Engine.Config.UniverseId = _config.UniverseID;
         }
 
-        if (!string.IsNullOrWhiteSpace(_config.LoginCredential) && !string.IsNullOrWhiteSpace(_config.LoginPassword))
-        {
-            _log.LogInformation("Logging in as {Credential}", _config.LoginCredential);
-
-            // TODO: LoginToken?
-            var login = await _engine.Cloud.Login
-            (
-                _config.LoginCredential,
-                _config.LoginPassword,
-                null,
-                _engine.LocalDB.SecretMachineID,
-                false,
-                null,
-                null
-            );
-
-            if (!login.IsOK)
+        await _engine.GlobalCoroutineManager.StartTask
+        (
+            static async args =>
             {
-                _log.LogWarning("Failed to log in: {Error}", login.Content);
-            }
-            else
-            {
-                _log.LogInformation("Logged in successfully");
-            }
-        }
+                await default(NextUpdate);
 
-        foreach (var allowedUrlHost in _config.AllowedUrlHosts ?? Array.Empty<Uri>())
-        {
-            _log.LogInformation("Allowing host: {Host}, Port: {Port}", allowedUrlHost.Host, allowedUrlHost.Port);
-            _engine.Security.AllowHost(allowedUrlHost.Host, allowedUrlHost.Port);
-        }
+                if (!string.IsNullOrWhiteSpace(args.Config.LoginCredential) && !string.IsNullOrWhiteSpace(args.Config.LoginPassword))
+                {
+                    args.Log.LogInformation("Logging in as {Credential}", args.Config.LoginCredential);
+
+                    // TODO: LoginToken?
+                    var login = await args.Engine.Cloud.Login
+                    (
+                        args.Config.LoginCredential,
+                        args.Config.LoginPassword,
+                        null,
+                        args.Engine.LocalDB.SecretMachineID,
+                        false,
+                        null,
+                        null
+                    );
+
+                    if (!login.IsOK)
+                    {
+                        args.Log.LogWarning("Failed to log in: {Error}", login.Content);
+                    }
+                    else
+                    {
+                        args.Log.LogInformation("Logged in successfully");
+                    }
+                }
+            },
+            (Config: _config, Log: _log, Engine: _engine)
+        );
+
+        await _engine.GlobalCoroutineManager.StartTask
+        (
+            static async args =>
+            {
+                await default(NextUpdate);
+
+                foreach (var allowedUrlHost in args.Config.AllowedUrlHosts ?? Array.Empty<Uri>())
+                {
+                    args.Log.LogInformation
+                    (
+                        "Allowing host: {Host}, Port: {Port}",
+                        allowedUrlHost.Host,
+                        allowedUrlHost.Port
+                    );
+
+                    args.Engine.Security.AllowHost(allowedUrlHost.Host, allowedUrlHost.Port);
+                }
+            },
+            (Config: _config, Log: _log, Engine: _engine)
+        );
 
         await _engine.LocalDB.WriteVariableAsync
         (
