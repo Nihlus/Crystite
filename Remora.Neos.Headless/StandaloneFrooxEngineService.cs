@@ -149,6 +149,11 @@ public class StandaloneFrooxEngineService : BackgroundService
 
         foreach (var startWorld in _config.StartWorlds ?? Array.Empty<WorldStartupParameters>())
         {
+            if (!startWorld.IsEnabled)
+            {
+                continue;
+            }
+
             var worldStart = await _worldService.StartWorld(startWorld, ct);
             if (!worldStart.IsSuccess)
             {
