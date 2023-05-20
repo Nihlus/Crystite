@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: UnversionedTypeSerialization.cs
+//  SPDX-FileName: ForwardedTypeSerialization.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -20,7 +20,7 @@ namespace Remora.Neos.Headless.Patches.WorkerManager;
 /// </summary>
 [HarmonyPatch(typeof(FrooxEngine.WorkerManager), nameof(FrooxEngine.WorkerManager.GetTypename))]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-public static class UnversionedTypeSerialization
+public static class ForwardedTypeSerialization
 {
     private const string _mscorlib = "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
 
