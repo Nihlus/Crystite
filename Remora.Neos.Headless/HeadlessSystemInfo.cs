@@ -23,8 +23,8 @@ public class HeadlessSystemInfo : StandaloneSystemInfo
         var cpu = hardwareInfo.CpuList.FirstOrDefault();
         var gpu = hardwareInfo.VideoControllerList.FirstOrDefault();
 
-        this.CPU = cpu?.Name ?? "UNKNOWN";
-        this.GPU = gpu?.Name ?? "UNKNOWN";
+        this.CPU = cpu?.Name.Trim() ?? "UNKNOWN";
+        this.GPU = gpu?.Name.Trim() ?? "UNKNOWN";
         this.PhysicalCores = (int)hardwareInfo.CpuList.Sum(c => c.NumberOfCores);
         this.MemoryBytes = hardwareInfo.MemoryList.Sum(r => (long)r.Capacity);
         this.VRAMBytes = (long?)gpu?.AdapterRAM ?? -1;
