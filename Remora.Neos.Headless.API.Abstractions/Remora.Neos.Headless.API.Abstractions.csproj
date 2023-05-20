@@ -2,7 +2,7 @@
     <Sdk Name="Remora.Sdk" Version="2.1.0" />
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <LibraryFrameworks>$(LibraryFrameworks);netstandard2.0</LibraryFrameworks>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -31,5 +31,4 @@
         <DependentUpon>RestWorld.cs</DependentUpon>
       </Compile>
     </ItemGroup>
-    
 </Project>

@@ -1,6 +1,6 @@
 <Project>
     <Sdk Name="Remora.Sdk" Version="2.1.0" />
-    <Sdk Name="Remora.Neos.Sdk" Version="1.1.1" />
+    <Sdk Name="Remora.Neos.Sdk" Version="1.2.0" />
 
     <PropertyGroup>
         <LegalLicense>AGPL-3.0-or-later</LegalLicense>
@@ -11,8 +11,10 @@
 
     <PropertyGroup>
         <NeosTarget>headless</NeosTarget>
-        <NeosProjectType>plugin</NeosProjectType>
+        <NeosProjectType>library</NeosProjectType>
         <NeosForceReferenceAssemblies>true</NeosForceReferenceAssemblies>
+        <TargetFramework/>
+        <LibraryFrameworks>net462;net7.0</LibraryFrameworks>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -21,13 +23,12 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <LibraryFrameworks>net462</LibraryFrameworks>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+        <DisableImplicitFrameworkReferences Condition="'$(TargetFramework)' == 'net462'">true</DisableImplicitFrameworkReferences>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
     
-    <ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
         <Reference Include="System.Core" />
     </ItemGroup>
 

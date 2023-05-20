@@ -1,6 +1,6 @@
 <Project>
     <Sdk Name="Remora.Sdk" Version="2.1.0" />
-    <Sdk Name="Remora.Neos.Sdk" Version="1.1.1" />
+    <Sdk Name="Remora.Neos.Sdk" Version="1.2.0" />
 
     <PropertyGroup>
         <NeosProjectType>standalone</NeosProjectType>
@@ -10,7 +10,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework/>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 

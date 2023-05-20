@@ -1,6 +1,6 @@
 <Project>
     <Sdk Name="Remora.Sdk" Version="2.1.0" />
-    <Sdk Name="Remora.Neos.Sdk" Version="1.1.1" />
+    <Sdk Name="Remora.Neos.Sdk" Version="1.2.0" />
 
     <PropertyGroup>
         <LegalLicense>AGPL-3.0-or-later</LegalLicense>
@@ -15,6 +15,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <TargetFramework/>
         <LibraryFrameworks>net462</LibraryFrameworks>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
