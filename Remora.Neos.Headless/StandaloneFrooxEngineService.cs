@@ -27,6 +27,8 @@ public class StandaloneFrooxEngineService : BackgroundService
     private readonly ISystemInfo _systemInfo;
     private readonly WorldService _worldService;
 
+    private bool _engineShutdownComplete;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="StandaloneFrooxEngineService"/> class.
     /// </summary>
@@ -58,6 +60,7 @@ public class StandaloneFrooxEngineService : BackgroundService
                                 ?? throw new InvalidOperationException();
 
         _engine.UsernameOverride = _config.UsernameOverride;
+        _engine.EnvironmentShutdownCallback = () => _engineShutdownComplete = true;
 
         await _engine.Initialize
         (
@@ -139,16 +142,13 @@ public class StandaloneFrooxEngineService : BackgroundService
     private async Task EngineLoopAsync(CancellationToken ct = default)
     {
         using var tickTimer = new PeriodicTimer(TimeSpan.FromSeconds(1.0 / _config.TickRate));
-        while (!ct.IsCancellationRequested)
+
+        var isShuttingDown = false;
+        while (!ct.IsCancellationRequested || !_engineShutdownComplete)
         {
-            try
-            {
-                if (!await tickTimer.WaitForNextTickAsync(ct))
-                {
-                    break;
-                }
-            }
-            catch (OperationCanceledException)
+            // Intentional. Ticks should continue until _engineShutdownComplete, so cancelling early here is
+            // undesired.
+            if (!await tickTimer.WaitForNextTickAsync(CancellationToken.None))
             {
                 break;
             }
@@ -161,6 +161,14 @@ public class StandaloneFrooxEngineService : BackgroundService
             {
                 _log.LogError(e, "Unexpected error during engine update loop");
             }
+
+            if (!ct.IsCancellationRequested || isShuttingDown)
+            {
+                continue;
+            }
+
+            isShuttingDown = true;
+            Userspace.ExitNeos(false);
         }
     }
 }
