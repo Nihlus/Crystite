@@ -32,7 +32,6 @@
 
     <ItemGroup>
         <NeosReference Include="Neos" />
-        <NeosReference Include="BaseX" />
         <NeosReference Include="CloudX.Shared" />
         <NeosReference Include="FrooxEngine" />
     </ItemGroup>

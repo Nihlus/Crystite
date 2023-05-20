@@ -12,8 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NeosHeadless;
 using NeosModLoader;
-using Remora.Neos.Headless.API.Abstractions;
-using Remora.Neos.Headless.API.Abstractions.Services;
+using Remora.Neos.Headless.API.Extensions;
 using Remora.Neos.Headless.API.Mod.Implementations;
 
 namespace Remora.Neos.Headless.API.Mod;
@@ -89,11 +88,7 @@ public class HeadlessApiMod : NeosMod
 
         serverBuilder.ConfigureServices = s => s
             .AddLogging(l => l.ClearProviders())
-            .AddSingleton<INeosApplicationController, NeosApplicationController>()
-            .AddSingleton<INeosBanController, NeosBanController>()
-            .AddSingleton<INeosContactController, NeosContactController>()
-            .AddSingleton<INeosWorldController, StockHeadlessNeosWorldController>()
-            .AddSingleton<IJobService, JobService>()
+            .AddNeosControllerServices<NeosApplicationController, StockHeadlessNeosWorldController>()
             .AddSingleton(Engine.Current)
             .AddSingleton(serv => serv.GetRequiredService<Engine>().WorldManager)
             .AddSingleton((NeosHeadlessConfig)configField.GetValue(null));

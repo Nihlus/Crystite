@@ -5,6 +5,7 @@
     <PackageVersion Include="Lib.Harmony" Version="2.3.0-alpha.5" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.5" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageVersion Include="NVorbis" Version="0.10.5" />
     <PackageVersion Include="Remora.Results" Version="7.2.3" />

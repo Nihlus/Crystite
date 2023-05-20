@@ -53,4 +53,8 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Remora.Neos.Headless.API\Remora.Neos.Headless.API.csproj" />
+    </ItemGroup>
 </Project>
