@@ -21,14 +21,14 @@ public static class ResultErrorExtensions
     /// <returns>The status code.</returns>
     public static HttpStatusCode ToStatusCode(this IResultError? error) => error switch
     {
-        ArgumentInvalidError argumentInvalidError => HttpStatusCode.BadRequest,
-        ArgumentNullError argumentNullError => HttpStatusCode.BadRequest,
-        ArgumentOutOfRangeError argumentOutOfRangeError => HttpStatusCode.BadRequest,
-        ArgumentError argumentError => HttpStatusCode.BadRequest,
-        ExceptionError exceptionError => HttpStatusCode.InternalServerError,
-        InvalidOperationError invalidOperationError => HttpStatusCode.BadRequest,
-        NotFoundError notFoundError => HttpStatusCode.NotFound,
-        NotSupportedError notSupportedError => HttpStatusCode.NotImplemented,
+        ArgumentInvalidError => HttpStatusCode.BadRequest,
+        ArgumentNullError => HttpStatusCode.BadRequest,
+        ArgumentOutOfRangeError => HttpStatusCode.BadRequest,
+        ArgumentError => HttpStatusCode.BadRequest,
+        ExceptionError => HttpStatusCode.InternalServerError,
+        InvalidOperationError => HttpStatusCode.BadRequest,
+        NotFoundError => HttpStatusCode.NotFound,
+        NotSupportedError => HttpStatusCode.NotImplemented,
         _ => HttpStatusCode.InternalServerError
     };
 }
