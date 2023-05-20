@@ -4,6 +4,8 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
+using System.Text.Json.Serialization;
+
 namespace Remora.Neos.Headless.Configuration;
 
 /// <summary>
@@ -43,6 +45,7 @@ public record NeosHeadlessConfig
     /// <summary>
     /// Gets the JSON schema for this file.
     /// </summary>
+    [JsonInclude]
     public static Uri Schema => new
     (
         "https://raw.githubusercontent.com/Neos-Metaverse/JSONSchemas/main/schemas/NeosHeadlessConfig.schema.json"
@@ -51,16 +54,19 @@ public record NeosHeadlessConfig
     /// <summary>
     /// Gets the default data folder.
     /// </summary>
+    [JsonIgnore]
     public static string DefaultDataFolder => Path.Combine(Directory.GetCurrentDirectory(), "Data");
 
     /// <summary>
     /// Gets the default cache folder.
     /// </summary>
+    [JsonIgnore]
     public static string DefaultCacheFolder => Path.Combine(Directory.GetCurrentDirectory(), "Cache");
 
     /// <summary>
     /// Gets the default log folder.
     /// </summary>
+    [JsonIgnore]
     public static string DefaultLogsFolder => Path.Combine(Directory.GetCurrentDirectory(), "Cache");
 
     /// <summary>
