@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project>
     <Sdk Name="Remora.Sdk" Version="2.1.0" />
     <Sdk Name="Remora.Neos.Sdk" Version="1.1.1" />
 
