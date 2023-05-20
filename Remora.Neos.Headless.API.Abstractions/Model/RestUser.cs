@@ -7,7 +7,7 @@
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
-namespace Remora.Neos.Headless.API;
+namespace Remora.Neos.Headless.API.Abstractions;
 
 /// <summary>
 /// Represents information about a world passed over the REST API.

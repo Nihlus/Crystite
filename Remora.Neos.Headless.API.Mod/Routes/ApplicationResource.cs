@@ -4,15 +4,13 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System;
-using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Grapevine;
 using JetBrains.Annotations;
-using NeosHeadless;
+using Remora.Neos.Headless.API.Abstractions;
 
-namespace Remora.Neos.Headless.API;
+namespace Remora.Neos.Headless.API.Mod;
 
 /// <summary>
 /// Defines API routes for application control.
@@ -21,22 +19,18 @@ namespace Remora.Neos.Headless.API;
 [PublicAPI]
 internal sealed class ApplicationResource
 {
-    private static bool _hasShutdownBeenRequested;
-
     private readonly JobService _jobService;
-    private readonly Func<Task> _shutdownProcedure;
+    private readonly INeosApplicationController _applicationController;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationResource"/> class.
     /// </summary>
     /// <param name="jobService">The job service.</param>
-    public ApplicationResource(JobService jobService)
+    /// <param name="applicationController">The application controller.</param>
+    public ApplicationResource(JobService jobService, INeosApplicationController applicationController)
     {
         _jobService = jobService;
-        _shutdownProcedure = (Func<Task>)(Assembly.GetAssembly(typeof(WorldHandler))
-            .GetType("NeosHeadless.Program")?
-            .GetMethod("Shutdown", BindingFlags.Static | BindingFlags.NonPublic)?
-            .CreateDelegate(typeof(Func<Task>)) ?? throw new MissingMethodException());
+        _applicationController = applicationController;
     }
 
     /// <summary>
@@ -47,7 +41,7 @@ internal sealed class ApplicationResource
     [RestRoute("POST", "/application/shutdown")]
     public async Task ShutdownAsync(IHttpContext context)
     {
-        if (_hasShutdownBeenRequested)
+        if (_applicationController.HasShutdownBeenRequested)
         {
             await context.Response.SendResponseAsync(HttpStatusCode.Forbidden);
             return;
@@ -56,10 +50,8 @@ internal sealed class ApplicationResource
         var job = _jobService.CreateJob
         (
             "shutdown",
-            _ => _shutdownProcedure()
+            _ => _applicationController.ShutdownAsync()
         );
-
-        _hasShutdownBeenRequested = true;
 
         var json = JsonSerializer.Serialize(job);
         await context.Response.SendResponseAsync(json);

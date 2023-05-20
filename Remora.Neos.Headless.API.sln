@@ -1,8 +1,12 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Headless.API", "Remora.Neos.Headless.API\Remora.Neos.Headless.API.csproj", "{123CE995-B49C-4780-A6F9-4AA683780EF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Headless.API.Mod", "Remora.Neos.Headless.API.Mod\Remora.Neos.Headless.API.Mod.csproj", "{123CE995-B49C-4780-A6F9-4AA683780EF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Headless", "Remora.Neos.Headless\Remora.Neos.Headless.csproj", "{8138C295-BA1E-428E-9D6A-0EE872D044F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Headless.API.Abstractions", "Remora.Neos.Headless.API.Abstractions\Remora.Neos.Headless.API.Abstractions.csproj", "{B4091365-1387-47AD-8C44-945DDBA3826E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Headless.API", "Remora.Neos.Headless.API\Remora.Neos.Headless.API.csproj", "{C7BD3711-A35F-40D9-8539-EC119389C324}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +22,13 @@ Global
 		{8138C295-BA1E-428E-9D6A-0EE872D044F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8138C295-BA1E-428E-9D6A-0EE872D044F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8138C295-BA1E-428E-9D6A-0EE872D044F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4091365-1387-47AD-8C44-945DDBA3826E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4091365-1387-47AD-8C44-945DDBA3826E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4091365-1387-47AD-8C44-945DDBA3826E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4091365-1387-47AD-8C44-945DDBA3826E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7BD3711-A35F-40D9-8539-EC119389C324}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7BD3711-A35F-40D9-8539-EC119389C324}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7BD3711-A35F-40D9-8539-EC119389C324}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7BD3711-A35F-40D9-8539-EC119389C324}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

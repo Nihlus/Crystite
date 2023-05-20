@@ -5,13 +5,14 @@
 //
 
 using FrooxEngine;
+using Remora.Neos.Headless.API.Abstractions;
 
 namespace Remora.Neos.Headless.API.Extensions;
 
 /// <summary>
 /// Defines extension methods for the <see cref="World"/> class.
 /// </summary>
-internal static class WorldExtensions
+public static class WorldExtensions
 {
     /// <summary>
     /// Converts a <see cref="World"/> to a <see cref="RestWorld"/>.
@@ -25,7 +26,7 @@ internal static class WorldExtensions
             world.CorrespondingWorldId,
             world.Name,
             world.Description,
-            world.AccessLevel,
+            world.AccessLevel.ToRestAccessLevel(),
             world.AwayKickMinutes,
             world.HideFromListing,
             world.MaxUsers

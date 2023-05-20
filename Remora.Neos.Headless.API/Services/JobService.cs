@@ -9,13 +9,16 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
+using Remora.Neos.Headless.API.Abstractions.Services;
 
 namespace Remora.Neos.Headless.API;
 
 /// <summary>
 /// Acts as a container and manager for long-running jobs.
 /// </summary>
-internal sealed class JobService
+[PublicAPI]
+public sealed class JobService : IJobService
 {
     private readonly ConcurrentDictionary<Guid, Job> _jobs = new();
 

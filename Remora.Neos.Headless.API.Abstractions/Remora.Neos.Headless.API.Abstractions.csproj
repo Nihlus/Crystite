@@ -1,0 +1,35 @@
+<Project>
+    <Sdk Name="Remora.Sdk" Version="2.1.0" />
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <LegalLicense>AGPL-3.0-or-later</LegalLicense>
+        <LegalAuthor>Jarl Gullberg</LegalAuthor>
+        <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
+        <UseSPDXFileHeaders>true</UseSPDXFileHeaders>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <Description>Defines common interfaces and data models for programmatic control of a NeosVR headless client</Description>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="OneOf" Version="3.0.243" />
+      <PackageReference Include="Remora.Results" Version="7.2.3" />
+      <PackageReference Include="System.Text.Json" Version="7.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Model\RestContactStatus.cs">
+        <DependentUpon>RestContact.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Model\RestAccessLevel.cs">
+        <DependentUpon>RestWorld.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+    
+</Project>

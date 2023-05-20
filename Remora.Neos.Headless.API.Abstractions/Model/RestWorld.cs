@@ -5,10 +5,9 @@
 //
 
 using System.Text.Json.Serialization;
-using CloudX.Shared;
 using JetBrains.Annotations;
 
-namespace Remora.Neos.Headless.API;
+namespace Remora.Neos.Headless.API.Abstractions;
 
 /// <summary>
 /// Represents information about a world passed over the REST API.
@@ -19,7 +18,7 @@ public sealed record RestWorld
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("name")] string Name,
     [property: JsonPropertyName("description")] string Description,
-    [property: JsonPropertyName("access_level")] SessionAccessLevel AccessLevel,
+    [property: JsonPropertyName("access_level")] RestAccessLevel AccessLevel,
     [property: JsonPropertyName("away_kick_interval")] float AwayKickInterval,
     [property: JsonPropertyName("hide_from_listing")] bool HideFromListing,
     [property: JsonPropertyName("max_users")] int MaxUsers

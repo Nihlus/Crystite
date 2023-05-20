@@ -5,13 +5,14 @@
 //
 
 using FrooxEngine;
+using Remora.Neos.Headless.API.Abstractions;
 
 namespace Remora.Neos.Headless.API.Extensions;
 
 /// <summary>
 /// Defines extension methods for the <see cref="User"/> class.
 /// </summary>
-internal static class UserExtensions
+public static class UserExtensions
 {
     /// <summary>
     /// Converts a <see cref="User"/> to a <see cref="RestUser"/>.

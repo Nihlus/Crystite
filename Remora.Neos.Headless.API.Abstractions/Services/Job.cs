@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 
-namespace Remora.Neos.Headless.API;
+namespace Remora.Neos.Headless.API.Abstractions.Services;
 
 /// <summary>
 /// Represents an ongoing job.

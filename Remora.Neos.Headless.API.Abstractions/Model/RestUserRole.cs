@@ -6,7 +6,7 @@
 
 using JetBrains.Annotations;
 
-namespace Remora.Neos.Headless.API;
+namespace Remora.Neos.Headless.API.Abstractions;
 
 /// <summary>
 /// Enumerates valid roles for users.
