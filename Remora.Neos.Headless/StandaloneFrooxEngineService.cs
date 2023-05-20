@@ -165,6 +165,10 @@ public class StandaloneFrooxEngineService : BackgroundService
 
     private async Task EngineLoopAsync(CancellationToken ct = default)
     {
+        var audioStartTime = DateTimeOffset.UtcNow;
+        var audioTime = 0.0;
+        var audioTickRate = 1.0 / _config.TickRate;
+
         using var tickTimer = new PeriodicTimer(TimeSpan.FromSeconds(1.0 / _config.TickRate));
 
         var isShuttingDown = false;
@@ -184,6 +188,13 @@ public class StandaloneFrooxEngineService : BackgroundService
             catch (Exception e)
             {
                 _log.LogError(e, "Unexpected error during engine update loop");
+            }
+
+            audioTime += audioTickRate * 48000f;
+            if (audioTime >= 1024.0)
+            {
+                audioTime = (audioTime - 1024.0) % 1024.0;
+                DummyAudioConnector.UpdateCallback((DateTimeOffset.UtcNow - audioStartTime).TotalMilliseconds * 1000);
             }
 
             if (!ct.IsCancellationRequested || isShuttingDown)
