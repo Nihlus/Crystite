@@ -274,7 +274,7 @@ public static class WorldExtensions
         ILogger log
     )
     {
-        string? ownerID = null;
+        string ownerID;
         switch (startupParameters.SaveAsOwner)
         {
             case SaveAsOwner.LocalMachine:
@@ -287,7 +287,7 @@ public static class WorldExtensions
                 if (world.Engine.Cloud.CurrentUser is null)
                 {
                     log.LogWarning("World is set to be saved under cloud user, but not user is logged in");
-                    break;
+                    return startupParameters;
                 }
 
                 ownerID = world.Engine.Cloud.CurrentUser.Id;
@@ -295,7 +295,7 @@ public static class WorldExtensions
             }
             case null:
             {
-                break;
+                return startupParameters;
             }
             default:
             {
@@ -303,32 +303,30 @@ public static class WorldExtensions
             }
         }
 
-        if (ownerID is not null)
+        var record = world.CorrespondingRecord;
+        if (record is null)
         {
-            var record = world.CorrespondingRecord;
-            if (record is null)
-            {
-                record = world.CreateNewRecord(ownerID);
-                world.CorrespondingRecord = record;
-            }
-            else
-            {
-                record.OwnerId = ownerID;
-                record.RecordId = RecordUtil.GenerateRecordID();
-            }
-
-            var transferer = new RecordOwnerTransferer(world.Engine, record.OwnerId, record.RecordId);
-            log.LogInformation("Saving world under {SaveAs}", startupParameters.SaveAsOwner);
-
-            var savedRecord = await Userspace.SaveWorld(world, record, transferer);
-            log.LogInformation("Saved successfully");
-
-            startupParameters = startupParameters with
-            {
-                SaveAsOwner = null,
-                LoadWorldURL = savedRecord.URL
-            };
+            record = world.CreateNewRecord(ownerID);
+            world.CorrespondingRecord = record;
         }
+        else
+        {
+            record.OwnerId = ownerID;
+            record.RecordId = RecordUtil.GenerateRecordID();
+        }
+
+        var transferer = new RecordOwnerTransferer(world.Engine, record.OwnerId, record.RecordId);
+        log.LogInformation("Saving world under {SaveAs}", startupParameters.SaveAsOwner);
+
+        var savedRecord = await Userspace.SaveWorld(world, record, transferer);
+        log.LogInformation("Saved successfully");
+
+        startupParameters = startupParameters with
+        {
+            SaveAsOwner = null,
+            LoadWorldURL = savedRecord.URL
+        };
+
         return startupParameters;
     }
 }
