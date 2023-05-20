@@ -5,7 +5,6 @@
 //
 
 using System.Reflection;
-using CloudX.Shared;
 using FrooxEngine;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
