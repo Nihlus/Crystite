@@ -46,7 +46,7 @@ namespace Remora.Neos.Headless.Configuration;
 /// <param name="AutoSleep">If set to true, will prevent an empty(or filled with away users) world from running a full update cycle regularly.</param>
 public record WorldStartupParameters
 (
-    bool IsEnabled = false,
+    bool IsEnabled = true,
     string? SessionName = null,
     string? CustomSessionID = null,
     string? Description = null,
@@ -85,7 +85,7 @@ public record WorldStartupParameters
     /// Initializes a new instance of the <see cref="WorldStartupParameters"/> class.
     /// </summary>
     public WorldStartupParameters()
-        : this(IsEnabled: false) // force overload resolution
+        : this(IsEnabled: true) // force overload resolution
     {
     }
 }
