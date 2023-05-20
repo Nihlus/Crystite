@@ -106,6 +106,12 @@ public static class WorldExtensions
             return;
         }
 
+        if (world.Engine.Cloud.CurrentUser is null)
+        {
+            log.LogWarning("Not logged in, cannot send auto-invites");
+            return;
+        }
+
         foreach (var username in startupParameters.AutoInviteUsernames)
         {
             var friend = world.Engine.Cloud.Friends.FindFriend
