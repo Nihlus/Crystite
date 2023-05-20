@@ -70,6 +70,19 @@ public static class UnversionedTypeSerialization
             nameBuilder.Append('.');
         }
 
+        if (type.IsNested)
+        {
+            var nestedTypeNameBuilder = new StringBuilder();
+            var declaringType = type.DeclaringType;
+            while (declaringType is not null)
+            {
+                nestedTypeNameBuilder.Insert(0, $"{declaringType.Name}+");
+                declaringType = declaringType.DeclaringType;
+            }
+
+            nameBuilder.Append(nestedTypeNameBuilder);
+        }
+
         nameBuilder.Append(type.Name);
 
         if (type.IsGenericTypeDefinition)
