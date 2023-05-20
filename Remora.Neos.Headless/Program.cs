@@ -70,6 +70,9 @@ AssemblyLoadContext.Default.ResolvingUnmanagedDll += (_, name) =>
     return IntPtr.Zero;
 };
 
+var hardwareInfo = new HardwareInfo();
+hardwareInfo.RefreshAll();
+
 var host = Host.CreateDefaultBuilder(args)
     .UseSerilog((context, provider, log) =>
     {
@@ -85,7 +88,7 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices
     (
         (c, s) => s
-            .AddSingleton<IHardwareInfo, HardwareInfo>()
+            .AddSingleton<IHardwareInfo>(hardwareInfo)
             .AddSingleton<ISystemInfo, HeadlessSystemInfo>()
             .AddSingleton<Engine>()
             .AddSingleton<WorldService>()
