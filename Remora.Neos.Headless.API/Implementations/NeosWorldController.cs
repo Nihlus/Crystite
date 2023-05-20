@@ -164,20 +164,25 @@ public abstract class NeosWorldController : INeosWorldController
             world.HideFromListing = hideFromListing.Value;
         }
 
-        if (maxUsers is not null)
+        switch (maxUsers)
         {
-            if (maxUsers is < 1 or > 256)
+            case null:
+            {
+                return Task.FromResult<Result<RestWorld>>(world.ToRestWorld());
+            }
+            case < 1 or > 256:
             {
                 return Task.FromResult<Result<RestWorld>>
                 (
                     new ArgumentInvalidError(nameof(maxUsers), "The maximum user count must be between 1 and 256.")
                 );
             }
-
-            world.MaxUsers = maxUsers.Value;
+            default:
+            {
+                world.MaxUsers = maxUsers.Value;
+                return Task.FromResult<Result<RestWorld>>(world.ToRestWorld());
+            }
         }
-
-        return Task.FromResult<Result<RestWorld>>(world.ToRestWorld());
     }
 
     /// <inheritdoc />
