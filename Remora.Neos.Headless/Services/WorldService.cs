@@ -270,6 +270,8 @@ public class WorldService
 
                     restart = true;
                     world.Destroy();
+
+                    break;
                 }
             }
 
@@ -286,6 +288,8 @@ public class WorldService
 
                 restart = true;
                 world.Destroy();
+
+                break;
             }
 
             lastUserCount = world.UserCount;
