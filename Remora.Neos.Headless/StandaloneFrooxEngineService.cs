@@ -157,10 +157,6 @@ public class StandaloneFrooxEngineService : BackgroundService
         }
 
         await engineLoop;
-
-        _engine.EnvironmentShutdownCallback = () => { };
-        _engine.Shutdown();
-        Userspace.ExitNeos(false);
     }
 
     private async Task EngineLoopAsync(CancellationToken ct = default)
