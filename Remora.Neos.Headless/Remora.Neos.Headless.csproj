@@ -43,6 +43,7 @@
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
+      <PackageReference Include="NVorbis" />
       <PackageReference Include="Remora.Results" />
       <PackageReference Include="Serilog.AspNetCore" />
     </ItemGroup>
