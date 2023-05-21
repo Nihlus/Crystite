@@ -4,98 +4,41 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System.Runtime.InteropServices;
-using System.Runtime.Loader;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using BaseX;
-using FrooxEngine;
 using Hardware.Info;
-using HarmonyLib;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Remora.Neos.Headless;
-using Remora.Neos.Headless.API.Extensions;
 using Remora.Neos.Headless.Configuration;
-using Remora.Neos.Headless.Implementations;
-using Remora.Neos.Headless.Services;
-using Serilog;
-
-var harmony = new Harmony("nu.algiz.remora.neos.headless");
-harmony.PatchAll();
-
-var knownNativeLibraryMappings = new Dictionary<string, string[]>
-{
-    { "assimp", new[] { "libassimp.so.5" } },
-    { "freeimage", new[] { "libfreeimage.so.3" } },
-    { "freetype6", new[] { "libfreetype.so.6" } },
-    { "opus", new[] { "libopus.so.0" } },
-    { "dl", new[] { "libdl.so.2" } },
-    { "libdl.so", new[] { "libdl.so.2" } },
-    { "zlib", new[] { "libzlib.so.1" } },
-};
-
-AssemblyLoadContext.Default.ResolvingUnmanagedDll += (_, name) =>
-{
-    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-    {
-        name = name.ToLowerInvariant();
-    }
-
-    // naive approach
-    if (NativeLibrary.TryLoad(name, out var handle))
-    {
-        return handle;
-    }
-
-    // check for a versioned library on Linux
-    if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-    {
-        return IntPtr.Zero;
-    }
-
-    if (!knownNativeLibraryMappings.TryGetValue(name, out var candidates))
-    {
-        return IntPtr.Zero;
-    }
-
-    foreach (var candidate in candidates)
-    {
-        if (NativeLibrary.TryLoad(candidate, out handle))
-        {
-            return handle;
-        }
-    }
-
-    return IntPtr.Zero;
-};
 
 var hardwareInfo = new HardwareInfo();
 hardwareInfo.RefreshAll();
 
-var host = Host.CreateDefaultBuilder(args)
-    .UseSerilog((context, provider, log) =>
-    {
-        log.ReadFrom.Configuration(context.Configuration);
+NeosAssemblyResolver? assemblyResolver = null;
 
-        // Backwards compatibility
-        var config = provider.GetRequiredService<IOptions<NeosHeadlessConfig>>().Value;
-        if (config.LogsFolder is not null)
+var hostBuilder = Host.CreateDefaultBuilder(args)
+    .ConfigureAppConfiguration
+    (
+        builder =>
         {
-            log.WriteTo.File(Path.Combine(config.LogsFolder, UniLog.GenerateLogName(Engine.VersionNumber)));
+            var config = builder.Build();
+            var headlessConfig = config.GetSection("Headless").Get<HeadlessApplicationConfiguration>()
+                                 ?? new HeadlessApplicationConfiguration();
+
+            assemblyResolver = new NeosAssemblyResolver(new[] { headlessConfig.NeosPath });
         }
-    })
+    );
+
+hostBuilder
+    .ConfigureNeosDependentCode()
     .ConfigureServices
     (
         (c, s) => s
-            .AddNeosControllerServices<NeosApplicationController, CustomHeadlessNeosWorldController>()
+            .AddSingleton(assemblyResolver ?? throw new InvalidOperationException())
             .AddSingleton<IHardwareInfo>(hardwareInfo)
-            .AddSingleton<ISystemInfo, HeadlessSystemInfo>()
-            .AddSingleton<Engine>()
-            .AddSingleton<WorldService>()
-            .AddHostedService<StandaloneFrooxEngineService>()
+            .Configure<HeadlessApplicationConfiguration>(c.Configuration.GetSection("Headless"))
             .Configure<NeosHeadlessConfig>(c.Configuration.GetSection("Neos"))
             .Configure<JsonSerializerOptions>
             (
@@ -106,11 +49,10 @@ var host = Host.CreateDefaultBuilder(args)
                     o.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 }
             )
-    )
-    .Build();
+    );
 
-var logger = host.Services.GetRequiredService<ILogger<Program>>();
-UniLog.OnLog += s => logger.LogInformation("{Message}", s);
-UniLog.OnError += s => logger.LogError("{Message}", s);
+var host = hostBuilder.Build();
+
+host.PostConfigureHost();
 
 await host.RunAsync();
