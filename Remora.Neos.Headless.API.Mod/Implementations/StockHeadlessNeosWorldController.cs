@@ -85,7 +85,7 @@ public class StockHeadlessNeosWorldController : NeosWorldController
         }
         else
         {
-            return new InvalidOperationException
+            return new InvalidOperationError
             (
                 $"Either {nameof(worldUrl)} or {nameof(templateName)} must be provided."
             );
