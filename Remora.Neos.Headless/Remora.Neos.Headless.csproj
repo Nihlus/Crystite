@@ -5,7 +5,6 @@
     <PropertyGroup>
         <NeosProjectType>standalone</NeosProjectType>
         <NeosTarget>headless</NeosTarget>
-        <NeosPath>/home/jarl/headless/var/lib/neosvr/NeosVR</NeosPath>
     </PropertyGroup>
 
     <PropertyGroup>
