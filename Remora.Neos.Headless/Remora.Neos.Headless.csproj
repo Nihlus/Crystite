@@ -31,9 +31,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <NeosReference Include="FrooxEngine" />
-        <NeosReference Include="BaseX" />
-        <NeosReference Include="CloudX.Shared" />
+        <NeosReference Include="FrooxEngine" Private="false" />
+        <NeosReference Include="BaseX" Private="false" />
+        <NeosReference Include="CloudX.Shared" Private="false" />
     </ItemGroup>
 
     <ItemGroup>
