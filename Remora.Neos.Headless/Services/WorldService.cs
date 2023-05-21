@@ -136,7 +136,7 @@ public class WorldService
         var sessionCancellation = new CancellationTokenSource();
         var wrapper = new SessionWrapper(session, sessionCancellation);
 
-        if (!_activeWorlds.TryAdd(world.RawName, wrapper))
+        if (!_activeWorlds.TryAdd(world.SessionId, wrapper))
         {
             throw new InvalidOperationException("Duplicate session ID?");
         }
@@ -282,7 +282,7 @@ public class WorldService
                 }
             };
 
-            if (!_activeWorlds.TryUpdate(world.RawName, wrapper, originalWrapper))
+            if (!_activeWorlds.TryUpdate(world.SessionId, wrapper, originalWrapper))
             {
                 _log.LogError
                 (
@@ -346,11 +346,11 @@ public class WorldService
             lastUserCount = world.UserCount;
         }
 
+        // always remove us first
+        _ = _activeWorlds.TryRemove(wrapper.Session.World.SessionId, out _);
+
         if (!ct.IsCancellationRequested && restart)
         {
-            // always remove us first
-            _ = _activeWorlds.TryRemove(wrapper.Session.World.RawName, out _);
-
             var restartWorld = await StartWorldAsync(wrapper.Session.StartInfo, ct);
             if (!restartWorld.IsSuccess)
             {
