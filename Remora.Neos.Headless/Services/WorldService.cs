@@ -24,7 +24,15 @@ public class WorldService
     private readonly NeosHeadlessConfig _config;
     private readonly ILogger<WorldService> _log;
     private readonly Engine _engine;
-    private readonly ConcurrentDictionary<string, ActiveSession> _activeWorlds;
+    private readonly ConcurrentDictionary<string, SessionWrapper> _activeWorlds;
+
+    private record SessionWrapper(ActiveSession Session, CancellationTokenSource CancellationSource)
+    {
+        /// <summary>
+        /// Gets or sets the session handler loop.
+        /// </summary>
+        public Task? Handler { get; set; }
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="WorldService"/> class.
@@ -46,7 +54,7 @@ public class WorldService
     /// <param name="startupParameters">The startup parameters.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>The started session.</returns>
-    public async Task<Result<ActiveSession>> StartWorld
+    public async Task<Result<ActiveSession>> StartWorldAsync
     (
         WorldStartupParameters startupParameters,
         CancellationToken ct = default
@@ -125,13 +133,21 @@ public class WorldService
         startupParameters = await world.SetParametersAsync(startupParameters, _log);
 
         var session = new ActiveSession(startupParameters, world);
+        var sessionCancellation = new CancellationTokenSource();
+        var wrapper = new SessionWrapper(session, sessionCancellation);
 
-        // Coroutines are kept track of by the engine
-        _ = _engine.GlobalCoroutineManager.StartTask
+        if (!_activeWorlds.TryAdd(world.RawName, wrapper))
+        {
+            throw new InvalidOperationException("Duplicate session ID?");
+        }
+
+        var handler = _engine.GlobalCoroutineManager.StartTask
         (
-            args => SessionHandlerAsync(args.Session, args.Token),
-            (Session: session, Token: ct)
+            args => SessionHandlerAsync(args.Wrapper, args.Token),
+            (Wrapper: wrapper, sessionCancellation.Token)
         );
+
+        wrapper.Handler = handler;
 
         _log.LogInformation("World running: {Name}", startupParameters.SessionName ?? world.SessionId);
 
@@ -153,24 +169,56 @@ public class WorldService
             _config
         );
 
-        if (!_activeWorlds.TryAdd(world.RawName, session))
+        return wrapper.Session;
+    }
+
+    /// <summary>
+    /// Restarts the given world.
+    /// </summary>
+    /// <param name="worldId">The ID of the world.</param>
+    /// <param name="ct">The cancellation token for this operation.</param>
+    /// <returns>The restarted world.</returns>
+    public async Task<Result<ActiveSession>> RestartWorldAsync(string worldId, CancellationToken ct = default)
+    {
+        if (!_activeWorlds.TryRemove(worldId, out var wrapper))
         {
-            throw new InvalidOperationException("Duplicate session ID?");
+            return new NotFoundError("No matching world found.");
         }
 
-        return session;
+        wrapper.CancellationSource.Cancel();
+        await (wrapper.Handler ?? Task.CompletedTask);
+
+        return await StartWorldAsync(wrapper.Session.StartInfo, ct);
+    }
+
+    /// <summary>
+    /// Stops the given world.
+    /// </summary>
+    /// <param name="worldId">The ID of the world.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    public async Task<Result> StopWorldAsync(string worldId)
+    {
+        if (!_activeWorlds.TryRemove(worldId, out var wrapper))
+        {
+            return new NotFoundError("No matching world found.");
+        }
+
+        wrapper.CancellationSource.Cancel();
+        await (wrapper.Handler ?? Task.CompletedTask);
+
+        return Result.FromSuccess();
     }
 
     /// <summary>
     /// Asynchronously manages an active session, restarting it and updating its information as necessary.
     /// </summary>
-    /// <param name="session">The session to manage.</param>
+    /// <param name="wrapper">The session wrapper to manage.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
-    private async Task SessionHandlerAsync(ActiveSession session, CancellationToken ct = default)
+    private async Task SessionHandlerAsync(SessionWrapper wrapper, CancellationToken ct = default)
     {
         var restart = false;
-        var autoRecover = session.StartInfo.AutoRecover;
-        session.World.WorldManager.WorldFailed += world =>
+        var autoRecover = wrapper.Session.StartInfo.AutoRecover;
+        wrapper.Session.World.WorldManager.WorldFailed += world =>
         {
             if (ct.IsCancellationRequested)
             {
@@ -192,7 +240,7 @@ public class WorldService
         var lastIdleBeginTime = DateTimeOffset.UtcNow;
         var lastSaveTime = DateTimeOffset.UtcNow;
 
-        while (!ct.IsCancellationRequested && !session.World.IsDestroyed)
+        while (!ct.IsCancellationRequested && !wrapper.Session.World.IsDestroyed)
         {
             try
             {
@@ -204,9 +252,9 @@ public class WorldService
             }
 
             // Update any changes to our startup information
-            var startupParameters = session.StartInfo;
-            var world = session.World;
-            session.World.RunSynchronously
+            var startupParameters = wrapper.Session.StartInfo;
+            var world = wrapper.Session.World;
+            wrapper.Session.World.RunSynchronously
             (
                 () =>
                 {
@@ -225,13 +273,16 @@ public class WorldService
                 }
             );
 
-            var originalSession = session;
-            session = session with
+            var originalWrapper = wrapper;
+            wrapper = wrapper with
             {
-                StartInfo = startupParameters
+                Session = wrapper.Session with
+                {
+                    StartInfo = startupParameters
+                }
             };
 
-            if (!_activeWorlds.TryUpdate(world.RawName, session, originalSession))
+            if (!_activeWorlds.TryUpdate(world.RawName, wrapper, originalWrapper))
             {
                 _log.LogError
                 (
@@ -241,7 +292,7 @@ public class WorldService
             }
 
             var timeSinceLastSave = DateTimeOffset.UtcNow - lastSaveTime;
-            var autosaveInterval = TimeSpan.FromSeconds(session.StartInfo.AutosaveInterval);
+            var autosaveInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.AutosaveInterval);
             if (autosaveInterval > TimeSpan.Zero && timeSinceLastSave > autosaveInterval && Userspace.CanSave(world))
             {
                 _log.LogInformation("Autosaving {World}", world.RawName);
@@ -256,7 +307,7 @@ public class WorldService
                     lastIdleBeginTime = DateTimeOffset.UtcNow;
                 }
 
-                var idleRestartInterval = TimeSpan.FromSeconds(session.StartInfo.IdleRestartInterval);
+                var idleRestartInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.IdleRestartInterval);
                 var timeSpentIdle = DateTimeOffset.UtcNow - lastIdleBeginTime;
 
                 if (idleRestartInterval > TimeSpan.Zero && timeSpentIdle > idleRestartInterval)
@@ -275,7 +326,7 @@ public class WorldService
                 }
             }
 
-            var forceRestartInterval = TimeSpan.FromSeconds(session.StartInfo.ForcedRestartInterval);
+            var forceRestartInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.ForcedRestartInterval);
             var timeRunning = DateTimeOffset.UtcNow - world.Time.LocalSessionBeginTime;
             if (forceRestartInterval > TimeSpan.Zero && timeRunning > forceRestartInterval)
             {
@@ -298,12 +349,17 @@ public class WorldService
         if (!ct.IsCancellationRequested && restart)
         {
             // always remove us first
-            _ = _activeWorlds.TryRemove(session.World.RawName, out _);
+            _ = _activeWorlds.TryRemove(wrapper.Session.World.RawName, out _);
 
-            var restartWorld = await StartWorld(session.StartInfo, ct);
+            var restartWorld = await StartWorldAsync(wrapper.Session.StartInfo, ct);
             if (!restartWorld.IsSuccess)
             {
-                _log.LogError("Failed to restart world {World}: {Reason}", session.World.RawName, restartWorld.Error);
+                _log.LogError
+                (
+                    "Failed to restart world {World}: {Reason}",
+                    wrapper.Session.World.RawName,
+                    restartWorld.Error
+                );
             }
         }
     }

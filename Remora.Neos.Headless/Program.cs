@@ -17,7 +17,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Headless;
+using Remora.Neos.Headless.API.Extensions;
 using Remora.Neos.Headless.Configuration;
+using Remora.Neos.Headless.Implementations;
 using Remora.Neos.Headless.Services;
 using Serilog;
 
@@ -88,6 +90,7 @@ var host = Host.CreateDefaultBuilder(args)
     .ConfigureServices
     (
         (c, s) => s
+            .AddNeosControllerServices<NeosApplicationController, CustomHeadlessNeosWorldController>()
             .AddSingleton<IHardwareInfo>(hardwareInfo)
             .AddSingleton<ISystemInfo, HeadlessSystemInfo>()
             .AddSingleton<Engine>()

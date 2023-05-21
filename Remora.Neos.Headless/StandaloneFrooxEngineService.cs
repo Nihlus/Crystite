@@ -153,7 +153,7 @@ public class StandaloneFrooxEngineService : BackgroundService
                 continue;
             }
 
-            var worldStart = await _worldService.StartWorld(startWorld, ct);
+            var worldStart = await _worldService.StartWorldAsync(startWorld, ct);
             if (!worldStart.IsSuccess)
             {
                 _log.LogWarning("Failed to start world: {Reason}", worldStart.Error);

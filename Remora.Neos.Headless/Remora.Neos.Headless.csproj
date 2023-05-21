@@ -10,7 +10,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework/>
+        <TargetFramework />
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
