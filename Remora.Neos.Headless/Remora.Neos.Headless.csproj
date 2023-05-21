@@ -56,4 +56,10 @@
     <ItemGroup>
       <ProjectReference Include="..\Remora.Neos.Headless.API\Remora.Neos.Headless.API.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="NeosDependentHostConfiguration.cs">
+        <DependentUpon>Program.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>
