@@ -1,6 +1,6 @@
 <Project>
     <Sdk Name="Remora.Sdk" Version="2.1.0" />
-    <Sdk Name="Remora.Neos.Sdk" Version="1.2.0" />
+    <Sdk Name="Remora.Neos.Sdk" Version="1.2.1" />
 
     <PropertyGroup>
         <LegalLicense>AGPL-3.0-or-later</LegalLicense>
@@ -27,7 +27,7 @@
         <DisableImplicitFrameworkReferences Condition="'$(TargetFramework)' == 'net462'">true</DisableImplicitFrameworkReferences>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
-    
+
     <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
         <Reference Include="System.Core" />
     </ItemGroup>
