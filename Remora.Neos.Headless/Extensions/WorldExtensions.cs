@@ -163,6 +163,87 @@ public static class WorldExtensions
                     args.World.Permissions.DefaultUserPermissions.Clear();
                 }
 
+                if (args.Startup.DefaultFriendRole is not null)
+                {
+                    var role = args.Startup.DefaultFriendRole;
+                    var roleByName = args.World.Permissions.FindRoleByName(role);
+                    if (roleByName is null)
+                    {
+                        args.Log.LogWarning("Role {Role} not available for world {World}", role, args.World.RawName);
+                    }
+                    else
+                    {
+                        var permissionSet = args.World.Permissions.FilterRole(roleByName);
+                        if (permissionSet != roleByName)
+                        {
+                            args.Log.LogWarning
+                            (
+                                "Cannot use default role {DefaultRole} for {Role} because it's higher than the host role {HostRole} in world {World}",
+                                roleByName.RoleName.Value,
+                                role,
+                                permissionSet.RoleName.Value,
+                                args.World.RawName
+                            );
+                        }
+
+                        args.World.Permissions.DefaultFriendRole.ForceWrite(permissionSet);
+                    }
+                }
+
+                if (args.Startup.DefaultAnonymousRole is not null)
+                {
+                    var role = args.Startup.DefaultAnonymousRole;
+                    var roleByName = args.World.Permissions.FindRoleByName(role);
+                    if (roleByName is null)
+                    {
+                        args.Log.LogWarning("Role {Role} not available for world {World}", role, args.World.RawName);
+                    }
+                    else
+                    {
+                        var permissionSet = args.World.Permissions.FilterRole(roleByName);
+                        if (permissionSet != roleByName)
+                        {
+                            args.Log.LogWarning
+                            (
+                                "Cannot use default role {DefaultRole} for {Role} because it's higher than the host role {HostRole} in world {World}",
+                                roleByName.RoleName.Value,
+                                role,
+                                permissionSet.RoleName.Value,
+                                args.World.RawName
+                            );
+                        }
+
+                        args.World.Permissions.DefaultAnonymousRole.ForceWrite(permissionSet);
+                    }
+                }
+
+                if (args.Startup.DefaultVisitorRole is not null)
+                {
+                    var role = args.Startup.DefaultVisitorRole;
+                    var roleByName = args.World.Permissions.FindRoleByName(role);
+                    if (roleByName is null)
+                    {
+                        args.Log.LogWarning("Role {Role} not available for world {World}", role, args.World.RawName);
+                    }
+                    else
+                    {
+                        var permissionSet = args.World.Permissions.FilterRole(roleByName);
+                        if (permissionSet != roleByName)
+                        {
+                            args.Log.LogWarning
+                            (
+                                "Cannot use default role {DefaultRole} for {Role} because it's higher than the host role {HostRole} in world {World}",
+                                roleByName.RoleName.Value,
+                                role,
+                                permissionSet.RoleName.Value,
+                                args.World.RawName
+                            );
+                        }
+
+                        args.World.Permissions.DefaultVisitorRole.ForceWrite(permissionSet);
+                    }
+                }
+
                 if (args.Startup.DefaultUserRoles is null)
                 {
                     return;

@@ -12,6 +12,9 @@ namespace Remora.Neos.Headless.Configuration;
 /// <summary>
 /// These options are used to configure a startup word from a JSON configuration file.
 /// </summary>
+/// <remarks>
+/// The base schema has been extended with some more properties, enabling further configuration.
+/// </remarks>
 /// <a href="https://raw.githubusercontent.com/Neos-Metaverse/JSONSchemas/main/schemas/NeosHeadlessConfig.schema.json"/>
 /// <param name="IsEnabled">When set to false, this will disable this world entry from starting.</param>
 /// <param name="SessionName">The name of the session as shown in the World/Session Browser.</param>
@@ -27,6 +30,9 @@ namespace Remora.Neos.Headless.Configuration;
 /// <param name="OverrideCorrespondingWorldID">Overrides the world id for this session allowing it to be grouped and displayed with other sessions with this world id.</param>
 /// <param name="ForcePort">Optional, If specified it will force this session to run on a specific network port.</param>
 /// <param name="KeepOriginalRoles">Optional, If specified will keep the original roles as saved in the world.</param>
+/// <param name="DefaultFriendRole">The default role to grant to joining friends.</param>
+/// <param name="DefaultAnonymousRole">The default role to grant to joining anonymous users.</param>
+/// <param name="DefaultVisitorRole">The default role to grant to joining visitors.</param>
 /// <param name="DefaultUserRoles">When provided with a list of username and permission pairs it will grant those users the listed permissions when they join.</param>
 /// <param name="RoleCloudVariable">An optional name of a cloud variable to use to determine the role of this user.</param>
 /// <param name="AllowUserCloudVariable">An optional name of a cloud variable to use to determine if this user is allowed in the session.</param>
@@ -61,6 +67,9 @@ public record WorldStartupParameters
     RecordId? OverrideCorrespondingWorldID = null,
     ushort? ForcePort = null,
     bool KeepOriginalRoles = false,
+    string? DefaultFriendRole = null,
+    string? DefaultAnonymousRole = null,
+    string? DefaultVisitorRole = null,
     IReadOnlyDictionary<string, string>? DefaultUserRoles = null,
     string? RoleCloudVariable = null,
     string? AllowUserCloudVariable = null,
