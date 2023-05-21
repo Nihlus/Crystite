@@ -6,7 +6,6 @@
 
 using CloudX.Shared;
 using FrooxEngine;
-using Microsoft.Extensions.Logging;
 using WorldStartupParameters = Remora.Neos.Headless.Configuration.WorldStartupParameters;
 
 namespace Remora.Neos.Headless.Extensions;

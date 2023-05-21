@@ -7,7 +7,6 @@
 using System.Collections.Concurrent;
 using CloudX.Shared;
 using FrooxEngine;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Extensions;

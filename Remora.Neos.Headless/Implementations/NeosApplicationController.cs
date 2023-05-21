@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using Microsoft.Extensions.Hosting;
 using Remora.Neos.Headless.API.Abstractions;
 
 namespace Remora.Neos.Headless.Implementations;

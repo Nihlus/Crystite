@@ -5,8 +5,6 @@
 //
 
 using FrooxEngine;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Services;

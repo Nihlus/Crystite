@@ -1,6 +1,7 @@
 <Project>
     <Sdk Name="Remora.Sdk" Version="2.1.0" />
     <Sdk Name="Remora.Neos.Sdk" Version="1.2.1" />
+    <Sdk Name="Microsoft.NET.Sdk.Web" />
 
     <PropertyGroup>
         <NeosProjectType>standalone</NeosProjectType>
@@ -39,18 +40,16 @@
     <ItemGroup>
       <PackageReference Include="Hardware.Info" />
       <PackageReference Include="Lib.Harmony" />
-      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
-      <PackageReference Include="NVorbis" />
       <PackageReference Include="Remora.Results" />
       <PackageReference Include="Serilog.AspNetCore" />
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="appsettings.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <Content Include="steam_appid.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
     <ItemGroup>
@@ -61,11 +60,5 @@
       <Compile Update="NeosDependentHostConfiguration.cs">
         <DependentUpon>Program.cs</DependentUpon>
       </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="steam_appid.txt">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
     </ItemGroup>
 </Project>
