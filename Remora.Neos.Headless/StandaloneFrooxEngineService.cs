@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System.Reflection;
 using FrooxEngine;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -21,6 +20,7 @@ namespace Remora.Neos.Headless;
 public class StandaloneFrooxEngineService : BackgroundService
 {
     private readonly ILogger<StandaloneFrooxEngineService> _log;
+    private readonly HeadlessApplicationConfiguration _applicationConfig;
     private readonly NeosHeadlessConfig _config;
     private readonly Engine _engine;
     private readonly ISystemInfo _systemInfo;
@@ -32,13 +32,15 @@ public class StandaloneFrooxEngineService : BackgroundService
     /// Initializes a new instance of the <see cref="StandaloneFrooxEngineService"/> class.
     /// </summary>
     /// <param name="log">The logging instance for this type.</param>
-    /// <param name="config">The application configuration.</param>
+    /// <param name="applicationConfig">The application configuration.</param>
+    /// <param name="config">The headless configuration.</param>
     /// <param name="engine">The engine.</param>
     /// <param name="systemInfo">Information about the system.</param>
     /// <param name="worldService">The world service.</param>
     public StandaloneFrooxEngineService
     (
         ILogger<StandaloneFrooxEngineService> log,
+        IOptions<HeadlessApplicationConfiguration> applicationConfig,
         IOptions<NeosHeadlessConfig> config,
         Engine engine,
         ISystemInfo systemInfo,
@@ -46,6 +48,7 @@ public class StandaloneFrooxEngineService : BackgroundService
     )
     {
         _log = log;
+        _applicationConfig = applicationConfig.Value;
         _config = config.Value;
         _engine = engine;
         _systemInfo = systemInfo;
@@ -55,15 +58,12 @@ public class StandaloneFrooxEngineService : BackgroundService
     /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
-        var assemblyDirectory = Directory.GetParent(Assembly.GetExecutingAssembly().Location)
-                                ?? throw new InvalidOperationException();
-
         _engine.UsernameOverride = _config.UsernameOverride;
         _engine.EnvironmentShutdownCallback = () => _engineShutdownComplete = true;
 
         await _engine.Initialize
         (
-            assemblyDirectory.FullName,
+            _applicationConfig.NeosPath,
             _config.DataFolder ?? NeosHeadlessConfig.DefaultDataFolder,
             _config.CacheFolder ?? NeosHeadlessConfig.DefaultCacheFolder,
             _systemInfo,
