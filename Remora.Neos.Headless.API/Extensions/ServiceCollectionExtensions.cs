@@ -7,6 +7,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Remora.Neos.Headless.API.Abstractions;
 using Remora.Neos.Headless.API.Abstractions.Services;
+using Remora.Neos.Headless.API.Services;
 
 namespace Remora.Neos.Headless.API.Extensions;
 

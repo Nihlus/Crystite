@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 using OneOf;
 using Remora.Neos.Headless.API.Abstractions;
 using Remora.Neos.Headless.API.Mod.Extensions;
+using Remora.Neos.Headless.API.Services;
 
 namespace Remora.Neos.Headless.API.Mod;
 

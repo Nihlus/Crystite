@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Grapevine;
 using JetBrains.Annotations;
 using Remora.Neos.Headless.API.Abstractions;
+using Remora.Neos.Headless.API.Services;
 
 namespace Remora.Neos.Headless.API.Mod;
 

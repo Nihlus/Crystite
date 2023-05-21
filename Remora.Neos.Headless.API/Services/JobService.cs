@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 using Remora.Neos.Headless.API.Abstractions.Services;
 
-namespace Remora.Neos.Headless.API;
+namespace Remora.Neos.Headless.API.Services;
 
 /// <summary>
 /// Acts as a container and manager for long-running jobs.
