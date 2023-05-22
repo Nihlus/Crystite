@@ -90,6 +90,10 @@ public class CustomHeadlessNeosWorldController : NeosWorldController
     }
 
     /// <inheritdoc />
+    public override Task<Result> CloseWorldAsync(string worldId, CancellationToken ct = default)
+        => _worldService.StopWorldAsync(worldId);
+
+    /// <inheritdoc />
     public override async Task<Result<IRestWorld>> RestartWorldAsync(string worldId, CancellationToken ct = default)
     {
         var restartWorld = await _worldService.RestartWorldAsync(worldId, ct);

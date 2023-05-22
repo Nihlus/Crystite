@@ -89,7 +89,7 @@ public abstract class NeosWorldController : INeosWorldController
     }
 
     /// <inheritdoc />
-    public Task<Result> CloseWorldAsync(string worldId, CancellationToken ct = default)
+    public virtual Task<Result> CloseWorldAsync(string worldId, CancellationToken ct = default)
     {
         var world = _worldManager.Worlds
             .Where(w => !w.IsUserspace())
