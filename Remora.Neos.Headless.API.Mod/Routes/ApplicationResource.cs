@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Grapevine;
 using JetBrains.Annotations;
 using Remora.Neos.Headless.API.Abstractions;
+using Remora.Neos.Headless.API.Abstractions.Services;
 using Remora.Neos.Headless.API.Services;
 
 namespace Remora.Neos.Headless.API.Mod;
@@ -20,7 +21,7 @@ namespace Remora.Neos.Headless.API.Mod;
 [PublicAPI]
 internal sealed class ApplicationResource
 {
-    private readonly JobService _jobService;
+    private readonly IJobService _jobService;
     private readonly INeosApplicationController _applicationController;
 
     /// <summary>

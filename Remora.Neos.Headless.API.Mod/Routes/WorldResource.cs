@@ -11,6 +11,7 @@ using Grapevine;
 using JetBrains.Annotations;
 using OneOf;
 using Remora.Neos.Headless.API.Abstractions;
+using Remora.Neos.Headless.API.Abstractions.Services;
 using Remora.Neos.Headless.API.Mod.Extensions;
 using Remora.Neos.Headless.API.Services;
 
@@ -23,7 +24,7 @@ namespace Remora.Neos.Headless.API.Mod;
 [PublicAPI]
 internal sealed class WorldResource
 {
-    private readonly JobService _jobService;
+    private readonly IJobService _jobService;
     private readonly INeosWorldController _worldController;
 
     /// <summary>
@@ -140,7 +141,7 @@ internal sealed class WorldResource
         var job = _jobService.CreateJob
         (
             $"save world {worldId}",
-            _ => _worldController.SaveWorldAsync(worldId, context.CancellationToken)
+            jct => _worldController.SaveWorldAsync(worldId, jct)
         );
 
         var json = JsonSerializer.Serialize(job);

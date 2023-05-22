@@ -34,16 +34,16 @@ public class NeosContactController : INeosContactController
     }
 
     /// <inheritdoc />
-    public Task<Result<IReadOnlyList<RestContact>>> GetContactsAsync(CancellationToken ct = default)
+    public Task<Result<IReadOnlyList<IRestContact>>> GetContactsAsync(CancellationToken ct = default)
     {
         var friends = new List<Friend>();
         _engine.Cloud.Friends.GetFriends(friends);
 
-        return Task.FromResult<Result<IReadOnlyList<RestContact>>>(friends.Select(f => f.ToRestContact()).ToArray());
+        return Task.FromResult<Result<IReadOnlyList<IRestContact>>>(friends.Select(f => f.ToRestContact()).ToArray());
     }
 
     /// <inheritdoc />
-    public Task<Result<RestContact>> ModifyContactAsync(string userIdOrName, RestContactStatus status, CancellationToken ct = default)
+    public Task<Result<IRestContact>> ModifyContactAsync(string userIdOrName, RestContactStatus status, CancellationToken ct = default)
     {
         var friends = new List<Friend>();
         _engine.Cloud.Friends.GetFriends(friends);
@@ -54,13 +54,13 @@ public class NeosContactController : INeosContactController
             friendRequest = friends.FirstOrDefault(f => string.Equals(userIdOrName, f.FriendUsername, StringComparison.InvariantCultureIgnoreCase));
             if (friendRequest is null)
             {
-                return Task.FromResult<Result<RestContact>>(new NotFoundError());
+                return Task.FromResult<Result<IRestContact>>(new NotFoundError());
             }
         }
 
         if (friendRequest.FriendStatus == status.ToFriendStatus())
         {
-            return Task.FromResult<Result<RestContact>>
+            return Task.FromResult<Result<IRestContact>>
             (
                 new InvalidOperationException($"The contact is already {status.ToString().ToLowerInvariant()}.")
             );
@@ -82,7 +82,7 @@ public class NeosContactController : INeosContactController
             }
             case RestContactStatus.Blocked:
             {
-                return Task.FromResult<Result<RestContact>>(new NotSupportedError("Blocking is currently unimplemented."));
+                return Task.FromResult<Result<IRestContact>>(new NotSupportedError("Blocking is currently unimplemented."));
             }
             case RestContactStatus.Requested:
             case RestContactStatus.Friend:
@@ -98,6 +98,6 @@ public class NeosContactController : INeosContactController
             }
         }
 
-        return Task.FromResult<Result<RestContact>>(friendRequest.ToRestContact() with { Status = status });
+        return Task.FromResult<Result<IRestContact>>(friendRequest.ToRestContact() with { Status = status });
     }
 }

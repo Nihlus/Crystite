@@ -46,6 +46,7 @@ public static class NeosDependentHostConfiguration
             s => s.AddNeosControllerServices<NeosApplicationController, CustomHeadlessNeosWorldController>()
                 .AddSingleton<ISystemInfo, HeadlessSystemInfo>()
                 .AddSingleton<Engine>()
+                .AddSingleton<WorldManager>(p => p.GetRequiredService<Engine>().WorldManager)
                 .AddSingleton<WorldService>()
                 .AddHostedService<StandaloneFrooxEngineService>()
         );

@@ -5,6 +5,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +26,12 @@ public interface IJobService
     Job CreateJob(string description, Func<CancellationToken, Task> action);
 
     /// <summary>
+    /// Gets the currently running jobs.
+    /// </summary>
+    /// <returns>The jobs.</returns>
+    IReadOnlyList<Job> GetJobs();
+
+    /// <summary>
     /// Attempts to retrieve the job with the given ID.
     /// </summary>
     /// <remarks>
@@ -34,4 +41,12 @@ public interface IJobService
     /// <param name="job">The job.</param>
     /// <returns>true if a matching job was found; otherwise, false.</returns>
     bool TryGetJob(Guid id, [NotNullWhen(true)] out Job? job);
+
+    /// <summary>
+    /// Attempts to peek at the job with the given ID.
+    /// </summary>
+    /// <param name="id">The ID of the job.</param>
+    /// <param name="job">The job.</param>
+    /// <returns>true if a matching job was found; otherwise, false.</returns>
+    bool TryPeekJob(Guid id, [NotNullWhen(true)] out Job? job);
 }

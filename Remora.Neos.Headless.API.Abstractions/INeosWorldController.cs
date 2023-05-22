@@ -25,7 +25,7 @@ public interface INeosWorldController
     /// </summary>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<IReadOnlyList<RestWorld>>> GetWorldsAsync(CancellationToken ct = default);
+    Task<Result<IReadOnlyList<IRestWorld>>> GetWorldsAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Gets the specified world.
@@ -33,7 +33,7 @@ public interface INeosWorldController
     /// <param name="worldId">The ID of the world.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<RestWorld>> GetWorldAsync(string worldId, CancellationToken ct = default);
+    Task<Result<IRestWorld>> GetWorldAsync(string worldId, CancellationToken ct = default);
 
     /// <summary>
     /// Starts a new world based on the given URL or template name.
@@ -42,7 +42,7 @@ public interface INeosWorldController
     /// <param name="templateName">The name of the preset template.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<RestWorld>> StartWorldAsync
+    Task<Result<IRestWorld>> StartWorldAsync
     (
         Uri? worldUrl = null,
         string? templateName = null,
@@ -71,7 +71,7 @@ public interface INeosWorldController
     /// <param name="worldId">The ID of the world.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<RestWorld>> RestartWorldAsync(string worldId, CancellationToken ct = default);
+    Task<Result<IRestWorld>> RestartWorldAsync(string worldId, CancellationToken ct = default);
 
     /// <summary>
     /// Modifies the given world.
@@ -85,7 +85,7 @@ public interface INeosWorldController
     /// <param name="maxUsers">The new maximum user count.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<RestWorld>> ModifyWorldAsync
+    Task<Result<IRestWorld>> ModifyWorldAsync
     (
         string worldId,
         string? name = null,
@@ -103,7 +103,7 @@ public interface INeosWorldController
     /// <param name="worldId">The ID of the world.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<IReadOnlyList<RestUser>>> GetWorldUsersAsync(string worldId, CancellationToken ct = default);
+    Task<Result<IReadOnlyList<IRestUser>>> GetWorldUsersAsync(string worldId, CancellationToken ct = default);
 
     /// <summary>
     /// Gets the given user in the given world.
@@ -112,7 +112,7 @@ public interface INeosWorldController
     /// <param name="userIdOrName">The ID or username of the user.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<RestUser>> GetWorldUserAsync(string worldId, string userIdOrName, CancellationToken ct = default);
+    Task<Result<IRestUser>> GetWorldUserAsync(string worldId, string userIdOrName, CancellationToken ct = default);
 
     /// <summary>
     /// Kicks the given user from the given world.
@@ -130,7 +130,7 @@ public interface INeosWorldController
     /// <param name="userIdOrName">The ID or username of the user.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<RestBan>> BanWorldUserAsync(string worldId, string userIdOrName, CancellationToken ct = default);
+    Task<Result<IRestBan>> BanWorldUserAsync(string worldId, string userIdOrName, CancellationToken ct = default);
 
     /// <summary>
     /// Silences or unsilences the given user in the given world.
@@ -178,7 +178,7 @@ public interface INeosWorldController
     /// </summary>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<RestWorld>> GetFocusedWorldAsync(CancellationToken ct = default);
+    Task<Result<IRestWorld>> GetFocusedWorldAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Focuses the given world.

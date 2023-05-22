@@ -30,9 +30,9 @@ public class NeosBanController : INeosBanController
     }
 
     /// <inheritdoc />
-    public Task<IReadOnlyList<RestBan>> GetBansAsync(CancellationToken ct = default)
+    public Task<IReadOnlyList<IRestBan>> GetBansAsync(CancellationToken ct = default)
     {
-        var bans = new List<RestBan>();
+        var bans = new List<IRestBan>();
         foreach (var listSetting in Settings.ListSettings("Security.Ban.Blacklist"))
         {
             var banPath = "Security.Ban.Blacklist." + listSetting + ".";
@@ -44,11 +44,11 @@ public class NeosBanController : INeosBanController
             bans.Add(new RestBan(id, username, machineId));
         }
 
-        return Task.FromResult<IReadOnlyList<RestBan>>(bans);
+        return Task.FromResult<IReadOnlyList<IRestBan>>(bans);
     }
 
     /// <inheritdoc />
-    public async Task<Result<RestBan>> BanUserAsync(string userIdOrName, CancellationToken ct = default)
+    public async Task<Result<IRestBan>> BanUserAsync(string userIdOrName, CancellationToken ct = default)
     {
         var getUser = await _engine.Cloud.GetUser(userIdOrName);
         if (!getUser.IsOK)

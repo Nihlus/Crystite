@@ -23,7 +23,7 @@ public static class WorldExtensions
     {
         return new RestWorld
         (
-            world.CorrespondingWorldId,
+            world.SessionId,
             world.Name,
             world.Description,
             world.AccessLevel.ToRestAccessLevel(),

@@ -30,5 +30,8 @@
       <Compile Update="Model\RestAccessLevel.cs">
         <DependentUpon>RestWorld.cs</DependentUpon>
       </Compile>
+      <Compile Update="Model\RestUserRole.cs">
+        <DependentUpon>RestUser.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

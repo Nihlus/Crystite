@@ -35,7 +35,7 @@ public class BanController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpGet]
     [Route("")]
-    public async Task<ActionResult<IEnumerable<RestBan>>> GetBansAsync(CancellationToken ct = default)
+    public async Task<ActionResult<IEnumerable<IRestBan>>> GetBansAsync(CancellationToken ct = default)
     {
         var bans = await _neosBanController.GetBansAsync(ct);
         return new(bans);
@@ -49,7 +49,7 @@ public class BanController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost]
     [Route("{userIdOrName}")]
-    public async Task<ActionResult<RestBan>> BanUserAsync(string userIdOrName, CancellationToken ct = default)
+    public async Task<ActionResult<IRestBan>> BanUserAsync(string userIdOrName, CancellationToken ct = default)
     {
         return (await _neosBanController.BanUserAsync(userIdOrName, ct)).ToActionResult();
     }

@@ -42,7 +42,7 @@ public class StockHeadlessNeosWorldController : NeosWorldController
     }
 
     /// <inheritdoc />
-    public override async Task<Result<RestWorld>> StartWorldAsync
+    public override async Task<Result<IRestWorld>> StartWorldAsync
     (
         Uri? worldUrl = null,
         string? templateName = null,
@@ -106,7 +106,7 @@ public class StockHeadlessNeosWorldController : NeosWorldController
     }
 
     /// <inheritdoc />
-    public override async Task<Result<RestWorld>> RestartWorldAsync(string worldId, CancellationToken ct = default)
+    public override async Task<Result<IRestWorld>> RestartWorldAsync(string worldId, CancellationToken ct = default)
     {
         var world = _worldManager.Worlds
             .Where(w => !w.IsUserspace())

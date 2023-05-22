@@ -6,7 +6,9 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
@@ -22,12 +24,13 @@ public sealed class JobService : IJobService
 {
     private readonly ConcurrentDictionary<Guid, Job> _jobs = new();
 
-    /// <summary>
-    /// Creates a job with the given description and associated action.
-    /// </summary>
-    /// <param name="description">The job description.</param>
-    /// <param name="action">The action.</param>
-    /// <returns>The job.</returns>
+    /// <inheritdoc />
+    public IReadOnlyList<Job> GetJobs()
+    {
+        return _jobs.Values.ToArray();
+    }
+
+    /// <inheritdoc />
     public Job CreateJob(string description, Func<CancellationToken, Task> action)
     {
         var tokenSource = new CancellationTokenSource();
@@ -55,15 +58,7 @@ public sealed class JobService : IJobService
         return job;
     }
 
-    /// <summary>
-    /// Attempts to retrieve the job with the given ID.
-    /// </summary>
-    /// <remarks>
-    /// If the job is completed, it will also be removed from the service's internal container.
-    /// </remarks>
-    /// <param name="id">The ID of the job.</param>
-    /// <param name="job">The job.</param>
-    /// <returns>true if a matching job was found; otherwise, false.</returns>
+    /// <inheritdoc />
     public bool TryGetJob(Guid id, [NotNullWhen(true)] out Job? job)
     {
         if (!_jobs.TryGetValue(id, out job))
@@ -79,4 +74,7 @@ public sealed class JobService : IJobService
 
         return true;
     }
+
+    /// <inheritdoc />
+    public bool TryPeekJob(Guid id, [NotNullWhen(true)] out Job? job) => _jobs.TryGetValue(id, out job);
 }

@@ -33,7 +33,7 @@ public class CustomHeadlessNeosWorldController : NeosWorldController
     }
 
     /// <inheritdoc />
-    public override async Task<Result<RestWorld>> StartWorldAsync
+    public override async Task<Result<IRestWorld>> StartWorldAsync
     (
         Uri? worldUrl = null,
         string? templateName = null,
@@ -86,16 +86,16 @@ public class CustomHeadlessNeosWorldController : NeosWorldController
 
         return startWorld.IsDefined(out var session)
             ? session.World.ToRestWorld()
-            : Result<RestWorld>.FromError(startWorld);
+            : Result<IRestWorld>.FromError(startWorld);
     }
 
     /// <inheritdoc />
-    public override async Task<Result<RestWorld>> RestartWorldAsync(string worldId, CancellationToken ct = default)
+    public override async Task<Result<IRestWorld>> RestartWorldAsync(string worldId, CancellationToken ct = default)
     {
         var restartWorld = await _worldService.RestartWorldAsync(worldId, ct);
 
         return restartWorld.IsDefined(out var session)
             ? session.World.ToRestWorld()
-            : Result<RestWorld>.FromError(restartWorld);
+            : Result<IRestWorld>.FromError(restartWorld);
     }
 }

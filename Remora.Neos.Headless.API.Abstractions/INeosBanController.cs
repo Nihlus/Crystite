@@ -23,7 +23,7 @@ public interface INeosBanController
     /// </summary>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<IReadOnlyList<RestBan>> GetBansAsync(CancellationToken ct = default);
+    Task<IReadOnlyList<IRestBan>> GetBansAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Bans the given user from all sessions.
@@ -31,7 +31,7 @@ public interface INeosBanController
     /// <param name="userIdOrName">The ID or username of the user to ban.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    Task<Result<RestBan>> BanUserAsync(string userIdOrName, CancellationToken ct = default);
+    Task<Result<IRestBan>> BanUserAsync(string userIdOrName, CancellationToken ct = default);
 
     /// <summary>
     /// Unbans the given user from all sessions.

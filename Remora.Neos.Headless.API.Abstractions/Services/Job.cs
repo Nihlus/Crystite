@@ -12,13 +12,9 @@ using JetBrains.Annotations;
 
 namespace Remora.Neos.Headless.API.Abstractions.Services;
 
-/// <summary>
-/// Represents an ongoing job.
-/// </summary>
-/// <param name="Id">The ID of the job.</param>
-/// <param name="Description">The human-readable description of the job.</param>
-/// <param name="Action">The associated programmatic action.</param>
-/// <param name="TokenSource">The cancellation token source associated with the job.</param>
+#pragma warning disable SA1402
+
+/// <inheritdoc />
 [PublicAPI]
 public sealed record Job
 (
@@ -26,7 +22,7 @@ public sealed record Job
     [property: JsonPropertyName("description")] string Description,
     [property: JsonIgnore] Task Action,
     [property: JsonIgnore] CancellationTokenSource TokenSource
-)
+) : IJob
 {
     /// <summary>
     /// Gets the status of the job.
@@ -40,4 +36,25 @@ public sealed record Job
             : this.Action.IsCompleted
                 ? JobStatus.Completed
                 : JobStatus.Running;
+}
+
+/// <summary>
+/// Represents an ongoing job.
+/// </summary>
+public interface IJob
+{
+    /// <summary>
+    /// Gets the status of the job.
+    /// </summary>
+    JobStatus Status { get; }
+
+    /// <summary>
+    /// Gets the ID of the job.
+    /// </summary>
+    Guid Id { get; }
+
+    /// <summary>
+    /// Gets the human-readable description of the job.
+    /// </summary>
+    string Description { get; }
 }

@@ -7,8 +7,16 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hardware.Info;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Remora.Neos.Headless;
+using Remora.Neos.Headless.API.Abstractions;
+using Remora.Neos.Headless.API.Abstractions.Services;
+using Remora.Neos.Headless.API.Services;
 using Remora.Neos.Headless.Configuration;
+using Remora.Neos.Headless.Extensions;
+using Remora.Neos.Headless.OptionConfigurators;
+using Remora.Rest.Extensions;
+using Remora.Rest.Json.Policies;
 
 #pragma warning disable ASP0013
 
@@ -36,24 +44,44 @@ applicationBuilder.Host
     .ConfigureNeosDependentCode()
     .ConfigureServices
     (
-        (c, s) =>
+        (config, services) =>
         {
-            s
+            services.ConfigureRestJsonConverters(ApiJsonMvcJsonOptionsConfigurator.Name);
+
+            services
                 .AddSingleton(assemblyResolver ?? throw new InvalidOperationException())
                 .AddSingleton<IHardwareInfo>(hardwareInfo)
-                .Configure<HeadlessApplicationConfiguration>(c.Configuration.GetSection("Headless"))
-                .Configure<NeosHeadlessConfig>(c.Configuration.GetSection("Neos"))
-                .Configure<JsonSerializerOptions>
-                (
-                    o =>
-                    {
-                        o.WriteIndented = true;
-                        o.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                        o.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                    }
-                );
+                .Configure<HeadlessApplicationConfiguration>(config.Configuration.GetSection("Headless"))
+                .Configure<NeosHeadlessConfig>(config.Configuration.GetSection("Neos"));
 
-            s.AddControllers();
+            services
+                .AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.WriteIndented = true;
+                    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                })
+                .AddApiJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.WriteIndented = false;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
+
+                    options.JsonSerializerOptions.Converters.Add
+                    (
+                        new JsonStringEnumConverter(new SnakeCaseNamingPolicy())
+                    );
+
+                    options.JsonSerializerOptions.AddDataObjectConverter<IJob, Job>()
+                        .IncludeWhenSerializing(j => j.Status)
+                        .ExcludeWhenSerializing(j => j.Action)
+                        .ExcludeWhenSerializing(j => j.TokenSource);
+
+                    options.JsonSerializerOptions.AddDataObjectConverter<IRestBan, RestBan>();
+                    options.JsonSerializerOptions.AddDataObjectConverter<IRestContact, RestContact>();
+                    options.JsonSerializerOptions.AddDataObjectConverter<IRestWorld, RestWorld>();
+                    options.JsonSerializerOptions.AddDataObjectConverter<IRestUser, RestUser>();
+                });
         }
     );
 
