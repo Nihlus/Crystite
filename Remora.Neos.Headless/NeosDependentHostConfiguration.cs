@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.API.Extensions;
 using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Implementations;
+using Remora.Neos.Headless.Patches.Engine;
 using Remora.Neos.Headless.Services;
 using Serilog;
 
@@ -57,6 +58,9 @@ public static class NeosDependentHostConfiguration
     /// <param name="host">The host.</param>
     public static void PostConfigureHost(this IHost host)
     {
+        var config = host.Services.GetRequiredService<IOptionsMonitor<NeosHeadlessConfig>>();
+        RedirectCommandLineParsing.SetRedirectedCommandLine(config.CurrentValue);
+
         var harmony = new Harmony("nu.algiz.remora.neos.headless");
         harmony.PatchAll();
 

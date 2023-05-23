@@ -11,6 +11,9 @@ namespace Remora.Neos.Headless.Configuration;
 /// <summary>
 /// Options used to configure a Neos Headless server. Read in from a JSON file on Headless start.
 /// </summary>
+/// <remarks>
+/// The base schema has been extended with some more properties, enabling further configuration.
+/// </remarks>
 /// <a href="https://raw.githubusercontent.com/Neos-Metaverse/JSONSchemas/main/schemas/NeosHeadlessConfig.schema.json"/>
 /// <param name="Comment">An optional free form comment for this file. Used for identification for your configuration.</param>
 /// <param name="UniverseID">Optionally, specifies which universe this Headless Server will be in. See our wiki article on Universes for more info.</param>
@@ -39,7 +42,11 @@ public record NeosHeadlessConfig
     string? CacheFolder = null,
     string? LogsFolder = null,
     IReadOnlyList<Uri>? AllowedUrlHosts = null,
-    IReadOnlyList<Uri>? AutoSpawnItems = null
+    IReadOnlyList<Uri>? AutoSpawnItems = null,
+    IReadOnlyList<string>? PluginAssemblies = null,
+    bool? GeneratePreCache = null,
+    int? BackgroundWorkers = null,
+    int? PriorityWorkers = null
 )
 {
     /// <summary>
