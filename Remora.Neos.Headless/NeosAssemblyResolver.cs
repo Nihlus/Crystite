@@ -59,15 +59,13 @@ public class NeosAssemblyResolver : IDisposable
 
     private IntPtr ResolveNativeAssembly(Assembly sourceAssembly, string assemblyName)
     {
-        var name = assemblyName;
-
-        var filename = name.Contains(".so") || name.Contains(".dll")
-            ? name
+        var filename = assemblyName.Contains(".so") || assemblyName.Contains(".dll")
+            ? assemblyName
             : RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
-                ? $"lib{name}.so"
+                ? $"lib{assemblyName}.so"
                 : RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
-                    ? $"{name}.dll"
-                    : name;
+                    ? $"{assemblyName}.dll"
+                    : assemblyName;
 
         // first, try loading it verbatim from the additional paths
         foreach (var additionalSearchPath in _additionalSearchPaths)
@@ -80,12 +78,12 @@ public class NeosAssemblyResolver : IDisposable
         }
 
         // then check through the normal system methods
-        if (NativeLibrary.TryLoad(name, out var handle))
+        if (NativeLibrary.TryLoad(assemblyName, out var handle))
         {
             return handle;
         }
 
-        var asLower = name.ToLowerInvariant();
+        var asLower = assemblyName.ToLowerInvariant();
         if (NativeLibrary.TryLoad(asLower, out handle))
         {
             return handle;
