@@ -37,11 +37,27 @@ public class NeosAssemblyResolver : IDisposable
     {
         _additionalSearchPaths = additionalSearchPaths;
 
-        AssemblyLoadContext.Default.ResolvingUnmanagedDll += ResolveNativeAssembly;
+        foreach (var context in AssemblyLoadContext.All)
+        {
+            context.ResolvingUnmanagedDll += ResolveNativeAssembly;
+        }
+
+        AppDomain.CurrentDomain.AssemblyLoad += AddResolverToAssembly;
         AppDomain.CurrentDomain.AssemblyResolve += ResolveManagedAssembly;
     }
 
-    private nint ResolveNativeAssembly(Assembly sourceAssembly, string assemblyName)
+    private void AddResolverToAssembly(object? sender, AssemblyLoadEventArgs args)
+    {
+        var context = AssemblyLoadContext.GetLoadContext(args.LoadedAssembly);
+        if (context is null || context == AssemblyLoadContext.Default)
+        {
+            return;
+        }
+
+        context.ResolvingUnmanagedDll += ResolveNativeAssembly;
+    }
+
+    private IntPtr ResolveNativeAssembly(Assembly sourceAssembly, string assemblyName)
     {
         var name = assemblyName;
 
@@ -125,7 +141,12 @@ public class NeosAssemblyResolver : IDisposable
 
         GC.SuppressFinalize(this);
 
-        AssemblyLoadContext.Default.ResolvingUnmanagedDll -= ResolveNativeAssembly;
+        foreach (var context in AssemblyLoadContext.All)
+        {
+            context.ResolvingUnmanagedDll -= ResolveNativeAssembly;
+        }
+
+        AppDomain.CurrentDomain.AssemblyLoad -= AddResolverToAssembly;
         AppDomain.CurrentDomain.AssemblyResolve -= ResolveManagedAssembly;
         _isDisposed = true;
     }
