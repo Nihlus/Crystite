@@ -1,0 +1,25 @@
+Source: remora-neos-headless
+Section: games
+Priority: optional
+Maintainer: Jarl Gullberg <jarl.gullberg@gmail.com>
+Build-Depends:
+ debhelper-compat (= 13),
+ dotnet-sdk-7.0
+Standards-Version: 4.6.0
+Homepage: https://github.com/Remora/Remora.Neos.Headless
+Vcs-Browser: https://github.com/Remora/Remora.Neos.Headless
+Vcs-Git: https://github.com/Remora/Remora.Neos.Headless.git
+Rules-Requires-Root: no
+
+Package: remora-neos-headless
+Architecture: any
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends},
+ dotnet-runtime-7.0
+Recommends:
+ steamcmd
+Description: Headless server for NeosVR
+ Provides a headless server for NeosVR built for modern .NET. The
+ server also comes with with several additional features, such as
+ native systemd integration and a REST API for remote control.

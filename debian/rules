@@ -1,0 +1,15 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+override_dh_auto_clean:
+	find . -type d -iname bin -exec rm -rf {} \; || true
+	find . -type d -iname obj -exec rm -rf {} \; || true
+
+override_dh_auto_build:
+	dotnet publish -f net7.0 -c Release -r linux-x64 --self-contained false -o bin Remora.Neos.Headless
+	chmod -x bin/*.dll
+
+override_dh_installsystemd:
+	dh_installsystemd --no-start --no-enable
