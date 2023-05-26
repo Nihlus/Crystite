@@ -26,10 +26,21 @@ NeosAssemblyResolver? assemblyResolver = null;
 var applicationBuilder = WebApplication.CreateBuilder(args);
 
 applicationBuilder.Host
+    .ConfigureHostConfiguration
+    (
+        builder =>
+        {
+            var systemConfig = Path.Combine("etc", "remora-neos-headless", "hostsettings.json");
+            builder.AddJsonFile(systemConfig, true);
+        }
+    )
     .ConfigureAppConfiguration
     (
         builder =>
         {
+            var systemConfig = Path.Combine("etc", "remora-neos-headless", "appsettings.json");
+            builder.AddJsonFile(systemConfig, true);
+
             var config = builder.Build();
             var headlessConfig = config.GetSection("Headless").Get<HeadlessApplicationConfiguration>()
                                  ?? new HeadlessApplicationConfiguration();
