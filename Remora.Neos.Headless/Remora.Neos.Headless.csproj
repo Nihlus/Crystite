@@ -42,6 +42,7 @@
       <PackageReference Include="Lib.Harmony" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" />
       <PackageReference Include="Remora.Rest" />
       <PackageReference Include="Remora.Results" />
       <PackageReference Include="Serilog.AspNetCore" />

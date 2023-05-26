@@ -39,6 +39,7 @@ applicationBuilder.Host
     );
 
 applicationBuilder.Host
+    .UseSystemd()
     .ConfigureNeosDependentCode()
     .ConfigureServices
     (

@@ -1,0 +1,48 @@
+[Unit]
+Description=NeosVR headless server
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=notify
+ExecStart=/usr/lib/remora-neos-headless/Remora.Neos.Headless
+Restart=always
+
+User=neosvr
+Group=neosvr
+
+WorkingDirectory=/usr/lib/remora-neos-headless
+
+# Various security options. These are mainly recommended becase NeosVR contains a complete code execution engine that
+# runs in-process, and is by its very nature always running unknown external user code. LogiX is theoretically already
+# sandboxed, but better safe than sorry.
+#
+# In summary, everything including the kitchen sink is restricted, and the only thing that is allowed is network
+# communication + read/write without the ability to execute binaries inside the configured data directory.
+NoNewPrivileges=true
+LockPersonality=true
+SystemCallArchitectures=native
+
+PrivateTmp=true
+PrivateIPC=true
+
+ProtectHome=true
+ProtectProc=noaccess
+ProtectSystem=strict
+PrivateUsers=true
+ProtectHostname=true
+ProtectClock=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectKernelLogs=true
+ProtectControlGroups=true
+
+RestrictAddressFamilies=AF_INET AF_INET6
+RestrictNamespaces=true
+RestrictRealtime=true
+
+ReadWritePaths=/var/lib/neosvr/data
+NoExecPaths=/var/lib/neosvr/data
+
+[Install]
+WantedBy=multi-user.target
