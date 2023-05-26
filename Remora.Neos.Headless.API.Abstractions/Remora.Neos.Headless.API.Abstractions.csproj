@@ -1,5 +1,5 @@
 <Project>
-    <Sdk Name="Remora.Sdk" Version="2.1.0" />
+    <Sdk Name="Remora.Sdk" Version="2.1.1" />
 
     <PropertyGroup>
         <LibraryFrameworks>$(LibraryFrameworks);netstandard2.0</LibraryFrameworks>
