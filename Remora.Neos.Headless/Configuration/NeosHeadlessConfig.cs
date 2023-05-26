@@ -28,6 +28,10 @@ namespace Remora.Neos.Headless.Configuration;
 /// <param name="LogsFolder">Optionally, override the folder which Neos will use to store logs for this Headless Server.</param>
 /// <param name="AllowedUrlHosts">A list of hosts which will automatically be allowed for in-Neos HTTP/WebSocket operations.</param>
 /// <param name="AutoSpawnItems">A list of item URIs to spawn in when a world starts.</param>
+/// <param name="PluginAssemblies">Additional assemblies to tell the engine to load.</param>
+/// <param name="GeneratePreCache">Whether pre-caches should be generated.</param>
+/// <param name="BackgroundWorkers">The number of background workers to create.</param>
+/// <param name="PriorityWorkers">The number of priority workers to create.</param>
 public record NeosHeadlessConfig
 (
     string? Comment = null,
