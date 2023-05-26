@@ -5,7 +5,6 @@
 //
 
 using System.Reflection;
-using System.Reflection.Emit;
 using HarmonyLib;
 using JetBrains.Annotations;
 using Remora.Neos.Headless.Configuration;

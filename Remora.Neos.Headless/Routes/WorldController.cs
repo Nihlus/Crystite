@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using OneOf;
 using Remora.Neos.Headless.API.Abstractions;
 using Remora.Neos.Headless.API.Abstractions.Services;
-using Remora.Neos.Headless.API.Services;
 using Remora.Neos.Headless.Extensions;
 
 namespace Remora.Neos.Headless.Routes;

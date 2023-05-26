@@ -7,11 +7,9 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Hardware.Info;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Remora.Neos.Headless;
 using Remora.Neos.Headless.API.Abstractions;
 using Remora.Neos.Headless.API.Abstractions.Services;
-using Remora.Neos.Headless.API.Services;
 using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Extensions;
 using Remora.Neos.Headless.OptionConfigurators;
