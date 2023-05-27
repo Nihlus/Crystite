@@ -1,3 +1,5 @@
 tar-ignore = ".idea"
 tar-ignore = ".git"
 tar-ignore = ".gitignore"
+tar-ignore = "**/bin"
+tar-ignore = "**/obj"

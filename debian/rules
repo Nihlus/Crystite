@@ -8,8 +8,7 @@ export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 	dh $@
 
 override_dh_auto_clean:
-	find . -type d -iname bin -exec rm -rf {} \; || true
-	find . -type d -iname obj -exec rm -rf {} \; || true
+	dotnet clean
 
 override_dh_auto_build:
 	dotnet publish -f net7.0 -c Release -r linux-x64 --self-contained false -o bin Remora.Neos.Headless
