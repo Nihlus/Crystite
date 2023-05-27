@@ -4,4 +4,3 @@ bin/*.deps.json usr/lib/remora-neos-headless/
 bin/*.runtimeconfig.json usr/lib/remora-neos-headless/
 bin/steam_appid.txt usr/lib/remora-neos-headless/
 bin/Remora.Neos.Headless usr/lib/remora-neos-headless/
-Remora.Neos.Headless/systemd/* usr/lib/systemd/system/

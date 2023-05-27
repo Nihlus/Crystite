@@ -4,4 +4,4 @@ remora-neos-headless/
 debhelper-build-stamp
 files
 *.substvars
-
+*.debhelper
