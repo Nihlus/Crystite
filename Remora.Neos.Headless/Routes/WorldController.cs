@@ -303,11 +303,13 @@ public class WorldController : ControllerBase
     /// <param name="value">The value to send to the impulse.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
+    [HttpPost]
+    [Route("{id}/impulses/{tag}")]
     public async Task<ActionResult> SendImpulseAsync
     (
         string id,
         string tag,
-        OneOf<float, int, string>? value = null,
+        [FromForm] OneOf<int, float, string>? value = null,
         CancellationToken ct = default
     )
         => (await _worldController.SendImpulseAsync(id, tag, value, ct)).ToActionResult();

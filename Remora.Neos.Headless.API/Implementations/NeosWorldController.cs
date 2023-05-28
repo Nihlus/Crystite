@@ -423,7 +423,7 @@ public abstract class NeosWorldController : INeosWorldController
     (
         string worldId,
         string tag,
-        OneOf<float, int, string>? value = null,
+        OneOf<int, float, string>? value = null,
         CancellationToken ct = default
     )
     {
@@ -456,18 +456,6 @@ public abstract class NeosWorldController : INeosWorldController
             {
                 value.Value.Switch
                 (
-                    f =>
-                    {
-                        var list = Pool.BorrowList<DynamicImpulseReceiverWithValue<float>>();
-                        {
-                            world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
-                            foreach (var dynamicImpulseReceiver in list)
-                            {
-                                dynamicImpulseReceiver.Trigger(f);
-                            }
-                        }
-                        Pool.Return(ref list);
-                    },
                     i =>
                     {
                         var list = Pool.BorrowList<DynamicImpulseReceiverWithValue<int>>();
@@ -476,6 +464,18 @@ public abstract class NeosWorldController : INeosWorldController
                             foreach (var dynamicImpulseReceiver in list)
                             {
                                 dynamicImpulseReceiver.Trigger(i);
+                            }
+                        }
+                        Pool.Return(ref list);
+                    },
+                    f =>
+                    {
+                        var list = Pool.BorrowList<DynamicImpulseReceiverWithValue<float>>();
+                        {
+                            world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
+                            foreach (var dynamicImpulseReceiver in list)
+                            {
+                                dynamicImpulseReceiver.Trigger(f);
                             }
                         }
                         Pool.Return(ref list);

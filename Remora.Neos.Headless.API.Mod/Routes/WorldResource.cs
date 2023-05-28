@@ -526,18 +526,18 @@ internal sealed class WorldResource
 
         var data = await context.Request.ParseFormUrlEncodedData();
 
-        OneOf<float, int, string>? value;
+        OneOf<int, float, string>? value;
         if (!data.TryGetValue("value", out var raw))
         {
             value = null;
         }
+        else if (int.TryParse(raw, out var intValue))
+        {
+            value = intValue;
+        }
         else if (float.TryParse(raw, out var floatValue))
         {
             value = floatValue;
-        }
-        else if (!int.TryParse(raw, out var intValue))
-        {
-            value = intValue;
         }
         else
         {

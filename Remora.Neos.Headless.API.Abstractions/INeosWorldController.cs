@@ -200,7 +200,7 @@ public interface INeosWorldController
     (
         string worldId,
         string tag,
-        OneOf<float, int, string>? value = null,
+        OneOf<int, float, string>? value = null,
         CancellationToken ct = default
     );
 }
