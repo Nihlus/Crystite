@@ -16,7 +16,7 @@ namespace Remora.Neos.Headless.Patches.Engine;
 /// <summary>
 /// Disables stack trace gathering for threads other than the current one.
 /// </summary>
-[HarmonyPatch(typeof(FrooxEngine.Engine), nameof(FrooxEngine.Engine.RunUpdateLoop))]
+[HarmonyPatch("FrooxEngine.Engine+<<RunUpdateLoop>b__328_0>d", "MoveNext")]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public static class DisableStackTraceGathering
 {
