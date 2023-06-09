@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <TargetFramework/>
+        <TargetFramework />
         <LibraryFrameworks>net462</LibraryFrameworks>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
