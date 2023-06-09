@@ -182,9 +182,18 @@ debuild -us -uc
 The resulting packages will be placed in the directory above the root of the
 repository.
 
+## Technical Details
+If you're interested in the nitty-gritty of how (and why!) the server works, or
+if you just want some informal technical reading, please check out [this][6]
+document.
+
+It contains a bit of a dive into some internals and has a couple of explanations
+that could be useful for future work with NeosVR and headless servers.
+
 
 [1]: https://raw.githubusercontent.com/Neos-Metaverse/JSONSchemas/main/schemas/NeosHeadlessConfig.schema.json
 [2]: https://learn.microsoft.com/en-us/dotnet/core/extensions/logging#configure-logging
 [3]: https://github.com/serilog/serilog-settings-configuration
 [4]: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/options
 [5]: ../docs/index.md
+[6]: docs/nitty-gritty.md
