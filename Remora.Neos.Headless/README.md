@@ -46,7 +46,7 @@ sudo apt install steamcmd
 
 cd /var/lib/neosvr
 sudo -u neosvr /usr/games/steamcmd \
-  +force_install_dir /var/lib/neosvr/NeosVR 
+  +force_install_dir /var/lib/neosvr/NeosVR \
   +login USERNAME PASSWORD \
   +app_update 740250 \
   -beta headless-client \
