@@ -1,3 +1,10 @@
+remora-neos-headless (1.0.0+deb11~preview3) UNRELEASED; urgency=medium
+
+  * Fix a conflict between HardwareInfo and the hardening options used.
+  * Fix non-rooted path to configuration files.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 10 Jun 2023 21:11:00 +0200
+
 remora-neos-headless (1.0.0+deb11~preview2) UNRELEASED; urgency=medium
 
   * Fix system user creation.
