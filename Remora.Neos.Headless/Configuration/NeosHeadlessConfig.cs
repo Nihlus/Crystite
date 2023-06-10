@@ -75,12 +75,6 @@ public record NeosHeadlessConfig
     public static string DefaultCacheFolder => Path.Combine(Directory.GetCurrentDirectory(), "Cache");
 
     /// <summary>
-    /// Gets the default log folder.
-    /// </summary>
-    [JsonIgnore]
-    public static string DefaultLogsFolder => Path.Combine(Directory.GetCurrentDirectory(), "Cache");
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="NeosHeadlessConfig"/> class.
     /// </summary>
     public NeosHeadlessConfig()
