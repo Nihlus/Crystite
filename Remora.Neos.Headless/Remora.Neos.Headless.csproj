@@ -35,6 +35,7 @@
         <NeosReference Include="FrooxEngine" Private="false" />
         <NeosReference Include="BaseX" Private="false" />
         <NeosReference Include="CloudX.Shared" Private="false" />
+        <NeosReference Include="PostX" Private="false" />
     </ItemGroup>
 
     <ItemGroup>
