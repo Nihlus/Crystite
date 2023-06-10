@@ -40,8 +40,8 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 RestrictNamespaces=true
 RestrictRealtime=true
 
-ReadWritePaths=/var/lib/neosvr/data /var/log/neosvr
-NoExecPaths=/var/lib/neosvr/data /var/log/neosvr
+ReadWritePaths=/var/lib/neosvr /var/log/neosvr
+NoExecPaths=/var/lib/neosvr /var/log/neosvr
 
 [Install]
 WantedBy=multi-user.target
