@@ -5,6 +5,7 @@
 //
 
 using FrooxEngine;
+using Microsoft.Extensions.Hosting.Systemd;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Services;
@@ -23,6 +24,7 @@ public class StandaloneFrooxEngineService : BackgroundService
     private readonly Engine _engine;
     private readonly ISystemInfo _systemInfo;
     private readonly WorldService _worldService;
+    private readonly ISystemdNotifier? _systemdNotifier;
 
     private bool _engineShutdownComplete;
 
@@ -35,6 +37,7 @@ public class StandaloneFrooxEngineService : BackgroundService
     /// <param name="engine">The engine.</param>
     /// <param name="systemInfo">Information about the system.</param>
     /// <param name="worldService">The world service.</param>
+    /// <param name="systemdNotifier">The systemd notifier.</param>
     public StandaloneFrooxEngineService
     (
         ILogger<StandaloneFrooxEngineService> log,
@@ -42,7 +45,8 @@ public class StandaloneFrooxEngineService : BackgroundService
         IOptions<NeosHeadlessConfig> config,
         Engine engine,
         ISystemInfo systemInfo,
-        WorldService worldService
+        WorldService worldService,
+        ISystemdNotifier? systemdNotifier = null
     )
     {
         _log = log;
@@ -51,6 +55,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         _engine = engine;
         _systemInfo = systemInfo;
         _worldService = worldService;
+        _systemdNotifier = systemdNotifier;
     }
 
     /// <inheritdoc/>
@@ -190,6 +195,14 @@ public class StandaloneFrooxEngineService : BackgroundService
             try
             {
                 _engine.RunUpdateLoop();
+
+                if (ct.IsCancellationRequested && _systemdNotifier is not null)
+                {
+                    _systemdNotifier.Notify
+                    (
+                        new ServiceState($"EXTEND_TIMEOUT_USEC={(int)TimeSpan.FromSeconds(15).TotalMicroseconds}")
+                    );
+                }
             }
             catch (Exception e)
             {
