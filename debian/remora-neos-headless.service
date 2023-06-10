@@ -11,7 +11,7 @@ Restart=always
 User=neosvr
 Group=neosvr
 
-WorkingDirectory=/usr/lib/remora-neos-headless
+WorkingDirectory=/var/lib/neosvr
 
 # Various security options. These are mainly recommended becase NeosVR contains a complete code execution engine that
 # runs in-process, and is by its very nature always running unknown external user code. LogiX is theoretically already
