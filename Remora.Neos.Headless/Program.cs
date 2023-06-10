@@ -19,7 +19,9 @@ using Remora.Rest.Json.Policies;
 #pragma warning disable ASP0013
 
 var hardwareInfo = new HardwareInfo();
-hardwareInfo.RefreshAll();
+hardwareInfo.RefreshCPUList();
+hardwareInfo.RefreshVideoControllerList();
+hardwareInfo.RefreshMemoryList();
 
 NeosAssemblyResolver? assemblyResolver = null;
 
