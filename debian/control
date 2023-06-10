@@ -17,7 +17,8 @@ Architecture: any
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- dotnet-runtime-7.0
+ dotnet-runtime-7.0,
+ aspnetcore-runtime-7.0
 Recommends:
  steamcmd
 Description: Headless server for NeosVR
