@@ -32,7 +32,6 @@ public class GuardDisposal
     )
     {
         var enumeratedInstructions = instructions.ToArray();
-        var disposeMethod = typeof(IDisposable).GetMethod(nameof(IDisposable.Dispose));
 
         Label? nextInstructionLabel = null;
         for (var i = 0; i < enumeratedInstructions.Length; i++)
