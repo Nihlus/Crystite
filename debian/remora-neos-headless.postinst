@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+#DEBHELPER#
+
+case "${1}" in
+  configure)
+    chown root:neosvr /etc/remora-neos-headless/appsettings.json
+    chmod 640 /etc/remora-neos-headless/appsettings.json
+    ;;
+  *)
+    ;;
+esac
