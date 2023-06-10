@@ -59,11 +59,19 @@ public class StandaloneFrooxEngineService : BackgroundService
         _engine.UsernameOverride = _config.UsernameOverride;
         _engine.EnvironmentShutdownCallback = () => _engineShutdownComplete = true;
 
+        var dataFolder = string.IsNullOrWhiteSpace(_config.DataFolder)
+            ? NeosHeadlessConfig.DefaultDataFolder
+            : _config.DataFolder;
+
+        var cacheFolder = string.IsNullOrWhiteSpace(_config.CacheFolder)
+            ? NeosHeadlessConfig.DefaultCacheFolder
+            : _config.CacheFolder;
+
         await _engine.Initialize
         (
             _applicationConfig.NeosPath,
-            _config.DataFolder ?? NeosHeadlessConfig.DefaultDataFolder,
-            _config.CacheFolder ?? NeosHeadlessConfig.DefaultCacheFolder,
+            dataFolder,
+            cacheFolder,
             _systemInfo,
             null,
             true
