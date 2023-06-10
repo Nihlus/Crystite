@@ -1,3 +1,13 @@
+remora-neos-headless (1.0.0+deb11~preview4) UNRELEASED; urgency=medium
+
+  * Fix an issue where the program would not detect systemd.
+  * Fix Engine::Dispose not checking for null before disposing members.
+  * Allow Read/Write to everything in /var/lib/neosvr.
+  * Use /var/lib/neosvr as the working directory.
+  * Replace the default assembly resolver used by Neos when post-processing assemblies.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 10 Jun 2023 23:42:00 +0200
+
 remora-neos-headless (1.0.0+deb11~preview3) UNRELEASED; urgency=medium
 
   * Fix a conflict between HardwareInfo and the hardening options used.
