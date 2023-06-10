@@ -27,7 +27,6 @@ PrivateTmp=true
 PrivateIPC=true
 
 ProtectHome=true
-ProtectProc=noaccess
 ProtectSystem=strict
 PrivateUsers=true
 ProtectHostname=true
