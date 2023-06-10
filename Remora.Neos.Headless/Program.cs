@@ -32,7 +32,10 @@ applicationBuilder.Host
     (
         builder =>
         {
-            var systemConfig = Path.Combine("etc", "remora-neos-headless", "hostsettings.json");
+            var systemConfig = OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD()
+                ? Path.Combine("/", "etc", "remora-neos-headless", "hostsettings.json")
+                : Path.Combine(Directory.GetCurrentDirectory(), "hostsettings.json");
+
             builder.AddJsonFile(systemConfig, true);
         }
     )
@@ -40,7 +43,10 @@ applicationBuilder.Host
     (
         builder =>
         {
-            var systemConfig = Path.Combine("etc", "remora-neos-headless", "appsettings.json");
+            var systemConfig = OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD()
+                ? Path.Combine("/", "etc", "remora-neos-headless", "appsettings.json")
+                : Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+
             builder.AddJsonFile(systemConfig, true);
 
             var config = builder.Build();
