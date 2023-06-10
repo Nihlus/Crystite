@@ -12,6 +12,7 @@ using Remora.Neos.Headless.API.Extensions;
 using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Implementations;
 using Remora.Neos.Headless.Patches.Engine;
+using Remora.Neos.Headless.Patches.NeosAssemblyPostProcessor;
 using Remora.Neos.Headless.Services;
 using Serilog;
 
@@ -60,6 +61,9 @@ public static class NeosDependentHostConfiguration
     {
         var config = host.Services.GetRequiredService<IOptionsMonitor<NeosHeadlessConfig>>();
         RedirectCommandLineParsing.SetRedirectedCommandLine(config.CurrentValue);
+
+        OverrideCecilAssemblyResolver.OverridingAssemblyResolver = host.Services
+            .GetRequiredService<NeosAssemblyResolver>();
 
         var harmony = new Harmony("nu.algiz.remora.neos.headless");
         harmony.PatchAll();

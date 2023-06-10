@@ -7,13 +7,14 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
+using Mono.Cecil;
 
 namespace Remora.Neos.Headless;
 
 /// <summary>
 /// Defines functionality to assist with resolution of NeosVR assemblies.
 /// </summary>
-public class NeosAssemblyResolver : IDisposable
+public class NeosAssemblyResolver : DefaultAssemblyResolver, IDisposable
 {
     private readonly IReadOnlyList<string> _additionalSearchPaths;
     private readonly IReadOnlyDictionary<string, string[]> _knownNativeLibraryMappings = new Dictionary<string, string[]>
@@ -44,6 +45,16 @@ public class NeosAssemblyResolver : IDisposable
 
         AppDomain.CurrentDomain.AssemblyLoad += AddResolverToAssembly;
         AppDomain.CurrentDomain.AssemblyResolve += ResolveManagedAssembly;
+
+        this.ResolveFailure += ResolveCecilAssembly;
+    }
+
+    private AssemblyDefinition? ResolveCecilAssembly(object sender, AssemblyNameReference reference)
+    {
+        // We only handle non-system assemblies
+        return reference.FullName.StartsWith("System")
+            ? null
+            : SearchDirectory(reference, _additionalSearchPaths, new ReaderParameters());
     }
 
     private void AddResolverToAssembly(object? sender, AssemblyLoadEventArgs args)
@@ -130,8 +141,10 @@ public class NeosAssemblyResolver : IDisposable
     }
 
     /// <inheritdoc />
-    public void Dispose()
+    protected override void Dispose(bool disposing)
     {
+        base.Dispose(disposing);
+
         if (_isDisposed)
         {
             return;
