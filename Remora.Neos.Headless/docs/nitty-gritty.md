@@ -257,6 +257,12 @@ about types that live in the new `mscorlib` equivalent. In testing, it's been
 working well - time will tell if any exceptions to the rule need to be 
 implemented.
 
+For serialization (that is, saving object graphs), a similar patch must be
+implemented. `FrooxEngine.Worker.WorkerTypeName` naively uses `FullName`, 
+and can be redirected to use the forwarder-aware type name generator. The same
+goes for `FrooxEngine.SaveControl.StoreTypeVersions`, which also accesses the 
+full type name directly.
+
 If you're interested in the specifics, I highly recommend perusing the patches
 in the source code. There are some interesting nuances to how Neos uses the 
 type name in its serialization logic that necessitated a little bit of 
