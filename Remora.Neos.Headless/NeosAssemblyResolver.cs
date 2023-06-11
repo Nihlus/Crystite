@@ -105,15 +105,9 @@ public class NeosAssemblyResolver : DefaultAssemblyResolver
             return IntPtr.Zero;
         }
 
-        foreach (var candidate in candidates)
-        {
-            if (NativeLibrary.TryLoad(candidate, out handle))
-            {
-                return handle;
-            }
-        }
-
-        return IntPtr.Zero;
+        return candidates.Any(candidate => NativeLibrary.TryLoad(candidate, out handle))
+            ? handle
+            : IntPtr.Zero;
     }
 
     private Assembly? ResolveManagedAssembly(object? sender, ResolveEventArgs args)
