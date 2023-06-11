@@ -1,6 +1,10 @@
 Remora.Neos.Headless
 ====================
 
+> **Warning**
+> This is experimental software in early alpha. Only use it for worlds you are
+> comfortable damaging beyond repair should you hit a bug in the software. 
+
 Remora.Neos.Headless is a custom headless server for NeosVR for modern .NET. The
 server comes with a variety of benefits, chief among them a faster and more
 efficient runtime. In addition, the server exposes a REST API for programmatic
