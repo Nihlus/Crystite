@@ -8,6 +8,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Headless.API.Ab
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Headless.API", "Remora.Neos.Headless.API\Remora.Neos.Headless.API.csproj", "{C7BD3711-A35F-40D9-8539-EC119389C324}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2EA42C3D-CDCA-4556-8403-B6A8663CB4F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Headless.Tests", "Tests\Remora.Neos.Headless.Tests\Remora.Neos.Headless.Tests.csproj", "{E2CAD203-05F7-46DB-86DA-6D85F6223FBF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +34,12 @@ Global
 		{C7BD3711-A35F-40D9-8539-EC119389C324}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C7BD3711-A35F-40D9-8539-EC119389C324}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C7BD3711-A35F-40D9-8539-EC119389C324}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2CAD203-05F7-46DB-86DA-6D85F6223FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2CAD203-05F7-46DB-86DA-6D85F6223FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2CAD203-05F7-46DB-86DA-6D85F6223FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2CAD203-05F7-46DB-86DA-6D85F6223FBF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E2CAD203-05F7-46DB-86DA-6D85F6223FBF} = {2EA42C3D-CDCA-4556-8403-B6A8663CB4F3}
 	EndGlobalSection
 EndGlobal
