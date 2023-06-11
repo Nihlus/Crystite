@@ -49,7 +49,14 @@ public static class ForwardedTypeSerialization
         return false;
     }
 
-    private static string GetSerializableTypeName(this Type type, bool qualifyAssembly = false)
+    /// <summary>
+    /// Gets a serializable type name for the given type, that is, a type name that uses a full name compatible with
+    /// both modern .NET and the legacy .NET Framework.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <param name="qualifyAssembly">Whether to fully qualify the assembly.</param>
+    /// <returns>The serializable type name.</returns>
+    public static string GetSerializableTypeName(this Type type, bool qualifyAssembly = false)
     {
         switch (qualifyAssembly)
         {
