@@ -104,6 +104,11 @@ public static class ForwardedTypeSerialization
             nameBuilder.Append(']');
         }
 
+        if (!qualifyAssembly)
+        {
+            return nameBuilder.ToString();
+        }
+
         // Respect TypeForwardedFromAttribute to enable cross-framework de/serialization
         var forwardedFrom = type.GetCustomAttribute<TypeForwardedFromAttribute>();
 
