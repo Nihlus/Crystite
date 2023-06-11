@@ -1,3 +1,10 @@
+remora-neos-headless (1.0.0+deb11~preview5) UNRELEASED; urgency=medium
+
+  * Fix type forwarding not being applied to saved records (Closes #1).
+  * Implement automatic cache expiration and cleanup.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 11 Jun 2023 16:55:00 +0200
+
 remora-neos-headless (1.0.0+deb11~preview4) UNRELEASED; urgency=medium
 
   * Fix an issue where the program would not detect systemd.
