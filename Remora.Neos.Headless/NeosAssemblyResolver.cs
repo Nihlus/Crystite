@@ -14,7 +14,7 @@ namespace Remora.Neos.Headless;
 /// <summary>
 /// Defines functionality to assist with resolution of NeosVR assemblies.
 /// </summary>
-public class NeosAssemblyResolver : DefaultAssemblyResolver, IDisposable
+public class NeosAssemblyResolver : DefaultAssemblyResolver
 {
     private readonly IReadOnlyList<string> _additionalSearchPaths;
     private readonly IReadOnlyDictionary<string, string[]> _knownNativeLibraryMappings = new Dictionary<string, string[]>
@@ -150,8 +150,6 @@ public class NeosAssemblyResolver : DefaultAssemblyResolver, IDisposable
             return;
         }
 
-        GC.SuppressFinalize(this);
-
         foreach (var context in AssemblyLoadContext.All)
         {
             context.ResolvingUnmanagedDll -= ResolveNativeAssembly;
@@ -159,6 +157,8 @@ public class NeosAssemblyResolver : DefaultAssemblyResolver, IDisposable
 
         AppDomain.CurrentDomain.AssemblyLoad -= AddResolverToAssembly;
         AppDomain.CurrentDomain.AssemblyResolve -= ResolveManagedAssembly;
+
+        this.ResolveFailure -= ResolveCecilAssembly;
         _isDisposed = true;
     }
 }
