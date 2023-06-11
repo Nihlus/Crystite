@@ -10,7 +10,14 @@ namespace Remora.Neos.Headless.Configuration;
 /// Represents application-level configuration of the headless client outside of NeosVR-defined configuration.
 /// </summary>
 /// <param name="NeosPath">The path to the NeosVR installation directory.</param>
-public record HeadlessApplicationConfiguration(string NeosPath)
+/// <param name="AssetCleanupInterval">The interval at which to clean up on-disk assets.</param>
+/// <param name="MaxAssetAge">The maximum time an asset can be untouched for until it is deleted.</param>
+public record HeadlessApplicationConfiguration
+(
+    string NeosPath,
+    TimeSpan? AssetCleanupInterval = null,
+    TimeSpan? MaxAssetAge = null
+)
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="HeadlessApplicationConfiguration"/> class.

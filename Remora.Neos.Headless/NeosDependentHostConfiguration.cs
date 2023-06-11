@@ -48,9 +48,11 @@ public static class NeosDependentHostConfiguration
             s => s.AddNeosControllerServices<NeosApplicationController, CustomHeadlessNeosWorldController>()
                 .AddSingleton<ISystemInfo, HeadlessSystemInfo>()
                 .AddSingleton<Engine>()
+                .AddSingleton<LocalDB>(p => p.GetRequiredService<Engine>().LocalDB)
                 .AddSingleton<WorldManager>(p => p.GetRequiredService<Engine>().WorldManager)
                 .AddSingleton<WorldService>()
                 .AddHostedService<StandaloneFrooxEngineService>()
+                .AddHostedService<AssetHooverService>()
         );
 
     /// <summary>

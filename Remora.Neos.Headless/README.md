@@ -92,12 +92,18 @@ itself.
 
 The following keys are defined for this section.
 
-| Name     | Type   | Description                                   | Default                | Required |
-|----------|--------|-----------------------------------------------|------------------------|----------|
-| neosPath | string | The path to the NeosVR installation directory | /var/lib/neosvr/NeosVR | yes      |
+| Name                 | Type   | Description                                                            | Default                | Required |
+|----------------------|--------|------------------------------------------------------------------------|------------------------|----------|
+| neosPath             | string | The path to the NeosVR installation directory                          | /var/lib/neosvr/NeosVR | yes      |
+| assetCleanupInterval | string | The interval at which cached files should be cleaned up                | null                   | no       |
+| maxAssetAge          | string | The maximum time a cached asset can remain unused before being deleted | null                   | no       |
 
 > It is an absolute requirement that `neosPath` points to a valid NeosVR 
 > installation. The server will not run without access to NeosVR's assemblies.
+
+`assetCleanupInterval` and `maxAssetAge` are C# `TimeSpan` strings, meaning that they are formatted as colon-separated
+groups of units of time. For example, ten days would be expressed as `10:00:00:00`, five seconds as `00:00:05`, and 
+twenty-five minutes as `00:25:00`.
 
 ### `Neos`
 This section contains the normal headless client's JSON configuration as defined

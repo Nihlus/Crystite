@@ -36,10 +36,12 @@
         <NeosReference Include="BaseX" Private="false" />
         <NeosReference Include="CloudX.Shared" Private="false" />
         <NeosReference Include="PostX" Private="false" />
+        <NeosReference Include="LiteDB" Private="false" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Hardware.Info" />
+      <PackageReference Include="Humanizer.Core" />
       <PackageReference Include="Lib.Harmony" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
