@@ -13,6 +13,7 @@ using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Implementations;
 using Remora.Neos.Headless.Patches.Engine;
 using Remora.Neos.Headless.Patches.NeosAssemblyPostProcessor;
+using Remora.Neos.Headless.Patches.RecordUploadTaskBase;
 using Remora.Neos.Headless.Services;
 using Serilog;
 
@@ -66,6 +67,15 @@ public static class NeosDependentHostConfiguration
 
         OverrideCecilAssemblyResolver.OverridingAssemblyResolver = host.Services
             .GetRequiredService<NeosAssemblyResolver>();
+
+        var headlessConfig = host.Services.GetRequiredService<IOptionsMonitor<HeadlessApplicationConfiguration>>()
+            .CurrentValue;
+
+        var logFactory = host.Services.GetRequiredService<ILoggerFactory>();
+
+        CorrectErrorHandling.Log = logFactory.CreateLogger(typeof(CorrectErrorHandling));
+        CorrectErrorHandling.MaxUploadRetries = headlessConfig.MaxUploadRetries ?? 3;
+        CorrectErrorHandling.RetryDelay = headlessConfig.RetryDelay ?? TimeSpan.Zero;
 
         var harmony = new Harmony("nu.algiz.remora.neos.headless");
         harmony.PatchAll();
