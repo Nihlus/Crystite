@@ -57,7 +57,7 @@ public static partial class CorrectErrorHandling
     /// <param name="cancellationToken">The cancellation token for this operation.</param>
     /// <returns>Always false.</returns>
     [HarmonyPrefix]
-    [HarmonyPatch("RunUpload")]
+    [HarmonyPatch(nameof(UploadTask.RunUpload))]
     public static bool RunUploadPrefix(UploadTask __instance, out Task __result, CancellationToken cancellationToken)
     {
         var uploadTask = _runUploadInternalMethod.Invoke(__instance, new object[] { cancellationToken }) as Task
