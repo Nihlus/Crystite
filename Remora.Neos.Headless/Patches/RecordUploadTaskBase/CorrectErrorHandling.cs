@@ -127,7 +127,6 @@ public static partial class CorrectErrorHandling
     {
         return uploadTask.FailReason.Trim().ToLowerInvariant() switch
         {
-            "conflict" => false,
             var r when r.Contains("conflict") => false,
             var r when r.Contains("preprocessing failed") => false,
             var r when r.Contains("state: 429") => true, // catch this before the next line
