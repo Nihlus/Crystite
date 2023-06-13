@@ -5,6 +5,7 @@
 //
 
 using System.Reflection;
+using System.Text.RegularExpressions;
 using HarmonyLib;
 using JetBrains.Annotations;
 
@@ -21,11 +22,17 @@ namespace Remora.Neos.Headless.Patches.RecordUploadTaskBase;
 /// <remarks>Based on code from https://github.com/stiefeljackal/JworkzNeosFixFrickenSync.</remarks>
 [HarmonyPatch(typeof(UploadTask))]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-public static class CorrectErrorHandling
+public static partial class CorrectErrorHandling
 {
     private static MethodInfo _runUploadInternalMethod = AccessTools.Method(typeof(UploadTask), "RunUploadInternal");
     private static FieldInfo _completionSourceField = AccessTools.Field(typeof(UploadTask), "_completionSource");
     private static MethodInfo _failMethod = AccessTools.Method(typeof(UploadTask), "Fail");
+
+    [GeneratedRegex(@"state: 4\d\d")]
+    private static partial Regex ClientErrorMatcher();
+
+    [GeneratedRegex(@"state: (501|505|511)")]
+    private static partial Regex TerminalServerErrorMatcher();
 
     /// <summary>
     /// Sets the logging instance for this type.
@@ -88,6 +95,11 @@ public static class CorrectErrorHandling
                             retryCount + 1,
                             maxRetryCount
                         );
+
+                        if (!__instance.ShouldRetry())
+                        {
+                            break;
+                        }
                     }
 
                     ++retryCount;
@@ -109,5 +121,19 @@ public static class CorrectErrorHandling
         );
 
         return false;
+    }
+
+    private static bool ShouldRetry(this UploadTask uploadTask)
+    {
+        return uploadTask.FailReason.Trim().ToLowerInvariant() switch
+        {
+            "conflict" => false,
+            var r when r.Contains("conflict") => false,
+            var r when r.Contains("preprocessing failed") => false,
+            var r when r.Contains("state: 429") => true, // catch this before the next line
+            var r when ClientErrorMatcher().IsMatch(r) => false,
+            var r when TerminalServerErrorMatcher().IsMatch(r) => false,
+            _ => true
+        };
     }
 }
