@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: ThreadAbortPatch.cs
+//  SPDX-FileName: UseThreadInterrupt.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -8,14 +8,14 @@ using System.Reflection;
 using HarmonyLib;
 using JetBrains.Annotations;
 
-namespace Remora.Neos.Headless.Patches;
+namespace Remora.Neos.Headless.Patches.WorkProcessor.ThreadWorker;
 
 /// <summary>
 /// Patches instances of hard thread aborts with a soft interrupt.
 /// </summary>
 [HarmonyPatch]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-public class ThreadAbortPatch
+public class UseThreadInterrupt
 {
     /// <summary>
     /// Gets the target method for patching.
