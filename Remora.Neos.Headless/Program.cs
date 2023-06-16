@@ -6,7 +6,10 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using CommandLiners;
 using Hardware.Info;
+using Microsoft.Extensions.Configuration.CommandLine;
+using Microsoft.Extensions.Options;
 using Remora.Neos.Headless;
 using Remora.Neos.Headless.API.Abstractions;
 using Remora.Neos.Headless.API.Abstractions.Services;
@@ -16,46 +19,42 @@ using Remora.Neos.Headless.OptionConfigurators;
 using Remora.Rest.Extensions;
 using Remora.Rest.Json.Policies;
 
-#pragma warning disable ASP0013
-
 var hardwareInfo = new HardwareInfo();
 hardwareInfo.RefreshCPUList();
 hardwareInfo.RefreshVideoControllerList();
 hardwareInfo.RefreshMemoryList();
 
-NeosAssemblyResolver? assemblyResolver = null;
-
 var applicationBuilder = WebApplication.CreateBuilder(args);
 
-applicationBuilder.Host
-    .ConfigureHostConfiguration
-    (
-        builder =>
-        {
-            var systemConfig = OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD()
-                ? Path.Combine("/", "etc", "remora-neos-headless", "hostsettings.json")
-                : Path.Combine(Directory.GetCurrentDirectory(), "hostsettings.json");
+var systemConfig = OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD()
+    ? Path.Combine("/", "etc", "remora-neos-headless", "appsettings.json")
+    : Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
 
-            builder.AddJsonFile(systemConfig, true);
-        }
+applicationBuilder.Configuration.AddJsonFile(systemConfig, true);
+
+var headlessConfig = applicationBuilder.Configuration.GetSection("Headless").Get<HeadlessApplicationConfiguration>()
+                     ?? new HeadlessApplicationConfiguration();
+
+var assemblyResolver = new NeosAssemblyResolver(new[] { headlessConfig.NeosPath });
+
+var oldProvider = applicationBuilder.Configuration.Sources.FirstOrDefault(s => s is CommandLineConfigurationSource);
+if (oldProvider is not null)
+{
+    applicationBuilder.Configuration.Sources.Remove(oldProvider);
+}
+
+applicationBuilder.Configuration.AddCommandLineOptions
+(
+    args.ToPosix<CommandLineOptions>
+    (
+        map => map
+            .Add("force-sync", o => o.ForceSync)
+            .Add("delete-unsynced", o => o.DeleteUnsynced)
+            .Add("repair-database", o => o.RepairDatabase)
     )
-    .ConfigureAppConfiguration
-    (
-        builder =>
-        {
-            var systemConfig = OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD()
-                ? Path.Combine("/", "etc", "remora-neos-headless", "appsettings.json")
-                : Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+);
 
-            builder.AddJsonFile(systemConfig, true);
-
-            var config = builder.Build();
-            var headlessConfig = config.GetSection("Headless").Get<HeadlessApplicationConfiguration>()
-                                 ?? new HeadlessApplicationConfiguration();
-
-            assemblyResolver = new NeosAssemblyResolver(new[] { headlessConfig.NeosPath });
-        }
-    );
+applicationBuilder.Services.Configure<CommandLineOptions>(o => applicationBuilder.Configuration.Bind(o));
 
 applicationBuilder.Host
     .UseSystemd()
@@ -105,8 +104,18 @@ applicationBuilder.Host
 
 var host = applicationBuilder.Build();
 
+var logger = host.Services.GetRequiredService<ILogger<Program>>();
+
+var commandLineOptions = host.Services.GetRequiredService<IOptions<CommandLineOptions>>().Value;
+if (commandLineOptions is { DeleteUnsynced: true, ForceSync: true })
+{
+    logger.LogError("--force-sync and --delete-unsynced are mutually exclusive");
+    return 1;
+}
+
 host.MapControllers();
 
 host.PostConfigureHost();
 
 await host.RunAsync();
+return 0;

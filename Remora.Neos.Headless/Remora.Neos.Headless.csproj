@@ -39,6 +39,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="CommandLiners.Posix" />
       <PackageReference Include="Hardware.Info" />
       <PackageReference Include="Humanizer.Core" />
       <PackageReference Include="Lib.Harmony" />

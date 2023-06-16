@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.API.Extensions;
 using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Implementations;
-using Remora.Neos.Headless.Patches.Engine;
+using Remora.Neos.Headless.Patches.Generic;
 using Remora.Neos.Headless.Patches.NeosAssemblyPostProcessor;
 using Remora.Neos.Headless.Patches.RecordUploadTaskBase;
 using Remora.Neos.Headless.Services;
@@ -62,8 +62,7 @@ public static class NeosDependentHostConfiguration
     /// <param name="host">The host.</param>
     public static void PostConfigureHost(this IHost host)
     {
-        var config = host.Services.GetRequiredService<IOptionsMonitor<NeosHeadlessConfig>>();
-        RedirectCommandLineParsing.SetRedirectedCommandLine(config.CurrentValue);
+        var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
         OverrideCecilAssemblyResolver.OverridingAssemblyResolver = host.Services
             .GetRequiredService<NeosAssemblyResolver>();
@@ -78,9 +77,97 @@ public static class NeosDependentHostConfiguration
         CorrectErrorHandling.RetryDelay = headlessConfig.RetryDelay ?? TimeSpan.Zero;
 
         var harmony = new Harmony("nu.algiz.remora.neos.headless");
-        harmony.PatchAll();
+        harmony.PatchAllUncategorized();
 
-        var logger = host.Services.GetRequiredService<ILogger<Program>>();
+        // Generic patches
+        var neosConfig = host.Services.GetRequiredService<IOptionsMonitor<NeosHeadlessConfig>>().CurrentValue;
+        RedirectCommandLineParsing.Configure<Engine>(nameof(Engine.Initialize), args =>
+        {
+            if (neosConfig.PluginAssemblies is not null)
+            {
+                foreach (var pluginAssembly in neosConfig.PluginAssemblies)
+                {
+                    args.Add("LoadAssembly");
+                    args.Add(pluginAssembly);
+                }
+            }
+
+            if (neosConfig.GeneratePreCache is true)
+            {
+                args.Add("GeneratePreCache");
+            }
+
+            if (neosConfig.BackgroundWorkers is { } backgroundWorkers)
+            {
+                args.Add("backgroundworkers");
+                args.Add(backgroundWorkers.ToString());
+            }
+
+            // ReSharper disable once InvertIf
+            if (neosConfig.PriorityWorkers is { } priorityWorkers)
+            {
+                args.Add("priorityworkers");
+                args.Add(priorityWorkers.ToString());
+            }
+        });
+
+        var flags = host.Services.GetRequiredService<IOptionsMonitor<CommandLineOptions>>().CurrentValue;
+        RedirectCommandLineParsing.Configure<Userspace>(new[] { "OnAttach", "Bootstrap" }, args =>
+        {
+            args.Add("noui");
+            args.Add("skipintrotutorial");
+            args.Add("dontautoopencloudhome");
+
+            if (flags.DeleteUnsynced)
+            {
+                logger.LogWarning
+                (
+                    "Unsynchronized records will be deleted. Ensure you remove the --delete-unsynced flag once your "
+                    + "instance is in a reliable state again"
+                );
+
+                args.Add("deleteunsyncedcloudrecords");
+            }
+
+            // ReSharper disable once InvertIf
+            if (flags.ForceSync)
+            {
+                logger.LogWarning
+                (
+                    "Unsynchronized records will be forcibly synced. Ensure you remove the --force-sync flag once your "
+                    + "instance is in a reliable state again"
+                );
+
+                args.Add("forcesyncconflictingcloudrecords");
+            }
+        });
+
+        RedirectCommandLineParsing.Configure<LocalDB>(nameof(LocalDB.Initialize), args =>
+        {
+            if (!flags.RepairDatabase)
+            {
+                return;
+            }
+
+            logger.LogWarning
+            (
+                "The local database will be repaired. Ensure you remove the --force-sync flag once your instance "
+                + "is in a reliable state again"
+            );
+
+            args.Add("repairdatabase");
+        });
+
+        RedirectCommandLineParsing.Configure<StatusManager>(args =>
+        {
+            if (headlessConfig.Invisible)
+            {
+                args.Add("invisible");
+            }
+        });
+
+        RedirectCommandLineParsing.PatchAll(harmony);
+
         UniLog.OnLog += s => logger.LogInformation("{Message}", s);
         UniLog.OnError += s => logger.LogError("{Message}", s);
     }
