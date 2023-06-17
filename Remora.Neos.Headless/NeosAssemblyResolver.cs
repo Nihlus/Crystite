@@ -36,7 +36,13 @@ public class NeosAssemblyResolver : DefaultAssemblyResolver
     /// <param name="additionalSearchPaths">The additional search paths to look in for native libraries.</param>
     public NeosAssemblyResolver(IReadOnlyList<string> additionalSearchPaths)
     {
-        _additionalSearchPaths = additionalSearchPaths;
+        // Add some unity-specific search paths for desktop client compatibility
+        var paths = new List<string>(additionalSearchPaths);
+        paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Neos_Data", "Managed")));
+        paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Neos_Data", "Plugins", "x86_64")));
+        paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Neos_Data", "Plugins")));
+
+        _additionalSearchPaths = paths;
 
         foreach (var context in AssemblyLoadContext.All)
         {
@@ -122,16 +128,26 @@ public class NeosAssemblyResolver : DefaultAssemblyResolver
         var filename = args.Name.Split(',')[0] + ".dll".ToLower();
 
         // then, try loading it verbatim from the additional paths
+        Assembly? potentialAssembly = null;
         foreach (var additionalSearchPath in _additionalSearchPaths)
         {
             var libraryPath = Path.Combine(additionalSearchPath, filename);
-            if (File.Exists(libraryPath))
+            if (!File.Exists(libraryPath))
             {
-                return Assembly.LoadFile(libraryPath);
+                continue;
             }
+
+            var assembly = Assembly.LoadFile(libraryPath);
+            if (assembly.FullName == args.Name)
+            {
+                // exact match, prefer this to keep things like strong-naming consistent
+                return assembly;
+            }
+
+            potentialAssembly = assembly;
         }
 
-        return null;
+        return potentialAssembly;
     }
 
     /// <inheritdoc />

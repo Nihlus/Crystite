@@ -36,6 +36,7 @@
         <NeosReference Include="BaseX" Private="false" />
         <NeosReference Include="CloudX.Shared" Private="false" />
         <NeosReference Include="PostX" Private="false" />
+        <NeosReference Include="LiteDB" Private="false" />
     </ItemGroup>
 
     <ItemGroup>
@@ -50,14 +51,10 @@
       <PackageReference Include="Remora.Results" />
       <PackageReference Include="Serilog.AspNetCore" />
     </ItemGroup>
-    
+
     <ItemGroup>
-        <!-- 
-            LiteDB is provided via Neos, and we can't use 4.1.4 (which is the only one available on nuget) since Neos
-            uses 4.1.5 (which appears to have been manually bundled and compiled). Referencing it like this allows us to
-            compile against 4.1.4 but use 4.1.5 at runtime.
-        -->
-        <PackageReference Include="LiteDB" PrivateAssets="all" IncludeAssets="build; compile" />
+        <!-- bring in Newtonsoft.Json as a ship-only dependency to ensure we always have a strongly-named copy -->
+        <PackageReference Include="Newtonsoft.Json" IncludeAssets="runtime" />
     </ItemGroup>
 
     <ItemGroup>
