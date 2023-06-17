@@ -99,6 +99,7 @@ The following keys are defined for this section.
 | maxAssetAge          | string | The maximum time a cached asset can remain unused before being deleted | null                   | no       |
 | maxUploadRetries     | byte   | The maximum number of times to retry record uploads while syncing      | 3                      | no       |
 | retryDelay           | string | The time to wait between subsequent record uploas while retrying       | null                   | no       |
+| invisible            | bool   | Whether the logged-in account's status should be set to invisible      | false                  | no       |
 
 > It is an absolute requirement that `neosPath` points to a valid NeosVR 
 > installation. The server will not run without access to NeosVR's assemblies.
@@ -155,6 +156,35 @@ sudo systemctl start remora-neos-headless
 ```
 
 > Logs can be viewed through journalctl just like any other service.
+
+If you need to perform certain one-time operations, you can optionally run the 
+server directly and pass one or more command-line options. If you do, ensure 
+that the server is first shut down.
+
+```bash
+sudo systemctl stop remora-neos-headless
+
+cd /var/lib/neosvr
+sudo -u neosvr /usr/lib/remora-neos-headless/Remora.Neos.Headless <option>...
+```
+
+Do note that this runs the server with more access rights and privileges than
+it normally has, and you should only run it like this for things like resolving
+sync conflicts or repairing local databases.
+
+> If an option has a value, it is passed as either the next space-separated 
+> option or by placing an equals sign between the option and the value.
+> 
+> `--option value`
+> 
+> `--option=value`
+
+### Command-Line Options
+| Option            | Value | Description                                                                          |
+|-------------------|-------|--------------------------------------------------------------------------------------|
+| --force-sync      | none  | Forces synchronization of conflicting records, overwriting the versions on the cloud |
+| --delete-unsynced | none  | Deletes local conflicting records, replacing them with the versions on the cloud     |
+| --repair-database | none  | Repairs the local database, correcting any inconsistencies in its contents           |
 
 ## API Usage
 See the [API documentation][5] for information related to the available 
