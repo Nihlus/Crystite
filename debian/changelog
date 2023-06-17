@@ -1,3 +1,15 @@
+remora-neos-headless (1.0.0+deb11~preview6) UNRELEASED; urgency=medium
+
+  * Add a patch for stuck syncs.
+    - Port of https://github.com/stiefeljackal/JworkzNeosFixFrickenSync
+  * Add command-line flags for one-time operations, such as deleting unsynced
+    records and repairing the local database.
+  * Add more configuration options for various undocumented Neos flags.
+  * Add support for running against the desktop NeosVR client.
+  * Replace nuget-based LiteDB dependency with reference assembly.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 11 Jun 2023 16:55:00 +0200
+
 remora-neos-headless (1.0.0+deb11~preview5) UNRELEASED; urgency=medium
 
   * Fix type forwarding not being applied to saved records (Closes #1).
