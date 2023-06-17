@@ -67,8 +67,10 @@ public static class NeosDependentHostConfiguration
         OverrideCecilAssemblyResolver.OverridingAssemblyResolver = host.Services
             .GetRequiredService<NeosAssemblyResolver>();
 
+        var flags = host.Services.GetRequiredService<IOptionsMonitor<CommandLineOptions>>().CurrentValue;
         var headlessConfig = host.Services.GetRequiredService<IOptionsMonitor<HeadlessApplicationConfiguration>>()
             .CurrentValue;
+        var neosConfig = host.Services.GetRequiredService<IOptionsMonitor<NeosHeadlessConfig>>().CurrentValue;
 
         var logFactory = host.Services.GetRequiredService<ILoggerFactory>();
 
@@ -80,7 +82,8 @@ public static class NeosDependentHostConfiguration
         harmony.PatchAllUncategorized();
 
         // Generic patches
-        var neosConfig = host.Services.GetRequiredService<IOptionsMonitor<NeosHeadlessConfig>>().CurrentValue;
+        RedirectCommandLineParsing.Configure<InputInterface>(_ => { });
+
         RedirectCommandLineParsing.Configure<Engine>(nameof(Engine.Initialize), args =>
         {
             if (neosConfig.PluginAssemblies is not null)
@@ -111,7 +114,32 @@ public static class NeosDependentHostConfiguration
             }
         });
 
-        var flags = host.Services.GetRequiredService<IOptionsMonitor<CommandLineOptions>>().CurrentValue;
+        RedirectCommandLineParsing.Configure<LocalDB>(nameof(LocalDB.Initialize), args =>
+        {
+            if (!flags.RepairDatabase)
+            {
+                return;
+            }
+
+            logger.LogWarning
+            (
+                "The local database will be repaired. Ensure you remove the --force-sync flag once your instance "
+                + "is in a reliable state again"
+            );
+
+            args.Add("repairdatabase");
+        });
+
+        RedirectCommandLineParsing.Configure<EngineCloudXInterface>(_ => { });
+
+        RedirectCommandLineParsing.Configure<StatusManager>(args =>
+        {
+            if (headlessConfig.Invisible)
+            {
+                args.Add("invisible");
+            }
+        });
+
         RedirectCommandLineParsing.Configure<Userspace>(new[] { "OnAttach", "Bootstrap" }, args =>
         {
             args.Add("noui");
@@ -142,29 +170,7 @@ public static class NeosDependentHostConfiguration
             }
         });
 
-        RedirectCommandLineParsing.Configure<LocalDB>(nameof(LocalDB.Initialize), args =>
-        {
-            if (!flags.RepairDatabase)
-            {
-                return;
-            }
-
-            logger.LogWarning
-            (
-                "The local database will be repaired. Ensure you remove the --force-sync flag once your instance "
-                + "is in a reliable state again"
-            );
-
-            args.Add("repairdatabase");
-        });
-
-        RedirectCommandLineParsing.Configure<StatusManager>(args =>
-        {
-            if (headlessConfig.Invisible)
-            {
-                args.Add("invisible");
-            }
-        });
+        RedirectCommandLineParsing.Configure<CommonAvatarBuilder>(_ => { });
 
         RedirectCommandLineParsing.PatchAll(harmony);
 

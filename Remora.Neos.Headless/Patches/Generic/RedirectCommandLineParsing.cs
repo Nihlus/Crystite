@@ -123,7 +123,18 @@ public static class RedirectCommandLineParsing
             if (MethodNames is null)
             {
                 // get constructor
-                yield return AccessTools.Constructor(typeof(TTarget));
+                var constructors = AccessTools.GetDeclaredConstructors(typeof(TTarget));
+                foreach (var constructor in constructors)
+                {
+                    yield return constructor;
+                }
+
+                var staticConstructors = AccessTools.GetDeclaredConstructors(typeof(TTarget), true);
+                foreach (var staticConstructor in staticConstructors)
+                {
+                    yield return staticConstructor;
+                }
+
                 yield break;
             }
 
