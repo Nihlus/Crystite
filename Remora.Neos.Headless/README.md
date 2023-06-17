@@ -69,10 +69,7 @@ library and `BETA_PASSWORD` with the headless client beta password.
 
 The server is built against the API available in the stock headless client, but 
 it *should* work with the normal desktop client as well. This is an unsupported 
-configuration, however, and may come with unexpected issues. If you do want to
-use the full desktop client instead, make sure to edit `neosPath` in the 
-configuration to point to the `Neos_Data/Managed` subdirectory of your 
-installation.
+configuration, however, and may come with unexpected issues.
 
 ## Configuration
 The server's main configuration file is located at 
