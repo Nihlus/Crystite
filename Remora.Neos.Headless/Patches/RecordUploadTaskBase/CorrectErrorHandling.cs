@@ -60,12 +60,8 @@ public static partial class CorrectErrorHandling
     [HarmonyPatch(nameof(UploadTask.RunUpload))]
     public static bool RunUploadPrefix(UploadTask __instance, out Task __result, CancellationToken cancellationToken)
     {
-        var uploadTask = _runUploadInternalMethod.Invoke(__instance, new object[] { cancellationToken }) as Task
-            ?? throw new InvalidOperationException();
-
-        var completionSource = _completionSourceField.GetValue(__instance) as TaskCompletionSource<bool>
-            ?? throw new InvalidOperationException();
-
+        var uploadTask = (Task)_runUploadInternalMethod.Invoke(__instance, new object[] { cancellationToken })!;
+        var completionSource = (TaskCompletionSource<bool>)_completionSourceField.GetValue(__instance)!;
         var failMethod = _failMethod.CreateDelegate<Action<string>>(__instance);
 
         // We don't want to let the task terminate early, so the cancellation token is not passed on
