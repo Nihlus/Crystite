@@ -171,8 +171,14 @@ public static class NeosDependentHostConfiguration
         });
 
         RedirectCommandLineParsing.Configure<CommonAvatarBuilder>(_ => { });
-
         RedirectCommandLineParsing.PatchAll(harmony);
+
+        SuppressStackTrace.Configure<WorldConfiguration>("FieldChanged");
+        SuppressStackTrace.PatchAll(harmony);
+
+        UseThreadInterrupt.Configure(AccessTools.Inner(typeof(WorkProcessor), "ThreadWorker"), "Abort");
+        UseThreadInterrupt.Configure<WorldAnnouncer>(nameof(WorldAnnouncer.Dispose));
+        UseThreadInterrupt.PatchAll(harmony);
 
         UniLog.OnLog += s => logger.LogInformation("{Message}", s);
         UniLog.OnError += s => logger.LogError("{Message}", s);
