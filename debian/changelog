@@ -1,3 +1,9 @@
+remora-neos-headless (1.0.0+deb11~preview7) UNRELEASED; urgency=medium
+
+  * Replace dh-sysuser with dh_installsysusers.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Mon, 19 Jun 2023 19:00:00 +0200
+
 remora-neos-headless (1.0.0+deb11~preview6) UNRELEASED; urgency=medium
 
   * Add a patch for stuck syncs.
@@ -8,7 +14,7 @@ remora-neos-headless (1.0.0+deb11~preview6) UNRELEASED; urgency=medium
   * Add support for running against the desktop NeosVR client.
   * Replace nuget-based LiteDB dependency with reference assembly.
 
- -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 11 Jun 2023 16:55:00 +0200
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 17 Jun 2023 22:30:00 +0200
 
 remora-neos-headless (1.0.0+deb11~preview5) UNRELEASED; urgency=medium
 

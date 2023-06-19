@@ -5,7 +5,7 @@ export DOTNET_CLI_TELEMETRY_OPTOUT=true
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
 %:
-	dh $@ --with sysuser
+	dh $@
 
 override_dh_auto_clean:
 	dotnet clean
@@ -15,4 +15,5 @@ override_dh_auto_build:
 	chmod -x bin/*.dll
 
 override_dh_installsystemd:
+	dh_installsysusers
 	dh_installsystemd --no-start --no-enable
