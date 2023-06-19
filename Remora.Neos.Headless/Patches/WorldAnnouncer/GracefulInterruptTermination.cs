@@ -30,6 +30,7 @@ public class GracefulInterruptTermination
         {
             case ThreadInterruptedException:
             case SocketException { SocketErrorCode: SocketError.Interrupted }:
+            case ObjectDisposedException:
             {
                 return null;
             }
