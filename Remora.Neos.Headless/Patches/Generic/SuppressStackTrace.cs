@@ -55,7 +55,7 @@ public static class SuppressStackTrace
     /// <typeparam name="TTarget">The target type.</typeparam>
     [HarmonyPatch]
     [HarmonyPatchCategory("Generic")]
-    private class SuppressStackTracePatch<TTarget>
+    private static class SuppressStackTracePatch<TTarget>
     {
         /// <summary>
         /// Gets or sets the name of the method to patch.
