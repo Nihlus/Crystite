@@ -97,6 +97,7 @@ The following keys are defined for this section.
 | maxUploadRetries     | byte   | The maximum number of times to retry record uploads while syncing      | 3                      | no       |
 | retryDelay           | string | The time to wait between subsequent record uploas while retrying       | null                   | no       |
 | invisible            | bool   | Whether the logged-in account's status should be set to invisible      | false                  | no       |
+| enableSteam          | bool   | Whether to enable Steam API integration                                | false                  | no       |
 
 > It is an absolute requirement that `neosPath` points to a valid NeosVR 
 > installation. The server will not run without access to NeosVR's assemblies.
