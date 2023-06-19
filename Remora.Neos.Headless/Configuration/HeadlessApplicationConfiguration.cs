@@ -15,6 +15,7 @@ namespace Remora.Neos.Headless.Configuration;
 /// <param name="MaxUploadRetries">The maximum number of times a record upload will be retried before it is considered failed.</param>
 /// <param name="RetryDelay">The delay between attempts to upload a record again.</param>
 /// <param name="Invisible">Whether to set the logged-in user as invisible.</param>
+/// <param name="EnableSteam">Whether to enable Steam API integration.</param>
 public record HeadlessApplicationConfiguration
 (
     string NeosPath,
@@ -22,7 +23,8 @@ public record HeadlessApplicationConfiguration
     TimeSpan? MaxAssetAge = null,
     byte? MaxUploadRetries = 3,
     TimeSpan? RetryDelay = null,
-    bool Invisible = false
+    bool Invisible = false,
+    bool EnableSteam = false
 )
 {
     /// <summary>

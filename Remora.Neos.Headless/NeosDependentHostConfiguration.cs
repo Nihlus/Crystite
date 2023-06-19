@@ -14,6 +14,7 @@ using Remora.Neos.Headless.Implementations;
 using Remora.Neos.Headless.Patches.Generic;
 using Remora.Neos.Headless.Patches.NeosAssemblyPostProcessor;
 using Remora.Neos.Headless.Patches.RecordUploadTaskBase;
+using Remora.Neos.Headless.Patches.SteamConnector;
 using Remora.Neos.Headless.Services;
 using Serilog;
 
@@ -77,6 +78,8 @@ public static class NeosDependentHostConfiguration
         CorrectErrorHandling.Log = logFactory.CreateLogger(typeof(CorrectErrorHandling));
         CorrectErrorHandling.MaxUploadRetries = headlessConfig.MaxUploadRetries ?? 3;
         CorrectErrorHandling.RetryDelay = headlessConfig.RetryDelay ?? TimeSpan.Zero;
+
+        DisableSteamAPI.ShouldAttemptSteamInitialization = headlessConfig.EnableSteam;
 
         var harmony = new Harmony("nu.algiz.remora.neos.headless");
         harmony.PatchAllUncategorized();
