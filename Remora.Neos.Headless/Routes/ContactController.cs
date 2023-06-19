@@ -51,7 +51,7 @@ public class ContactController : ControllerBase
     public async Task<ActionResult<IRestContact>> ModifyContactAsync
     (
         string userIdOrName,
-        RestContactStatus status,
+        [FromForm] RestContactStatus status,
         CancellationToken ct = default
     )
     {
