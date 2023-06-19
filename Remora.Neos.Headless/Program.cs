@@ -54,8 +54,6 @@ applicationBuilder.Configuration.AddCommandLineOptions
     )
 );
 
-applicationBuilder.Services.Configure<CommandLineOptions>(o => applicationBuilder.Configuration.Bind(o));
-
 applicationBuilder.Host
     .UseSystemd()
     .ConfigureNeosDependentCode()
@@ -68,6 +66,7 @@ applicationBuilder.Host
             services
                 .AddSingleton(assemblyResolver ?? throw new InvalidOperationException())
                 .AddSingleton<IHardwareInfo>(hardwareInfo)
+                .Configure<CommandLineOptions>(o => applicationBuilder.Configuration.Bind(o))
                 .Configure<HeadlessApplicationConfiguration>(config.Configuration.GetSection("Headless"))
                 .Configure<NeosHeadlessConfig>(config.Configuration.GetSection("Neos"));
 
