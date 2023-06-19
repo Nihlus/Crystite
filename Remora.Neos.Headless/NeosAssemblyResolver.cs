@@ -19,13 +19,13 @@ public class NeosAssemblyResolver : DefaultAssemblyResolver
     private readonly IReadOnlyList<string> _additionalSearchPaths;
     private readonly IReadOnlyDictionary<string, string[]> _knownNativeLibraryMappings = new Dictionary<string, string[]>
     {
-        { "assimp", new[] { "libassimp.so.5" } },
-        { "freeimage", new[] { "libfreeimage.so.3" } },
-        { "freetype6", new[] { "libfreetype.so.6" } },
-        { "opus", new[] { "libopus.so.0" } },
+        { "assimp", new[] { "libassimp.so.5", "Assimp64.so" } },
+        { "freeimage", new[] { "libfreeimage.so.3", "libFreeImage.so" } },
+        { "freetype6", new[] { "libfreetype.so.6", "libfreetype6.so" } },
+        { "opus", new[] { "libopus.so.0", "libopus.so" } },
         { "dl", new[] { "libdl.so.2" } },
         { "libdl.so", new[] { "libdl.so.2" } },
-        { "zlib", new[] { "libzlib.so.1" } },
+        { "zlib", new[] { "libzlib.so.1", "libzlib.so" } },
     };
 
     private bool _isDisposed;
