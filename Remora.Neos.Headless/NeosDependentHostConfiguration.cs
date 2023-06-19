@@ -177,6 +177,7 @@ public static class NeosDependentHostConfiguration
         RedirectCommandLineParsing.PatchAll(harmony);
 
         SuppressStackTrace.Configure<WorldConfiguration>("FieldChanged");
+        SuppressStackTrace.Configure<UserRoot>("Slot_OnPrepareDestroy");
         SuppressStackTrace.PatchAll(harmony);
 
         UseThreadInterrupt.Configure(AccessTools.Inner(typeof(WorkProcessor), "ThreadWorker"), "Abort");
