@@ -1,8 +1,13 @@
 remora-neos-headless (1.0.0+deb11~preview8) UNRELEASED; urgency=medium
 
   * Fix incorrect parameter binding in the contact route.
+  * Genericize more patches.
+  * Fix an issue where world startup could cause the server to shut down.
+  * Add package dependencies on various libraries.
+  * Add an option to enable or disable Steam API integration. By default, Steam is disabled.
+  * Suppress more noisy stack traces.
 
- -- Jarl Gullberg <jarl.gullberg@gmail.com>  Mon, 19 Jun 2023 19:50:00 +0200
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Mon, 19 Jun 2023 22:50:00 +0200
 
 remora-neos-headless (1.0.0+deb11~preview7) UNRELEASED; urgency=medium
 
