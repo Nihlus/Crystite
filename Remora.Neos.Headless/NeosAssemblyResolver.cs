@@ -25,7 +25,7 @@ public class NeosAssemblyResolver : DefaultAssemblyResolver
         { "opus", new[] { "libopus.so.0", "libopus.so" } },
         { "dl", new[] { "libdl.so.2" } },
         { "libdl.so", new[] { "libdl.so.2" } },
-        { "zlib", new[] { "libzlib.so.1", "libzlib.so" } },
+        { "zlib", new[] { "libz.so.1", "libzlib.so.1", "libzlib.so" } },
     };
 
     private bool _isDisposed;
