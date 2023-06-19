@@ -17,7 +17,12 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  dotnet-runtime-7.0,
- aspnetcore-runtime-7.0
+ aspnetcore-runtime-7.0,
+ libassimp5,
+ libfreeimage3,
+ libfreetype6,
+ libopus0,
+ zlib1g
 Recommends:
  steamcmd
 Description: Headless server for NeosVR
