@@ -117,6 +117,10 @@ public class WorldService
         startSettings.CreateLoadIndicator = false;
 
         var world = await Userspace.OpenWorld(startSettings);
+        if (world is null)
+        {
+            return new InvalidOperationError("World startup failed. Refer to the log for more context.");
+        }
 
         // wait for the world to initialize
         while (world.State is World.WorldState.Initializing)
