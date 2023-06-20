@@ -8,6 +8,7 @@ using FrooxEngine;
 using Microsoft.Extensions.Hosting.Systemd;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.Configuration;
+using Remora.Neos.Headless.Extensions;
 using Remora.Neos.Headless.Services;
 using WorldStartupParameters = Remora.Neos.Headless.Configuration.WorldStartupParameters;
 
@@ -156,6 +157,8 @@ public class StandaloneFrooxEngineService : BackgroundService
             "Session.MaxConcurrentTransmitJobs",
             _config.MaxConcurrentAssetTransfers
         );
+
+        await _engine.RecordManager.WaitForPendingUploadsAsync(ct: ct);
 
         foreach (var startWorld in _config.StartWorlds ?? Array.Empty<WorldStartupParameters>())
         {
