@@ -88,31 +88,35 @@ public class AssetHooverService : BackgroundService
 
             var oldPaths = oldFiles.Select(f => f.FullName).ToArray();
 
-            string[] assetUrls;
             using (await dbLock.AcquireAsync(stoppingToken))
             {
-                assetUrls = assets.Find(a => oldPaths.Contains(a.path)).Select(a => a.url).ToArray();
-            }
+                var oldAssets = assets.Find(a => oldPaths.Contains(a.path)).Select(a => (Url: a.url, Path: a.path)).ToArray();
+                if (oldAssets.Length <= 0)
+                {
+                    continue;
+                }
 
-            if (assetUrls.Length <= 0)
-            {
-                continue;
-            }
+                _log.LogInformation("Cleaning up cached assets");
 
-            _log.LogInformation("Cleaning up cached assets");
+                var totalSize = oldFiles.Sum(f => f.Length);
+                _log.LogInformation
+                (
+                    "{Count} expired assets found (total {Size})",
+                    oldAssets.Length,
+                    totalSize.Bytes().Humanize()
+                );
 
-            var totalSize = oldFiles.Sum(f => f.Length);
-            _log.LogInformation
-            (
-                "{Count} expired assets found (total {Size})",
-                assetUrls.Length,
-                totalSize.Bytes().Humanize()
-            );
+                foreach (var (url, path) in oldAssets)
+                {
+                    _log.LogInformation("Deleting {Url}", url);
+                    await db.DeleteCacheRecordAsync(new Uri(url));
 
-            foreach (var assetUrl in assetUrls)
-            {
-                _log.LogInformation("Deleting {Url}", assetUrl);
-                await db.DeleteCacheRecordAsync(new Uri(assetUrl));
+                    // clean up files that the DB doesn't know about
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                }
             }
         }
     }
