@@ -23,7 +23,7 @@ public class StandaloneFrooxEngineService : BackgroundService
     private readonly HeadlessApplicationConfiguration _applicationConfig;
     private readonly NeosHeadlessConfig _config;
     private readonly Engine _engine;
-    private readonly ISystemInfo _systemInfo;
+    private readonly HeadlessSystemInfo _systemInfo;
     private readonly WorldService _worldService;
     private readonly ISystemdNotifier? _systemdNotifier;
 
@@ -45,7 +45,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         IOptions<HeadlessApplicationConfiguration> applicationConfig,
         IOptions<NeosHeadlessConfig> config,
         Engine engine,
-        ISystemInfo systemInfo,
+        HeadlessSystemInfo systemInfo,
         WorldService worldService,
         ISystemdNotifier? systemdNotifier = null
     )
@@ -195,6 +195,7 @@ public class StandaloneFrooxEngineService : BackgroundService
             try
             {
                 _engine.RunUpdateLoop();
+                _systemInfo.FrameFinished();
 
                 if (ct.IsCancellationRequested && _systemdNotifier is not null)
                 {
