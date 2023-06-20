@@ -68,7 +68,14 @@ applicationBuilder.Host
                 .AddSingleton<IHardwareInfo>(hardwareInfo)
                 .Configure<CommandLineOptions>(o => applicationBuilder.Configuration.Bind(o))
                 .Configure<HeadlessApplicationConfiguration>(config.Configuration.GetSection("Headless"))
-                .Configure<NeosHeadlessConfig>(config.Configuration.GetSection("Neos"));
+                .Configure<NeosHeadlessConfig>(config.Configuration.GetSection("Neos"))
+                .Configure<HostOptions>(o =>
+                {
+                    if (o.ShutdownTimeout < TimeSpan.FromMinutes(15))
+                    {
+                        o.ShutdownTimeout = TimeSpan.FromMinutes(15);
+                    }
+                });
 
             services
                 .AddControllers()
