@@ -1,3 +1,13 @@
+remora-neos-headless (1.0.0+deb11~preview9) UNRELEASED; urgency=medium
+
+  * Wait for syncs to complete before attempting world startup.
+  * Wait for syncs to complete before allowing shutdown to complete.
+  * Extend host shutdown timeout to at least 15 minutes.
+  * Implement FPS counter.
+  * Asset hoovering is faster and deletes files the DB doesn't know about.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Tue, 20 Jun 2023 18:15:00 +0200
+
 remora-neos-headless (1.0.0+deb11~preview8) UNRELEASED; urgency=medium
 
   * Fix incorrect parameter binding in the contact route.
