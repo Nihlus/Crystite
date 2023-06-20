@@ -190,10 +190,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         {
             // Intentional. Ticks should continue until _engineShutdownComplete, so cancelling early here is
             // undesired.
-            if (!await tickTimer.WaitForNextTickAsync(CancellationToken.None))
-            {
-                break;
-            }
+            _ = await tickTimer.WaitForNextTickAsync(CancellationToken.None);
 
             try
             {
