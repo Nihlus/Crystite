@@ -54,8 +54,8 @@ public static class NeosDependentHostConfiguration
                 .AddSingleton<LocalDB>(p => p.GetRequiredService<Engine>().LocalDB)
                 .AddSingleton<WorldManager>(p => p.GetRequiredService<Engine>().WorldManager)
                 .AddSingleton<WorldService>()
-                .AddHostedService<StandaloneFrooxEngineService>()
                 .AddHostedService<AssetHooverService>()
+                .AddHostedService<StandaloneFrooxEngineService>()
         );
 
     /// <summary>
