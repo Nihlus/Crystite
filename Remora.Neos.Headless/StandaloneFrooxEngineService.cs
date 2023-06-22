@@ -225,8 +225,5 @@ public class StandaloneFrooxEngineService : BackgroundService
             isShuttingDown = true;
             Userspace.ExitNeos(false);
         }
-
-        // TODO: is this required, or does the engine wait on its own?
-        await _engine.RecordManager.WaitForPendingUploadsAsync(ct: CancellationToken.None);
     }
 }
