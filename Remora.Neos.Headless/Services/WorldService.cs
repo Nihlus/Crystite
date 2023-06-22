@@ -327,8 +327,8 @@ public class WorldService : IAsyncDisposable
             var autosaveInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.AutosaveInterval);
             if (autosaveInterval > TimeSpan.Zero && timeSinceLastSave > autosaveInterval && Userspace.CanSave(world))
             {
-                // only attempt a save if the last save has been synchronized
-                if (world.CorrespondingRecord.IsSynced)
+                // only attempt a save if the last save has been synchronized and we're not shutting down
+                if (world.CorrespondingRecord.IsSynced && !(Userspace.IsExitingNeos || _engine.ShutdownRequested))
                 {
                     _log.LogInformation("Autosaving {World}", world.RawName);
                     await Userspace.SaveWorldAuto(world, SaveType.Overwrite, false);
