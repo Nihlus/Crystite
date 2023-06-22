@@ -5,6 +5,7 @@
 //
 
 using FrooxEngine;
+using HarmonyLib;
 using Microsoft.Extensions.Hosting.Systemd;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.Configuration;
@@ -57,6 +58,27 @@ public class StandaloneFrooxEngineService : BackgroundService
         _systemInfo = systemInfo;
         _worldService = worldService;
         _systemdNotifier = systemdNotifier;
+    }
+
+    /// <inheritdoc />
+    public override async Task StopAsync(CancellationToken cancellationToken)
+    {
+        if (this.ExecuteTask is null)
+        {
+            return;
+        }
+
+        try
+        {
+            var fieldRef = AccessTools.FieldRefAccess<CancellationTokenSource>(typeof(BackgroundService), "_stoppingCts");
+            var tokenSource = fieldRef.Invoke(this);
+            tokenSource.Cancel();
+        }
+        finally
+        {
+            // ignore the stop cancellation token
+            await this.ExecuteTask.ConfigureAwait(false);
+        }
     }
 
     /// <inheritdoc/>
