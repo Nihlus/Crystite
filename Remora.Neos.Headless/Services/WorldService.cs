@@ -299,7 +299,9 @@ public class WorldService
             if (autosaveInterval > TimeSpan.Zero && timeSinceLastSave > autosaveInterval && Userspace.CanSave(world))
             {
                 _log.LogInformation("Autosaving {World}", world.RawName);
+
                 await Userspace.SaveWorldAuto(world, SaveType.Overwrite, false);
+                lastSaveTime = DateTimeOffset.UtcNow;
             }
 
             // world is idle
