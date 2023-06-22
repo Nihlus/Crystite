@@ -84,6 +84,16 @@ public abstract class NeosWorldController : INeosWorldController
             return new InvalidOperationError("The given world cannot be saved.");
         }
 
+        if (!world.CorrespondingRecord.IsSynced)
+        {
+            return new InvalidOperationError("The world is currently synchronizing.");
+        }
+
+        if (Userspace.IsExitingNeos || _worldManager.Engine.ShutdownRequested)
+        {
+            return new InvalidOperationError("The application is currently shutting down.");
+        }
+
         await Userspace.SaveWorldAuto(world, SaveType.Overwrite, false);
         return Result.FromSuccess();
     }

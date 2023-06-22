@@ -10,7 +10,9 @@ using FrooxEngine;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.Configuration;
 using Remora.Neos.Headless.Extensions;
+using Remora.Neos.Headless.Patches.EngineRecordUploadTask;
 using Remora.Results;
+using Record = FrooxEngine.Record;
 using WorldStartupParameters = Remora.Neos.Headless.Configuration.WorldStartupParameters;
 
 namespace Remora.Neos.Headless.Services;
@@ -239,6 +241,17 @@ public class WorldService
             }
         };
 
+        var world = wrapper.Session.World;
+        void UpdateCorrespondingRecord(Record record)
+        {
+            if (world.CorrespondingRecord.IsSameRecord(record))
+            {
+                world.CorrespondingRecord = record;
+            }
+        }
+
+        RecordStoreNotifications.RecordStored += UpdateCorrespondingRecord;
+
         var lastUserCount = 1;
         var lastIdleBeginTime = DateTimeOffset.UtcNow;
         var lastSaveTime = DateTimeOffset.UtcNow;
@@ -256,7 +269,6 @@ public class WorldService
 
             // Update any changes to our startup information
             var startupParameters = wrapper.Session.StartInfo;
-            var world = wrapper.Session.World;
             wrapper.Session.World.RunSynchronously
             (
                 () =>
@@ -357,6 +369,8 @@ public class WorldService
 
         // always remove us first
         _ = _activeWorlds.TryRemove(wrapper.Session.World.SessionId, out _);
+        RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
+
         if (!wrapper.Session.World.IsDestroyed)
         {
             wrapper.Session.World.Destroy();
