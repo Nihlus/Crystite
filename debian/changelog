@@ -1,3 +1,14 @@
+remora-neos-headless (1.0.0+deb11~preview10) UNRELEASED; urgency=medium
+
+  * Fix worlds saving on every update after the first save.
+  * Prevent multiple saves queuing up while a world record is syncing.
+  * Ensure worlds are destroyed when world handlers exit.
+  * Ensure the corresponding record of a world is updated after a sync.
+  * Prevent automatic saving of worlds during userspace exit and engine shutdown.
+  * Ensure synchronization is allowed to complete before the application exits.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Thu, 22 Jun 2023 21:10:00 +0200
+
 remora-neos-headless (1.0.0+deb11~preview9) UNRELEASED; urgency=medium
 
   * Wait for syncs to complete before attempting world startup.
