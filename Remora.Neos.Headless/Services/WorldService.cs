@@ -298,9 +298,13 @@ public class WorldService
             var autosaveInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.AutosaveInterval);
             if (autosaveInterval > TimeSpan.Zero && timeSinceLastSave > autosaveInterval && Userspace.CanSave(world))
             {
-                _log.LogInformation("Autosaving {World}", world.RawName);
+                // only attempt a save if the last save has been synchronized
+                if (world.CorrespondingRecord.IsSynced)
+                {
+                    _log.LogInformation("Autosaving {World}", world.RawName);
+                    await Userspace.SaveWorldAuto(world, SaveType.Overwrite, false);
+                }
 
-                await Userspace.SaveWorldAuto(world, SaveType.Overwrite, false);
                 lastSaveTime = DateTimeOffset.UtcNow;
             }
 
