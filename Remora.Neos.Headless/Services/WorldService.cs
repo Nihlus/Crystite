@@ -357,6 +357,10 @@ public class WorldService
 
         // always remove us first
         _ = _activeWorlds.TryRemove(wrapper.Session.World.SessionId, out _);
+        if (!wrapper.Session.World.IsDestroyed)
+        {
+            wrapper.Session.World.Destroy();
+        }
 
         if (!ct.IsCancellationRequested && restart)
         {
