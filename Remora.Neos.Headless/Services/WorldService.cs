@@ -20,12 +20,14 @@ namespace Remora.Neos.Headless.Services;
 /// <summary>
 /// Handles access to and control of worlds.
 /// </summary>
-public class WorldService
+public class WorldService : IAsyncDisposable
 {
     private readonly NeosHeadlessConfig _config;
     private readonly ILogger<WorldService> _log;
     private readonly Engine _engine;
     private readonly ConcurrentDictionary<string, SessionWrapper> _activeWorlds;
+
+    private bool _isDisposed;
 
     private record SessionWrapper(ActiveSession Session, CancellationTokenSource CancellationSource)
     {
@@ -61,6 +63,11 @@ public class WorldService
         CancellationToken ct = default
     )
     {
+        if (_isDisposed)
+        {
+            throw new ObjectDisposedException(nameof(WorldService));
+        }
+
         var sessionID = startupParameters.CustomSessionID;
         if (sessionID is not null)
         {
@@ -185,6 +192,11 @@ public class WorldService
     /// <returns>The restarted world.</returns>
     public async Task<Result<ActiveSession>> RestartWorldAsync(string worldId, CancellationToken ct = default)
     {
+        if (_isDisposed)
+        {
+            throw new ObjectDisposedException(nameof(WorldService));
+        }
+
         if (!_activeWorlds.TryRemove(worldId, out var wrapper))
         {
             return new NotFoundError("No matching world found.");
@@ -203,6 +215,11 @@ public class WorldService
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     public async Task<Result> StopWorldAsync(string worldId)
     {
+        if (_isDisposed)
+        {
+            throw new ObjectDisposedException(nameof(WorldService));
+        }
+
         if (!_activeWorlds.TryRemove(worldId, out var wrapper))
         {
             return new NotFoundError("No matching world found.");
@@ -388,6 +405,23 @@ public class WorldService
                     restartWorld.Error
                 );
             }
+        }
+    }
+
+    /// <inheritdoc />
+    public async ValueTask DisposeAsync()
+    {
+        GC.SuppressFinalize(this);
+
+        _isDisposed = true;
+
+        var valueSnapshot = _activeWorlds.Values;
+        foreach (var wrapper in valueSnapshot)
+        {
+            wrapper.CancellationSource.Cancel();
+            await (wrapper.Handler ?? Task.CompletedTask);
+
+            _ = _activeWorlds.TryRemove(wrapper.Session.World.SessionId, out _);
         }
     }
 }
