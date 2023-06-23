@@ -79,6 +79,12 @@ public class AssetHooverService : BackgroundService
         var timer = new PeriodicTimer(_config.AssetCleanupInterval.Value);
         while (await timer.WaitForNextTickAsync(stoppingToken))
         {
+            if (Userspace.IsExitingNeos || _engine.ShutdownRequested)
+            {
+                // don't mess with local files while we're shutting down
+                continue;
+            }
+
             var now = DateTimeOffset.UtcNow;
 
             var files = cacheDirectory.EnumerateFiles("*", SearchOption.AllDirectories);
