@@ -121,6 +121,11 @@ public static partial class CorrectErrorHandling
 
     private static bool ShouldRetry(this UploadTask uploadTask)
     {
+        if (uploadTask.FailReason is null)
+        {
+            return false;
+        }
+
         return uploadTask.FailReason.Trim().ToLowerInvariant() switch
         {
             var r when r.Contains("conflict") => false,
