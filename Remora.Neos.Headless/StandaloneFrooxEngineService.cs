@@ -4,8 +4,11 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
+using CloudX.Shared;
 using FrooxEngine;
 using HarmonyLib;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Hosting.Systemd;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Headless.Configuration;
@@ -118,40 +121,8 @@ public class StandaloneFrooxEngineService : BackgroundService
             Engine.Config.UniverseId = _config.UniverseID;
         }
 
-        await _engine.GlobalCoroutineManager.StartTask
-        (
-            static async args =>
-            {
-                await default(NextUpdate);
-
-                if (!string.IsNullOrWhiteSpace(args.Config.LoginCredential) && !string.IsNullOrWhiteSpace(args.Config.LoginPassword))
-                {
-                    args.Log.LogInformation("Logging in as {Credential}", args.Config.LoginCredential);
-
-                    // TODO: LoginToken?
-                    var login = await args.Engine.Cloud.Login
-                    (
-                        args.Config.LoginCredential,
-                        args.Config.LoginPassword,
-                        null,
-                        args.Engine.LocalDB.SecretMachineID,
-                        false,
-                        null,
-                        null
-                    );
-
-                    if (!login.IsOK)
-                    {
-                        args.Log.LogWarning("Failed to log in: {Error}", login.Content);
-                    }
-                    else
-                    {
-                        args.Log.LogInformation("Logged in successfully");
-                    }
-                }
-            },
-            (Config: _config, Log: _log, Engine: _engine)
-        );
+        await LoginAsync();
+        OverrideSignalRReconnectRoutine();
 
         await _engine.GlobalCoroutineManager.StartTask
         (
@@ -197,6 +168,100 @@ public class StandaloneFrooxEngineService : BackgroundService
         }
 
         await engineLoop;
+    }
+
+    private Task LoginAsync() => _engine.GlobalCoroutineManager.StartTask
+    (
+        static async args =>
+        {
+            await default(NextUpdate);
+
+            if (!string.IsNullOrWhiteSpace(args.Config.LoginCredential) && !string.IsNullOrWhiteSpace(args.Config.LoginPassword))
+            {
+                args.Log.LogInformation("Logging in as {Credential}", args.Config.LoginCredential);
+
+                // TODO: LoginToken?
+                var login = await args.Engine.Cloud.Login
+                (
+                    args.Config.LoginCredential,
+                    args.Config.LoginPassword,
+                    null,
+                    args.Engine.LocalDB.SecretMachineID,
+                    false,
+                    null,
+                    null
+                );
+
+                if (!login.IsOK)
+                {
+                    args.Log.LogWarning("Failed to log in: {Error}", login.Content);
+                }
+                else
+                {
+                    args.Log.LogInformation("Logged in successfully");
+                }
+            }
+        },
+        (Config: _config, Log: _log, Engine: _engine)
+    );
+
+    private void OverrideSignalRReconnectRoutine()
+    {
+        if (_engine.Cloud.HubClient is null)
+        {
+            _log.LogDebug("Not logged in; skipping SignalR reconnection override");
+            return;
+        }
+
+        var connection = _engine.Cloud.HubClient.Hub;
+
+        // clear existing events
+        var field = AccessTools.Field(typeof(HubConnection), "Closed");
+        field.SetValue(connection, null);
+
+        var cancellationTokenField = AccessTools.Field(typeof(CloudXInterface), "_hubConnectionToken");
+
+        var connectDelegate = AccessTools.MethodDelegate<Func<Task>>
+        (
+            AccessTools.DeclaredMethod(typeof(CloudXInterface), "ConnectToHub"), _engine.Cloud
+        );
+
+        connection.Closed += async error =>
+        {
+            var tokenSource = AccessTools.FieldRefAccess<CloudXInterface, CancellationTokenSource>
+            (
+                _engine.Cloud,
+                cancellationTokenField
+            );
+
+            var cancellationToken = tokenSource.Token;
+
+            _log.LogInformation("SignalR connection closed: {Error}", error);
+            if (cancellationToken.IsCancellationRequested || error is not HubException)
+            {
+                return;
+            }
+
+            _log.LogInformation("Running manual reconnect");
+            try
+            {
+                await connectDelegate();
+            }
+            catch (Exception connectException)
+            {
+                _log.LogWarning(connectException, "Failed to reconnect; attempting to relog");
+
+                try
+                {
+                    await LoginAsync();
+                }
+                catch (Exception loginException)
+                {
+                    _log.LogWarning(loginException, "Failed to relog");
+                    throw;
+                }
+            }
+        };
     }
 
     private async Task EngineLoopAsync(CancellationToken ct = default)
