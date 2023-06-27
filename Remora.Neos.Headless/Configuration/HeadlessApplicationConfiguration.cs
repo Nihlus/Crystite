@@ -12,6 +12,8 @@ namespace Remora.Neos.Headless.Configuration;
 /// <param name="NeosPath">The path to the NeosVR installation directory.</param>
 /// <param name="AssetCleanupInterval">The interval at which to clean up on-disk assets.</param>
 /// <param name="MaxAssetAge">The maximum time an asset can be untouched for until it is deleted.</param>
+/// <param name="CleanupTypes">The asset types to clean and their associated max ages.</param>
+/// <param name="CleanupLocations">The asset locations to clean.</param>
 /// <param name="MaxUploadRetries">The maximum number of times a record upload will be retried before it is considered failed.</param>
 /// <param name="RetryDelay">The delay between attempts to upload a record again.</param>
 /// <param name="Invisible">Whether to set the logged-in user as invisible.</param>
@@ -21,6 +23,8 @@ public record HeadlessApplicationConfiguration
     string NeosPath,
     TimeSpan? AssetCleanupInterval = null,
     TimeSpan? MaxAssetAge = null,
+    IReadOnlyDictionary<AssetCleanupType, TimeSpan?>? CleanupTypes = null,
+    IReadOnlyList<AssetCleanupLocation>? CleanupLocations = null,
     byte? MaxUploadRetries = 3,
     TimeSpan? RetryDelay = null,
     bool Invisible = false,

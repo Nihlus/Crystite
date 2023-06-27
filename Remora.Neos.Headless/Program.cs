@@ -10,6 +10,7 @@ using CommandLiners;
 using Hardware.Info;
 using Microsoft.Extensions.Configuration.CommandLine;
 using Microsoft.Extensions.Options;
+using Remora.Extensions.Options.Immutable;
 using Remora.Neos.Headless;
 using Remora.Neos.Headless.API.Abstractions;
 using Remora.Neos.Headless.API.Abstractions.Services;
@@ -67,8 +68,28 @@ applicationBuilder.Host
                 .AddSingleton(assemblyResolver ?? throw new InvalidOperationException())
                 .AddSingleton<IHardwareInfo>(hardwareInfo)
                 .Configure<CommandLineOptions>(o => applicationBuilder.Configuration.Bind(o))
-                .Configure<HeadlessApplicationConfiguration>(config.Configuration.GetSection("Headless"))
-                .Configure<NeosHeadlessConfig>(config.Configuration.GetSection("Neos"));
+                .Configure<NeosHeadlessConfig>(config.Configuration.GetSection("Neos"))
+                .Configure
+                (
+                    () => config.Configuration
+                        .GetSection("Headless")
+                        .Get<HeadlessApplicationConfiguration>()
+                          ?? throw new InvalidOperationException()
+                )
+                .PostConfigure<HeadlessApplicationConfiguration>(c => c with
+                {
+                    CleanupTypes = c.CleanupTypes ?? new Dictionary<AssetCleanupType, TimeSpan?>
+                    {
+                        { AssetCleanupType.Local, c.MaxAssetAge },
+                        { AssetCleanupType.NeosDB, c.MaxAssetAge },
+                        { AssetCleanupType.Other, c.MaxAssetAge }
+                    },
+                    CleanupLocations = c.CleanupLocations?.Distinct().ToArray() ?? new[]
+                    {
+                        AssetCleanupLocation.Data,
+                        AssetCleanupLocation.Cache
+                    }
+                });
 
             services
                 .AddControllers()

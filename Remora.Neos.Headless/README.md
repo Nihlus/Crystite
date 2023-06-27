@@ -89,15 +89,17 @@ itself.
 
 The following keys are defined for this section.
 
-| Name                 | Type   | Description                                                            | Default                | Required |
-|----------------------|--------|------------------------------------------------------------------------|------------------------|----------|
-| neosPath             | string | The path to the NeosVR installation directory                          | /var/lib/neosvr/NeosVR | yes      |
-| assetCleanupInterval | string | The interval at which cached files should be cleaned up                | null                   | no       |
-| maxAssetAge          | string | The maximum time a cached asset can remain unused before being deleted | null                   | no       |
-| maxUploadRetries     | byte   | The maximum number of times to retry record uploads while syncing      | 3                      | no       |
-| retryDelay           | string | The time to wait between subsequent record uploas while retrying       | null                   | no       |
-| invisible            | bool   | Whether the logged-in account's status should be set to invisible      | false                  | no       |
-| enableSteam          | bool   | Whether to enable Steam API integration                                | false                  | no       |
+| Name                 | Type     | Description                                                            | Default                    | Required |
+|----------------------|----------|------------------------------------------------------------------------|----------------------------|----------|
+| neosPath             | string   | The path to the NeosVR installation directory                          | /var/lib/neosvr/NeosVR     | yes      |
+| assetCleanupInterval | string   | The interval at which cached files should be cleaned up                | null                       | no       |
+| maxAssetAge          | string   | The maximum time a cached asset can remain unused before being deleted | null                       | no       |
+| cleanupTypes         | dict     | The asset types to clean and their associated max ages.                | all types at `maxAssetAge` | no       |
+| cleanupLocations     | string[] | The asset locations to clean.                                          | all locations              | no       |
+| maxUploadRetries     | byte     | The maximum number of times to retry record uploads while syncing      | 3                          | no       |
+| retryDelay           | string   | The time to wait between subsequent record uploas while retrying       | null                       | no       |
+| invisible            | bool     | Whether the logged-in account's status should be set to invisible      | false                      | no       |
+| enableSteam          | bool     | Whether to enable Steam API integration                                | false                      | no       |
 
 > It is an absolute requirement that `neosPath` points to a valid NeosVR 
 > installation. The server will not run without access to NeosVR's assemblies.
@@ -105,6 +107,31 @@ The following keys are defined for this section.
 `assetCleanupInterval`, `maxAssetAge`, and `retryDelay` are C# `TimeSpan` strings, meaning that they are formatted as 
 colon-separated groups of units of time. For example, ten days would be expressed as `10:00:00:00`, five seconds as 
 `00:00:05`, and twenty-five minutes as `00:25:00`.
+
+`cleanupTypes` is a dictionary of `AssetCleanupType` keys and `TimeSpan` strings. This property can be used to configure
+individual maximum ages for known asset types, as well as limiting which asset types are cleaned up. If an asset type
+is present as a key in this dictionary, it will be cleaned up at either `maxAssetAge` (if the key's value is `null`) or
+at the time specified in the dictionary.
+
+By default, all asset types older than `maxAssetAge` are cleaned up.
+
+`cleanupLocations` is a list of well-known locations (`AssetCleanupLocation`) to periodically clean up. This property 
+can be used to limit cleaning to one or the other of the data and cache directories.
+
+By default, all locations are cleaned up.
+
+#### `AssetCleanupType`
+| Value  | Description          |
+|--------|----------------------|
+| Local  | `local://` assets    |
+| NeosDB | `neosdb://` assets   |
+| Other  | any other URI scheme |
+
+#### `AssetCleanupLocation`
+| Value   | Description                           |
+|---------|---------------------------------------|
+| Data    | clean files in the `Assets` directory |
+| Cache   | clean files in the `Cache` directory  |
 
 ### `Neos`
 This section contains the normal headless client's JSON configuration as defined

@@ -48,6 +48,7 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" />
+      <PackageReference Include="Remora.Extensions.Options.Immutable" />
       <PackageReference Include="Remora.Rest" />
       <PackageReference Include="Remora.Results" />
       <PackageReference Include="Serilog.AspNetCore" />
@@ -71,6 +72,15 @@
     <ItemGroup>
       <Compile Update="NeosDependentHostConfiguration.cs">
         <DependentUpon>Program.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Configuration\AssetCleanupLocation.cs">
+        <DependentUpon>HeadlessApplicationConfiguration.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Configuration\AssetCleanupType.cs">
+        <DependentUpon>HeadlessApplicationConfiguration.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Configuration\WorldStartupParameters.cs">
+        <DependentUpon>NeosHeadlessConfig.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 </Project>

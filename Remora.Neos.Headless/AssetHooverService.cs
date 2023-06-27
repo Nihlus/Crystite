@@ -22,7 +22,6 @@ public class AssetHooverService : BackgroundService
     private readonly ILogger<AssetHooverService> _log;
 
     private readonly HeadlessApplicationConfiguration _config;
-    private readonly NeosHeadlessConfig _neosConfig;
 
     private readonly Engine _engine;
 
@@ -31,27 +30,30 @@ public class AssetHooverService : BackgroundService
     /// </summary>
     /// <param name="log">The logging instance for this type.</param>
     /// <param name="config">The application configuration.</param>
-    /// <param name="neosConfig">The headless configuration.</param>
     /// <param name="engine">The game engine.</param>
     public AssetHooverService
     (
         ILogger<AssetHooverService> log,
         IOptionsMonitor<HeadlessApplicationConfiguration> config,
-        IOptionsMonitor<NeosHeadlessConfig> neosConfig,
         Engine engine
     )
     {
         _log = log;
         _config = config.CurrentValue;
-        _neosConfig = neosConfig.CurrentValue;
         _engine = engine;
     }
 
     /// <inheritdoc />
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        if (_config.AssetCleanupInterval is null || _config.MaxAssetAge is null)
+        if (
+            _config.AssetCleanupInterval is null
+            || _config.MaxAssetAge is null
+            || _config.CleanupTypes is null
+            || _config.CleanupLocations is null
+        )
         {
+            // no interval or age set, end early
             return;
         }
 
@@ -70,11 +72,7 @@ public class AssetHooverService : BackgroundService
         var dbLock = (AsyncLock)(lockField.GetValue(db) ?? throw new InvalidOperationException());
         var assets = (LiteCollection<AssetRecord>)(assetsField.GetValue(db) ?? throw new InvalidOperationException());
 
-        var cacheFolder = string.IsNullOrWhiteSpace(_neosConfig.CacheFolder)
-            ? NeosHeadlessConfig.DefaultCacheFolder
-            : _neosConfig.CacheFolder;
-
-        var cacheDirectory = new DirectoryInfo(cacheFolder);
+        var directories = GetTargetDirectories();
 
         var timer = new PeriodicTimer(_config.AssetCleanupInterval.Value);
         while (await timer.WaitForNextTickAsync(stoppingToken))
@@ -87,16 +85,54 @@ public class AssetHooverService : BackgroundService
 
             var now = DateTimeOffset.UtcNow;
 
-            var files = cacheDirectory.EnumerateFiles("*", SearchOption.AllDirectories);
-            var oldFiles = files
-                .Where(f => f.CreationTimeUtc > f.LastAccessTimeUtc) // filter out entries without an access time
-                .Where(f => now - f.LastAccessTimeUtc > _config.MaxAssetAge).ToArray();
+            var files = directories
+                .SelectMany(d => d.EnumerateFiles("*", SearchOption.AllDirectories))
+                .Where(f => f.CreationTimeUtc < f.LastAccessTimeUtc) // filter out entries without an access time
+                .ToArray();
 
-            var oldPaths = oldFiles.Select(f => f.FullName).ToArray();
+            if (files.Length <= 0)
+            {
+                continue;
+            }
+
+            var paths = files.Select(f => f.FullName).ToArray();
 
             using (await dbLock.AcquireAsync(stoppingToken))
             {
-                var oldAssets = assets.Find(a => oldPaths.Contains(a.path)).Select(a => (Url: a.url, Path: a.path)).ToArray();
+                // data assets aren't stored in the database with their full path; check the Assets directory too
+                var oldAssets = assets
+                    .Find(a => paths.Contains(a.path) || paths.Contains(Path.Combine(_engine.DataPath, "Assets", a.path)))
+                    .Select
+                    (
+                        a =>
+                        (
+                            Url: new Uri(a.url),
+                            Path: a.path,
+                            File: files.Single
+                            (
+                                f => f.FullName == (Path.IsPathRooted(a.path)
+                                    ? a.path
+                                    : Path.Combine(_engine.DataPath, "Assets", a.path))
+                            )
+                        )
+                    )
+                    .Where(a =>
+                    {
+                        var type = Enum.TryParse<AssetCleanupType>(a.Url.Scheme, true, out var val)
+                            ? val
+                            : AssetCleanupType.Other;
+
+                        if (!_config.CleanupTypes.TryGetValue(type, out var maxAssetAge))
+                        {
+                            return false;
+                        }
+
+                        // age check
+                        maxAssetAge ??= _config.MaxAssetAge;
+                        return now - a.File.LastAccessTimeUtc > maxAssetAge;
+                    })
+                    .ToArray();
+
                 if (oldAssets.Length <= 0)
                 {
                     continue;
@@ -104,7 +140,7 @@ public class AssetHooverService : BackgroundService
 
                 _log.LogInformation("Cleaning up cached assets");
 
-                var totalSize = oldFiles.Sum(f => f.Length);
+                var totalSize = oldAssets.Sum(f => f.File.Length);
                 _log.LogInformation
                 (
                     "{Count} expired assets found (total {Size})",
@@ -112,18 +148,25 @@ public class AssetHooverService : BackgroundService
                     totalSize.Bytes().Humanize()
                 );
 
-                foreach (var (url, path) in oldAssets)
+                foreach (var (url, _, _) in oldAssets)
                 {
                     _log.LogInformation("Deleting {Url}", url);
-                    await db.DeleteCacheRecordAsync(new Uri(url));
-
-                    // clean up files that the DB doesn't know about
-                    if (File.Exists(path))
-                    {
-                        File.Delete(path);
-                    }
+                    await db.DeleteCacheRecordAsync(url);
                 }
             }
         }
+    }
+
+    private IReadOnlyList<DirectoryInfo> GetTargetDirectories()
+    {
+        return _config.CleanupLocations!.Select(cleanupLocation => new DirectoryInfo
+        (
+            cleanupLocation switch
+            {
+                AssetCleanupLocation.Data => Path.Combine(_engine.DataPath, "Assets"),
+                AssetCleanupLocation.Cache => Path.Combine(_engine.CachePath, "Cache"),
+                _ => throw new ArgumentOutOfRangeException()
+            }
+        )).ToArray();
     }
 }
