@@ -42,6 +42,7 @@ RestrictRealtime=true
 
 ReadWritePaths=/var/lib/neosvr /var/log/neosvr
 NoExecPaths=/var/lib/neosvr /var/log/neosvr
+ExecPaths=/var/lib/neosvr/NeosVR
 
 [Install]
 WantedBy=multi-user.target
