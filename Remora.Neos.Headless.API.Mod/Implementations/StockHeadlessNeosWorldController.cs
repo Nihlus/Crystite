@@ -25,7 +25,6 @@ public class StockHeadlessNeosWorldController : NeosWorldController
 {
     private readonly NeosHeadlessConfig _config;
     private readonly Engine _engine;
-    private readonly WorldManager _worldManager;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StockHeadlessNeosWorldController"/> class.
@@ -38,7 +37,6 @@ public class StockHeadlessNeosWorldController : NeosWorldController
     {
         _config = config;
         _engine = engine;
-        _worldManager = worldManager;
     }
 
     /// <inheritdoc />
