@@ -145,6 +145,12 @@ supplement the existing schema as defined below.
 | backgroundWorkers | int          | The number of background workers to create.                                                          | (internal)  | no       |
 | priorityWorkers   | int          | The number of priority workers to create.                                                            | (internal)  | no       |
 
+> **Warning**
+> Ensure that any assemblies referenced in `pluginAssemblies` are *not* stored in the root of the NeosVR installation
+> directory (or, if you're using the desktop client, any directory containing NeosVR assemblies). Doing so can cause
+> runtime conflicts between assembly versions shipped by the server and ones shipped by NeosVR (or ones shipped with the
+> plugin!).
+
 Additionally, the following extra keys can be used in the `startWorlds` array.
 
 | Name                 | Type   | Description                                        | Default   | Required |
@@ -170,6 +176,18 @@ Configures server options for the built-in REST API. Typically, this is used to
 customize the address and port the web server listens on. See 
 [Configure options for the ASP.NET Core Kestrel web server][4] for more 
 information.
+
+## Mods
+[NeosModLoader][7] can be used with the server to add runtime patches and normal headless mods. Compatibility is not 
+guaranteed, however, depending on what the mods do - as always, use with caution and your mileage may vary.
+
+To install NML, follow their guide but replace step 4 (where you add the command-line argument) with an appropriate 
+modification to `appsettings.json`'s `pluginAssemblies` property. Add the full path to the NML assembly there.
+
+There are some use cases that are affected by the security hardening options in use by the systemd service. Primarily, 
+you cannot store mod files outside of `/var/lib/neosvr` as Neos requires write permissions to mod files in order to 
+perform certain postprocessing steps. You should also consider the restrictions imposed when testing mods, as some mod
+behaviour may be blocked for security reasons and isn't always the mod's fault.
 
 ## Running
 Once you've configured the server, you can start it by enabling and starting the
@@ -264,3 +282,4 @@ that could be useful for future work with NeosVR and headless servers.
 [4]: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/options
 [5]: ../docs/index.md
 [6]: docs/nitty-gritty.md
+[7]: https://github.com/neos-modding-group/NeosModLoader

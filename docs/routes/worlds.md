@@ -140,7 +140,7 @@ Starts a new world.
 > `url` and `template` are mutually exclusive.
 
 #### Returns
-An asynchronous [Job](job.md#job).
+An asynchronous [Job](jobs.md#job).
 
 #### Errors
 * `404 Not Found` if no known template was found with the given name
@@ -162,7 +162,7 @@ Saves the world identified by `id`.
 None.
 
 #### Returns
-An asynchronous [Job](job.md#job).
+An asynchronous [Job](jobs.md#job).
 
 #### Errors
 * `404 Not Found` if no world with the given ID was found
@@ -196,7 +196,7 @@ Restarts the world identified by `id`.
 None.
 
 #### Returns
-An asynchronous [Job](job.md#job).
+An asynchronous [Job](jobs.md#job).
 
 #### Errors
 * `404 Not Found` if no world with the given ID was found OR it does not have

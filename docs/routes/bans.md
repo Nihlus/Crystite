@@ -43,7 +43,7 @@ None.
 ]
 ```
 
-### `POST` /bans/[{id}](world.md#restuser) `200 Ok`
+### `POST` /bans/[{id}](worlds.md#restuser) `200 Ok`
 Bans the identified user from all sessions on this server.
 
   > The user id may be substituted for the user's username on this route.
@@ -66,7 +66,7 @@ A [RestBan](#restban) object.
 }
 ```
 
-### `DELETE` /bans/[{id}](world.md#restuser) `201 No Content`
+### `DELETE` /bans/[{id}](worlds.md#restuser) `201 No Content`
 Unbans the identified user from all sessions on this server.
 
   > The user id may be substituted for the user's username on this route.

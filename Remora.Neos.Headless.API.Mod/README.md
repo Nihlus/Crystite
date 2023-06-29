@@ -10,7 +10,7 @@ server. Generally, the routes provided functionally match up with the console
 commands offered out of the box but with a more program-oriented design and data
 format.
 
-To get started, check out the [Route Documentation](docs/index.md).
+To get started, check out the [Route Documentation](../docs/index.md).
 
 ## Configuration
 The mod defines two configuration keys through NML's configuration system.

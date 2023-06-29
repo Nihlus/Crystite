@@ -16,6 +16,7 @@ and a nullable field with a trailing question mark on its type `string?`.
 Enumerations are serialized as integers unless otherwise specified.
 
 # Resource Routes
-1. [Jobs](routes/job.md)
-2. [Worlds](routes/world.md)
-3. [Users](routes/users.md)
+1. [Bans](routes/bans.md)
+2. [Contacts](routes/contacts.md)
+3. [Jobs](routes/jobs.md)
+4. [Worlds](routes/worlds.md)

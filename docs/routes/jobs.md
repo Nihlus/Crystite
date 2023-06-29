@@ -1,4 +1,7 @@
 # Jobs
+Contains routes and objects for querying and interacting with asynchronous jobs
+started by other routes.
+
 ## Objects
 ### Job
 An asynchronous job descriptor.
