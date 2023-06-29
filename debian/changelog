@@ -1,3 +1,9 @@
+remora-neos-headless (1.0.0+deb11~preview13) UNRELEASED; urgency=medium
+
+  * Implement using "focused" as a world ID.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Thu, 29 Jun 2023 19:30:00 +0200
+
 remora-neos-headless (1.0.0+deb11~preview12) UNRELEASED; urgency=medium
 
   * Improve asset cleanup options.
