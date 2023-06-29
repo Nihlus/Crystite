@@ -267,6 +267,18 @@ debuild -us -uc
 The resulting packages will be placed in the directory above the root of the
 repository.
 
+## Edge Cases
+This is a collection of miscellaneous edge cases that have cropped up and that
+prospective runners of the software might want to know about.
+
+### systemd-sysusers and SSSD
+If you use the Debian package, a sysusers.d file is installed that specifies
+the presence of a neosvr user. This can sometimes conflict with or override
+users defined externally, such as via LDAP.
+
+In order to avoid problems with this, ensure that `systemd-sysusers` runs 
+*after* `sssd` so that any external users can be resolved when sysusers.d is read.
+
 ## Technical Details
 If you're interested in the nitty-gritty of how (and why!) the server works, or
 if you just want some informal technical reading, please check out [this][6]
