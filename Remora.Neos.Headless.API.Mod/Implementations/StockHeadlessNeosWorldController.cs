@@ -108,13 +108,10 @@ public class StockHeadlessNeosWorldController : NeosWorldController
     /// <inheritdoc />
     public override async Task<Result<IRestWorld>> RestartWorldAsync(string worldId, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return new NotFoundError("No matching world found.");
+            return Result<IRestWorld>.FromError(findWorld);
         }
 
         var handler = WorldHandler.GetHandler(world);

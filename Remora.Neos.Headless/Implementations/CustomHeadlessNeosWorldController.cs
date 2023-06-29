@@ -96,7 +96,13 @@ public class CustomHeadlessNeosWorldController : NeosWorldController
     /// <inheritdoc />
     public override async Task<Result<IRestWorld>> RestartWorldAsync(string worldId, CancellationToken ct = default)
     {
-        var restartWorld = await _worldService.RestartWorldAsync(worldId, ct);
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
+        {
+            return Result<IRestWorld>.FromError(findWorld);
+        }
+
+        var restartWorld = await _worldService.RestartWorldAsync(world.SessionId, ct);
 
         return restartWorld.IsDefined(out var session)
             ? session.World.ToRestWorld()

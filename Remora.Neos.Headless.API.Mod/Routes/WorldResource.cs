@@ -470,25 +470,6 @@ internal sealed class WorldResource
     }
 
     /// <summary>
-    /// Get the currently focused world.
-    /// </summary>
-    /// <param name="context">The HTTP context.</param>
-    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-    [RestRoute("GET", "/worlds/focused")]
-    public async Task GetFocusedWorldAsync(IHttpContext context)
-    {
-        var getFocused = await _worldController.GetFocusedWorldAsync(context.CancellationToken);
-        if (!getFocused.IsDefined(out var world))
-        {
-            await context.Response.SendResponseAsync(getFocused.Error.ToStatusCode());
-            return;
-        }
-
-        var json = JsonSerializer.Serialize(world);
-        await context.Response.SendResponseAsync(json);
-    }
-
-    /// <summary>
     /// Set the currently focused world.
     /// </summary>
     /// <param name="context">The HTTP context.</param>

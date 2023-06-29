@@ -275,16 +275,6 @@ public class WorldController : ControllerBase
     ) => (await _worldController.SetWorldUserRoleAsync(id, userIdOrName, role, ct)).ToActionResult();
 
     /// <summary>
-    /// Gets the focused world.
-    /// </summary>
-    /// <param name="ct">The cancellation token for this operation.</param>
-    /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
-    [HttpGet]
-    [Route("focused")]
-    public async Task<ActionResult<IRestWorld>> GetFocusedWorldAsync(CancellationToken ct = default)
-        => (await _worldController.GetFocusedWorldAsync(ct)).ToActionResult();
-
-    /// <summary>
     /// Focuses the given world.
     /// </summary>
     /// <param name="id">The ID of the world.</param>

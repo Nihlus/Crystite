@@ -58,25 +58,16 @@ public abstract class NeosWorldController : INeosWorldController
     /// <inheritdoc />
     public Task<Result<IRestWorld>> GetWorldAsync(string worldId, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        return world is null
-            ? Task.FromResult<Result<IRestWorld>>(new NotFoundError("No matching world found."))
-            : Task.FromResult<Result<IRestWorld>>(world.ToRestWorld());
+        return Task.FromResult(FindWorld(worldId).Map<IRestWorld>(w => w.ToRestWorld()));
     }
 
     /// <inheritdoc />
     public async Task<Result> SaveWorldAsync(string worldId, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return new NotFoundError("No matching world found.");
+            return (Result)findWorld;
         }
 
         if (!Userspace.CanSave(world))
@@ -101,13 +92,10 @@ public abstract class NeosWorldController : INeosWorldController
     /// <inheritdoc />
     public virtual Task<Result> CloseWorldAsync(string worldId, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result>(new NotFoundError("No matching world found."));
+            return Task.FromResult((Result)findWorld);
         }
 
         world.Destroy();
@@ -127,13 +115,10 @@ public abstract class NeosWorldController : INeosWorldController
         CancellationToken ct = default
     )
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result<IRestWorld>>(new NotFoundError("No matching world found."));
+            return Task.FromResult(Result<IRestWorld>.FromError(findWorld));
         }
 
         if (name is not null)
@@ -198,25 +183,19 @@ public abstract class NeosWorldController : INeosWorldController
     /// <inheritdoc />
     public Task<Result<IReadOnlyList<IRestUser>>> GetWorldUsersAsync(string worldId, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        return world is null
-            ? Task.FromResult<Result<IReadOnlyList<IRestUser>>>(new NotFoundError("No matching world found."))
-            : Task.FromResult<Result<IReadOnlyList<IRestUser>>>(world.AllUsers.Select(u => u.ToRestUser()).ToArray());
+        return Task.FromResult
+        (
+            FindWorld(worldId).Map<IReadOnlyList<IRestUser>>(w => w.AllUsers.Select(u => u.ToRestUser()).ToArray())
+        );
     }
 
     /// <inheritdoc />
     public Task<Result<IRestUser>> GetWorldUserAsync(string worldId, string userIdOrName, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result<IRestUser>>(new NotFoundError("No matching world found."));
+            return Task.FromResult(Result<IRestUser>.FromError(findWorld));
         }
 
         var user = world.AllUsers.FirstOrDefault
@@ -233,13 +212,10 @@ public abstract class NeosWorldController : INeosWorldController
     /// <inheritdoc />
     public Task<Result> KickWorldUserAsync(string worldId, string userIdOrName, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result>(new NotFoundError("No matching world found."));
+            return Task.FromResult((Result)findWorld);
         }
 
         var user = world.AllUsers.FirstOrDefault
@@ -265,13 +241,10 @@ public abstract class NeosWorldController : INeosWorldController
     /// <inheritdoc />
     public Task<Result<IRestBan>> BanWorldUserAsync(string worldId, string userIdOrName, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result<IRestBan>>(new NotFoundError("No matching world found."));
+            return Task.FromResult(Result<IRestBan>.FromError(findWorld));
         }
 
         var user = world.AllUsers.FirstOrDefault
@@ -303,13 +276,10 @@ public abstract class NeosWorldController : INeosWorldController
         CancellationToken ct = default
     )
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result>(new NotFoundError("No matching world found."));
+            return Task.FromResult((Result)findWorld);
         }
 
         var user = world.AllUsers.FirstOrDefault
@@ -330,13 +300,10 @@ public abstract class NeosWorldController : INeosWorldController
     /// <inheritdoc />
     public Task<Result> RespawnWorldUserAsync(string worldId, string userIdOrName, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result>(new NotFoundError("No matching world found."));
+            return Task.FromResult((Result)findWorld);
         }
 
         var user = world.AllUsers.FirstOrDefault
@@ -357,13 +324,10 @@ public abstract class NeosWorldController : INeosWorldController
     /// <inheritdoc />
     public Task<Result> SetWorldUserRoleAsync(string worldId, string userIdOrName, RestUserRole userRole, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result>(new NotFoundError("No matching world found."));
+            return Task.FromResult((Result)findWorld);
         }
 
         var user = world.AllUsers.FirstOrDefault
@@ -403,24 +367,15 @@ public abstract class NeosWorldController : INeosWorldController
 
     /// <inheritdoc />
     public Task<Result<IRestWorld>> GetFocusedWorldAsync(CancellationToken ct = default)
-    {
-        var world = _worldManager.FocusedWorld;
-
-        return world is null
-            ? Task.FromResult<Result<IRestWorld>>(new NotFoundError("No world is focused."))
-            : Task.FromResult<Result<IRestWorld>>(world.ToRestWorld());
-    }
+        => GetWorldAsync("focused", ct);
 
     /// <inheritdoc />
     public Task<Result> FocusWorldAsync(string worldId, CancellationToken ct = default)
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result>(new NotFoundError("No matching world found."));
+            return Task.FromResult((Result)findWorld);
         }
 
         _worldManager.FocusWorld(world);
@@ -437,13 +392,10 @@ public abstract class NeosWorldController : INeosWorldController
         CancellationToken ct = default
     )
     {
-        var world = _worldManager.Worlds
-            .Where(w => !w.IsUserspace())
-            .FirstOrDefault(w => w.SessionId == worldId);
-
-        if (world is null)
+        var findWorld = FindWorld(worldId);
+        if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult<Result>(new NotFoundError("No matching world found."));
+            return Task.FromResult((Result)findWorld);
         }
 
         switch (value)
@@ -509,5 +461,34 @@ public abstract class NeosWorldController : INeosWorldController
         }
 
         return Task.FromResult(Result.FromSuccess());
+    }
+
+    /// <summary>
+    /// Attempts to find a world that matches the given ID.
+    /// </summary>
+    /// <param name="worldId">
+    /// The ID of the world, or the special value <value>"focused"</value>, which returns the currently focused world.
+    /// </param>
+    /// <returns>The world.</returns>
+    protected Result<World> FindWorld(string worldId)
+    {
+        World? world;
+        if (worldId is "focused")
+        {
+            world = _worldManager.FocusedWorld;
+        }
+        else
+        {
+            world = _worldManager.Worlds
+                .Where(w => !w.IsUserspace())
+                .FirstOrDefault(w => w.SessionId == worldId);
+        }
+
+        if (world is null)
+        {
+            return new NotFoundError("No matching world found.");
+        }
+
+        return world;
     }
 }
