@@ -27,11 +27,19 @@ hardwareInfo.RefreshMemoryList();
 
 var applicationBuilder = WebApplication.CreateBuilder(args);
 
-var systemConfig = OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD()
-    ? Path.Combine("/", "etc", "remora-neos-headless", "appsettings.json")
-    : Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
+var systemConfigBase = OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD()
+    ? Path.Combine("/", "etc", "remora-neos-headless")
+    : Directory.GetCurrentDirectory();
+
+var systemConfigDropInDirectory = Path.Combine(systemConfigBase, "conf.d");
+var systemConfig = Path.Combine(systemConfigBase, "appsettings.json");
 
 applicationBuilder.Configuration.AddJsonFile(systemConfig, true);
+var dropInFiles = Directory.EnumerateFiles(systemConfigDropInDirectory, "*.json", SearchOption.TopDirectoryOnly);
+foreach (var dropInFile in dropInFiles.OrderBy(Path.GetFileNameWithoutExtension))
+{
+    applicationBuilder.Configuration.AddJsonFile(dropInFile, true);
+}
 
 var headlessConfig = applicationBuilder.Configuration.GetSection("Headless").Get<HeadlessApplicationConfiguration>()
                      ?? new HeadlessApplicationConfiguration();
