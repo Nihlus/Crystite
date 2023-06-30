@@ -31,14 +31,17 @@ var systemConfigBase = OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD()
     ? Path.Combine("/", "etc", "remora-neos-headless")
     : Directory.GetCurrentDirectory();
 
-var systemConfigDropInDirectory = Path.Combine(systemConfigBase, "conf.d");
 var systemConfig = Path.Combine(systemConfigBase, "appsettings.json");
-
 applicationBuilder.Configuration.AddJsonFile(systemConfig, true);
-var dropInFiles = Directory.EnumerateFiles(systemConfigDropInDirectory, "*.json", SearchOption.TopDirectoryOnly);
-foreach (var dropInFile in dropInFiles.OrderBy(Path.GetFileNameWithoutExtension))
+
+var systemConfigDropInDirectory = Path.Combine(systemConfigBase, "conf.d");
+if (Directory.Exists(systemConfigDropInDirectory))
 {
-    applicationBuilder.Configuration.AddJsonFile(dropInFile, true);
+    var dropInFiles = Directory.EnumerateFiles(systemConfigDropInDirectory, "*.json", SearchOption.TopDirectoryOnly);
+    foreach (var dropInFile in dropInFiles.OrderBy(Path.GetFileNameWithoutExtension))
+    {
+        applicationBuilder.Configuration.AddJsonFile(dropInFile, true);
+    }
 }
 
 var headlessConfig = applicationBuilder.Configuration.GetSection("Headless").Get<HeadlessApplicationConfiguration>()
