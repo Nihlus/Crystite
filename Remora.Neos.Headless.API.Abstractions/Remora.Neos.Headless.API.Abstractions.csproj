@@ -17,6 +17,10 @@
         <Description>Defines common interfaces and data models for programmatic control of a NeosVR headless client</Description>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    </PropertyGroup>
+    
     <ItemGroup>
       <PackageReference Include="OneOf" />
       <PackageReference Include="Remora.Results" />
