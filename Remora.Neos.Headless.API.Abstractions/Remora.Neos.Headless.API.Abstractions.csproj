@@ -18,9 +18,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="OneOf" Version="3.0.243" />
-      <PackageReference Include="Remora.Results" Version="7.2.3" />
-      <PackageReference Include="System.Text.Json" Version="7.0.2" />
+      <PackageReference Include="OneOf" />
+      <PackageReference Include="Remora.Results" />
+      <PackageReference Include="System.Text.Json" />
     </ItemGroup>
 
     <ItemGroup>

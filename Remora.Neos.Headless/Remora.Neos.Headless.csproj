@@ -32,11 +32,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <NeosReference Include="FrooxEngine" Private="false" />
-        <NeosReference Include="BaseX" Private="false" />
-        <NeosReference Include="CloudX.Shared" Private="false" />
-        <NeosReference Include="PostX" Private="false" />
-        <NeosReference Include="LiteDB" Private="false" />
+        <NeosReference Include="FrooxEngine" />
+        <NeosReference Include="BaseX" />
+        <NeosReference Include="CloudX.Shared" />
+        <NeosReference Include="PostX" />
+        <NeosReference Include="LiteDB" />
     </ItemGroup>
 
     <ItemGroup>

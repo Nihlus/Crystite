@@ -13,10 +13,12 @@
     <PackageVersion Include="Microsoft.Extensions.Hosting.Systemd" Version="7.0.0" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageVersion Include="NVorbis" Version="0.10.5" />
+    <PackageVersion Include="OneOf" Version="3.0.255"/>
     <PackageVersion Include="Remora.Extensions.Options.Immutable" Version="1.0.6" />
     <PackageVersion Include="Remora.Rest" Version="3.2.0" />
     <PackageVersion Include="Remora.Results" Version="7.2.3" />
     <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
+    <PackageVersion Include="System.Text.Json" Version="7.0.3" />
     <PackageVersion Include="System.Threading" Version="4.3.0" />
   </ItemGroup>
 </Project>
