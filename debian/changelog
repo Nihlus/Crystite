@@ -1,3 +1,9 @@
+remora-neos-headless (1.0.0+deb11~preview14) UNRELEASED; urgency=medium
+
+  * Implement support for drop-in configuration overrides.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Fri, 30 Jun 2023 17:30:00 +0200
+
 remora-neos-headless (1.0.0+deb11~preview13) UNRELEASED; urgency=medium
 
   * Implement using "focused" as a world ID.
