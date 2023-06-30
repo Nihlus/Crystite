@@ -83,6 +83,20 @@ important ones are the `Headless` and the `Neos` sections.
 > The sections listed here are the only ones officially supported and known to
 > work.
 
+If you don't want to edit the configuration file shipped with the package, you
+can also use drop-in JSON configuration files in the 
+`/etc/remora-neos-headless/conf.d` directory. Any files placed here will 
+be merged with `appsettings.json`, overriding any values specified there. 
+Drop-ins can also override each other and are ordered by their filename. This
+means that if two drop-in files define the same key, the latter file overrides
+the value of the first one.
+
+There is an exception to this, and that is when the value is either an object
+or an array. In this case, the latter will not replace the value directly; 
+rather, it will *merge* the two values, only replacing values when their
+property names or array indices conflict. See [this issue][8] for more
+information about the behaviour.
+
 ### `Headless`
 This section provides configuration options for the headless server application
 itself.
@@ -295,3 +309,4 @@ that could be useful for future work with NeosVR and headless servers.
 [5]: ../docs/index.md
 [6]: docs/nitty-gritty.md
 [7]: https://github.com/neos-modding-group/NeosModLoader
+[8]: https://github.com/dotnet/runtime/issues/36569
