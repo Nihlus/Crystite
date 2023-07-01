@@ -30,9 +30,9 @@ An enumeration of friend request states.
 |-----------|-------|
 | None      | 0     | 
 | Ignored   | 1     |
-| Blocked   | 3     |
-| Friend    | 4     |
-| Requested | 5     |
+| Blocked   | 2     |
+| Friend    | 3     |
+| Requested | 4     |
 
 ## Routes
 ### `GET` /contacts `200 Ok`
