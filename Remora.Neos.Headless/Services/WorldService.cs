@@ -64,6 +64,13 @@ public class WorldService
         var sessionID = startupParameters.CustomSessionID;
         if (sessionID is not null)
         {
+            // automatically add the session ID prefix if it's not already been provided.
+            // custom session IDs must be in the form "S-U-<username>:<arbitrary>
+            if (!sessionID.StartsWith("S-"))
+            {
+                sessionID = $"S-{sessionID}";
+            }
+
             if (!SessionInfo.IsValidSessionId(sessionID))
             {
                 _log.LogWarning("Invalid custom session ID: {ID}", sessionID);
