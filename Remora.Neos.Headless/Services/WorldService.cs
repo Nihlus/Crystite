@@ -231,6 +231,7 @@ public class WorldService
                 return;
             }
 
+            // TODO: does this restart all worlds if one fails?
             if (autoRecover)
             {
                 restart = true;
