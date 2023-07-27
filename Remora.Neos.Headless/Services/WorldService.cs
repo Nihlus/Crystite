@@ -91,39 +91,11 @@ public class WorldService
             }
         }
 
-        var startSettings = new WorldStartSettings();
-        if (startupParameters.LoadWorldURL is not null)
+        var createStartSettings = await startupParameters.CreateWorldStartSettingsAsync(sessionID);
+        if (!createStartSettings.IsDefined(out var startSettings))
         {
-            startSettings.URIs = new[] { startupParameters.LoadWorldURL };
+            return Result<ActiveSession>.FromError(createStartSettings);
         }
-        else if (startupParameters.LoadWorldPresetName is not null)
-        {
-            var worldPreset = (await WorldPresets.GetPresets()).FirstOrDefault
-            (
-                p => startupParameters.LoadWorldPresetName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)
-            );
-
-            if (worldPreset is null)
-            {
-                return new NotFoundError($"Unknown world preset: {startupParameters.LoadWorldPresetName}");
-            }
-
-            startSettings.InitWorld = worldPreset.Method;
-        }
-        else
-        {
-            return new InvalidOperationError
-            (
-                "No world startup information. At least one of loadWorldUrl or loadWorldPresetName is required."
-            );
-        }
-
-        startSettings.ForcePort = startupParameters.ForcePort.GetValueOrDefault();
-        startSettings.ForceSessionId = sessionID;
-        startSettings.DefaultAccessLevel = startupParameters.AccessLevel;
-        startSettings.HideFromListing = startupParameters.HideFromPublicListing;
-        startSettings.GetExisting = false;
-        startSettings.CreateLoadIndicator = false;
 
         var world = await Userspace.OpenWorld(startSettings);
         if (world is null)
