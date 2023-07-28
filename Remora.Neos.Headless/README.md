@@ -103,17 +103,19 @@ itself.
 
 The following keys are defined for this section.
 
-| Name                 | Type     | Description                                                            | Default                    | Required |
-|----------------------|----------|------------------------------------------------------------------------|----------------------------|----------|
-| neosPath             | string   | The path to the NeosVR installation directory                          | /var/lib/neosvr/NeosVR     | yes      |
-| assetCleanupInterval | string   | The interval at which cached files should be cleaned up                | null                       | no       |
-| maxAssetAge          | string   | The maximum time a cached asset can remain unused before being deleted | null                       | no       |
-| cleanupTypes         | dict     | The asset types to clean and their associated max ages.                | all types at `maxAssetAge` | no       |
-| cleanupLocations     | string[] | The asset locations to clean.                                          | all locations              | no       |
-| maxUploadRetries     | byte     | The maximum number of times to retry record uploads while syncing      | 3                          | no       |
-| retryDelay           | string   | The time to wait between subsequent record uploas while retrying       | null                       | no       |
-| invisible            | bool     | Whether the logged-in account's status should be set to invisible      | false                      | no       |
-| enableSteam          | bool     | Whether to enable Steam API integration                                | false                      | no       |
+| Name                 | Type      | Description                                                            | Default                    | Required |
+|----------------------|-----------|------------------------------------------------------------------------|----------------------------|----------|
+| neosPath             | string    | The path to the NeosVR installation directory                          | /var/lib/neosvr/NeosVR     | yes      |
+| assetCleanupInterval | string    | The interval at which cached files should be cleaned up                | null                       | no       |
+| maxAssetAge          | string    | The maximum time a cached asset can remain unused before being deleted | null                       | no       |
+| cleanupTypes         | dict      | The asset types to clean and their associated max ages.                | all types at `maxAssetAge` | no       |
+| cleanupLocations     | string[]  | The asset locations to clean.                                          | all locations              | no       |
+| maxUploadRetries     | byte      | The maximum number of times to retry record uploads while syncing      | 3                          | no       |
+| retryDelay           | string    | The time to wait between subsequent record uploas while retrying       | null                       | no       |
+| invisible            | bool      | Whether the logged-in account's status should be set to invisible      | false                      | no       |
+| enableSteam          | bool      | Whether to enable Steam API integration                                | false                      | no       |
+| enableYoutubeDL      | bool      | Whether to enable youtube-dl integration                               | true                       | no       |
+| youtubeDLPaths       | string[]? | Paths to check for youtube-dl binaries                                 | (internal)                 | no       |
 
 > It is an absolute requirement that `neosPath` points to a valid NeosVR 
 > installation. The server will not run without access to NeosVR's assemblies.
@@ -146,6 +148,19 @@ By default, all locations are cleaned up.
 |---------|---------------------------------------|
 | Data    | clean files in the `Assets` directory |
 | Cache   | clean files in the `Cache` directory  |
+
+`enableYoutubeDL` and `youtubeDLPaths` can be used to control whether video textures use youtube-dl (or a compatible
+alternative) to load information from a remote video service. You can either enable or disable the integration outright,
+or use one or more alternate search paths for the program used.
+
+By default, the server will look for `yt-dlp` and `youtube-dl`, prioritizing the former, in the following order:
+  1. (Non-Windows only) /usr/bin
+  2. (Non-Windows only) /usr/local/bin
+  3. (Windows only) `neosPath`\RuntimeData
+  4. $PWD
+
+If you set `youtubeDLPaths` to `null` or omit it from your configuration, this is the paths that will be searched. If
+you set your own list of paths, they will be tried in the order you enter them.
 
 ### `Neos`
 This section contains the normal headless client's JSON configuration as defined

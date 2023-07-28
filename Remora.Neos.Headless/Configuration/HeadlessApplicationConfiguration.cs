@@ -28,7 +28,9 @@ public record HeadlessApplicationConfiguration
     byte? MaxUploadRetries = 3,
     TimeSpan? RetryDelay = null,
     bool Invisible = false,
-    bool EnableSteam = false
+    bool EnableSteam = false,
+    bool EnableYoutubeDL = true,
+    IReadOnlyList<string>? YoutubeDLPaths = null
 )
 {
     /// <summary>

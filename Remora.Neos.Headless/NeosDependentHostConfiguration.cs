@@ -15,6 +15,7 @@ using Remora.Neos.Headless.Patches.Generic;
 using Remora.Neos.Headless.Patches.NeosAssemblyPostProcessor;
 using Remora.Neos.Headless.Patches.RecordUploadTaskBase;
 using Remora.Neos.Headless.Patches.SteamConnector;
+using Remora.Neos.Headless.Patches.VideoTextureProvider;
 using Remora.Neos.Headless.Services;
 using Serilog;
 
@@ -81,6 +82,33 @@ public static class NeosDependentHostConfiguration
         CorrectErrorHandling.RetryDelay = headlessConfig.RetryDelay ?? TimeSpan.Zero;
 
         DisableSteamAPI.ShouldAttemptSteamInitialization = headlessConfig.EnableSteam;
+
+        var firstValidPath = headlessConfig.YoutubeDLPaths!.FirstOrDefault(File.Exists);
+
+        ConfigurableYoutubeDLPath.EnableYoutubeDL = headlessConfig.EnableYoutubeDL && firstValidPath is not null;
+        if (firstValidPath is not null)
+        {
+            ConfigurableYoutubeDLPath.YoutubeDLPath = firstValidPath;
+        }
+
+        switch (headlessConfig.EnableYoutubeDL)
+        {
+            case true when firstValidPath is null:
+            {
+                logger.LogWarning
+                (
+                    "None of the configured youtube-dl paths appear to be valid. Please configure a valid path or "
+                    + "disable youtube-dl integration"
+                );
+
+                break;
+            }
+            case true:
+            {
+                logger.LogInformation("Using {Path} for youtube-dl integration", firstValidPath);
+                break;
+            }
+        }
 
         var harmony = new Harmony("nu.algiz.remora.neos.headless");
         harmony.PatchAllUncategorized();

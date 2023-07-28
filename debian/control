@@ -24,7 +24,8 @@ Depends:
  libopus0,
  zlib1g
 Recommends:
- steamcmd
+ steamcmd,
+ yt-dlp | youtube-dl
 Description: Headless server for NeosVR
  Provides a headless server for NeosVR built for modern .NET. The
  server also comes with with several additional features, such as

@@ -4,10 +4,12 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CommandLiners;
 using Hardware.Info;
+using HarmonyLib;
 using Microsoft.Extensions.Configuration.CommandLine;
 using Microsoft.Extensions.Options;
 using Remora.Extensions.Options.Immutable;
@@ -19,6 +21,8 @@ using Remora.Neos.Headless.Extensions;
 using Remora.Neos.Headless.OptionConfigurators;
 using Remora.Rest.Extensions;
 using Remora.Rest.Json.Policies;
+
+Harmony.DEBUG = true;
 
 var hardwareInfo = new HardwareInfo();
 hardwareInfo.RefreshCPUList();
@@ -87,20 +91,55 @@ applicationBuilder.Host
                         .Get<HeadlessApplicationConfiguration>()
                           ?? throw new InvalidOperationException()
                 )
-                .PostConfigure<HeadlessApplicationConfiguration>(c => c with
-                {
-                    CleanupTypes = c.CleanupTypes ?? new Dictionary<AssetCleanupType, TimeSpan?>
+                .PostConfigure<HeadlessApplicationConfiguration>(c =>
                     {
-                        { AssetCleanupType.Local, c.MaxAssetAge },
-                        { AssetCleanupType.NeosDB, c.MaxAssetAge },
-                        { AssetCleanupType.Other, c.MaxAssetAge }
-                    },
-                    CleanupLocations = c.CleanupLocations?.Distinct().ToArray() ?? new[]
-                    {
-                        AssetCleanupLocation.Data,
-                        AssetCleanupLocation.Cache
+                        return c with
+                        {
+                            YoutubeDLPaths = ResolveYoutubeDLPaths(c.YoutubeDLPaths),
+                            CleanupTypes = c.CleanupTypes ?? new Dictionary<AssetCleanupType, TimeSpan?>
+                            {
+                               { AssetCleanupType.Local, c.MaxAssetAge },
+                               { AssetCleanupType.NeosDB, c.MaxAssetAge },
+                               { AssetCleanupType.Other, c.MaxAssetAge }
+                            },
+                            CleanupLocations = c.CleanupLocations?.Distinct().ToArray() ?? new[]
+                            {
+                                AssetCleanupLocation.Data,
+                                AssetCleanupLocation.Cache
+                            }
+                        };
+
+                        IReadOnlyList<string> ResolveYoutubeDLPaths(IReadOnlyList<string>? paths)
+                        {
+                            if (paths is not null)
+                            {
+                                return paths.Select(Path.GetFullPath).ToArray();
+                            }
+
+                            // defaults
+                            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            {
+                                return new[]
+                                {
+                                    Path.GetFullPath(Path.Combine(c.NeosPath, "RuntimeData", "yt-dlp.exe")),
+                                    Path.GetFullPath("yt-dlp.exe"),
+                                    Path.GetFullPath(Path.Combine(c.NeosPath, "RuntimeData", "youtube-dl.exe")),
+                                    Path.GetFullPath("youtube-dl.exe")
+                                };
+                            }
+
+                            return new[]
+                            {
+                                Path.Combine("/", "usr", "bin", "yt-dlp"),
+                                Path.Combine("/", "usr", "local", "bin", "yt-dlp"),
+                                Path.GetFullPath("yt-dlp"),
+                                Path.Combine("/", "usr", "bin", "youtube-dl"),
+                                Path.Combine("/", "usr", "local", "bin", "youtube-dl"),
+                                Path.GetFullPath("youtube-dl"),
+                            };
+                        }
                     }
-                });
+                );
 
             services
                 .AddControllers()
