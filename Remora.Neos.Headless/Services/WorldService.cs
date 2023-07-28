@@ -223,27 +223,33 @@ public class WorldService
     private async Task SessionHandlerAsync(SessionWrapper wrapper, CancellationToken ct = default)
     {
         var restart = false;
+
+        var world = wrapper.Session.World;
         var autoRecover = wrapper.Session.StartInfo.AutoRecover;
-        wrapper.Session.World.WorldManager.WorldFailed += world =>
+
+        void MarkAutoRecoverRestart(World failedWorld)
         {
             if (ct.IsCancellationRequested)
             {
                 return;
             }
 
-            // TODO: does this restart all worlds if one fails?
+            if (world.SessionId != failedWorld.SessionId)
+            {
+                return;
+            }
+
             if (autoRecover)
             {
                 restart = true;
-                _log.LogWarning("World {World} has crashed! Restarting...", world.RawName);
+                _log.LogWarning("World {World} has crashed! Restarting...", failedWorld.RawName);
             }
             else
             {
-                _log.LogWarning("World {World} has crashed!", world.RawName);
+                _log.LogWarning("World {World} has crashed!", failedWorld.RawName);
             }
-        };
+        }
 
-        var world = wrapper.Session.World;
         void UpdateCorrespondingRecord(Record record)
         {
             if (world.CorrespondingRecord.IsSameRecord(record))
@@ -252,6 +258,7 @@ public class WorldService
             }
         }
 
+        wrapper.Session.World.WorldManager.WorldFailed += MarkAutoRecoverRestart;
         RecordStoreNotifications.RecordStored += UpdateCorrespondingRecord;
 
         var lastUserCount = 1;
@@ -371,6 +378,8 @@ public class WorldService
 
         // always remove us first
         _ = _activeWorlds.TryRemove(wrapper.Session.World.SessionId, out _);
+
+        wrapper.Session.World.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
         RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
 
         if (!wrapper.Session.World.IsDestroyed)
