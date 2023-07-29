@@ -9,7 +9,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using CommandLiners;
 using Hardware.Info;
-using HarmonyLib;
 using Microsoft.Extensions.Configuration.CommandLine;
 using Microsoft.Extensions.Options;
 using Remora.Extensions.Options.Immutable;
@@ -21,8 +20,6 @@ using Remora.Neos.Headless.Extensions;
 using Remora.Neos.Headless.OptionConfigurators;
 using Remora.Rest.Extensions;
 using Remora.Rest.Json.Policies;
-
-Harmony.DEBUG = true;
 
 var hardwareInfo = new HardwareInfo();
 hardwareInfo.RefreshCPUList();
