@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crystite.Tests", "Tests\Cry
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Control", "Remora.Neos.Control\Remora.Neos.Control.csproj", "{C3563CE0-1248-43B7-A7B8-3DBDEB0891C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Control.Tests", "Tests\Remora.Neos.Control.Tests\Remora.Neos.Control.Tests.csproj", "{72E06891-8FC3-4852-86A0-A0045D055E47}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,8 +40,13 @@ Global
 		{C3563CE0-1248-43B7-A7B8-3DBDEB0891C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3563CE0-1248-43B7-A7B8-3DBDEB0891C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3563CE0-1248-43B7-A7B8-3DBDEB0891C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72E06891-8FC3-4852-86A0-A0045D055E47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72E06891-8FC3-4852-86A0-A0045D055E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72E06891-8FC3-4852-86A0-A0045D055E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72E06891-8FC3-4852-86A0-A0045D055E47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{E2CAD203-05F7-46DB-86DA-6D85F6223FBF} = {2EA42C3D-CDCA-4556-8403-B6A8663CB4F3}
+		{72E06891-8FC3-4852-86A0-A0045D055E47} = {2EA42C3D-CDCA-4556-8403-B6A8663CB4F3}
 	EndGlobalSection
 EndGlobal

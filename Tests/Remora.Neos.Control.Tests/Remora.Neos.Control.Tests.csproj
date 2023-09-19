@@ -1,0 +1,16 @@
+<Project Sdk="Remora.Tests.Sdk/2.0.6">
+  <PropertyGroup>
+    <LegalLicense>AGPL-3.0-or-later</LegalLicense>
+    <LegalAuthor>Jarl Gullberg</LegalAuthor>
+    <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
+    <UseSPDXFileHeaders>true</UseSPDXFileHeaders>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Remora.Neos.Control\Remora.Neos.Control.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Remora.Rest.Xunit" Version="3.0.1" />
+  </ItemGroup>
+</Project>
