@@ -1,5 +1,5 @@
 <Project>
-    <Sdk Name="Remora.Sdk" Version="2.1.1" />
+    <Sdk Name="Remora.Sdk" Version="2.1.2" />
     <Sdk Name="Remora.Neos.Sdk" Version="1.2.2" />
 
     <PropertyGroup>

@@ -1,5 +1,5 @@
 <Project>
-    <Sdk Name="Remora.Sdk" Version="2.1.1" />
+    <Sdk Name="Remora.Sdk" Version="2.1.2" />
 
     <PropertyGroup>
         <LibraryFrameworks>$(LibraryFrameworks);netstandard2.0</LibraryFrameworks>
@@ -20,7 +20,7 @@
     <PropertyGroup>
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
-    
+
     <ItemGroup>
       <PackageReference Include="OneOf" />
       <PackageReference Include="Remora.Results" />
