@@ -1,0 +1,34 @@
+<Project Sdk="Remora.Sdk/2.1.2">
+  <PropertyGroup>
+    <LegalLicense>AGPL-3.0-or-later</LegalLicense>
+    <LegalAuthor>Jarl Gullberg</LegalAuthor>
+    <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
+    <UseSPDXFileHeaders>true</UseSPDXFileHeaders>
+  </PropertyGroup>
+  
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VersionPrefix>1.0.0</VersionPrefix>
+    <Description>Control companion for the Remora headless NeosVR server.</Description>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" />
+    <PackageReference Include="ConsoleTables" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="OneOf" />
+    <PackageReference Include="Remora.Rest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Remora.Neos.Headless.API.Abstractions\Remora.Neos.Headless.API.Abstractions.csproj" />
+  </ItemGroup>
+</Project>
