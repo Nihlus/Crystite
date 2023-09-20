@@ -13,4 +13,8 @@
   <ItemGroup>
     <PackageReference Include="Remora.Rest.Xunit" Version="3.0.1" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <EmbeddedResource Include="Data\**\*" />
+  </ItemGroup>
 </Project>

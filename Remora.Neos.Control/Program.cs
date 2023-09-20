@@ -88,6 +88,7 @@ public static partial class Program
             o =>
             {
                 o.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
+                o.WriteIndented = true;
 
                 o.Converters.Add(new StringEnumConverter<RestContactStatus>(o.PropertyNamingPolicy));
                 o.Converters.Add(new StringEnumConverter<RestAccessLevel>(o.PropertyNamingPolicy));

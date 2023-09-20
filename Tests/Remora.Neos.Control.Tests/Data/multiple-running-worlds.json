@@ -1,0 +1,20 @@
+[
+    {
+        "id": "S-9801807d-fd97-40de-a46a-aed4b5ab4a62",
+        "name": "SpaceWorld",
+        "description": null,
+        "access_level": "anyone",
+        "away_kick_interval": 5,
+        "hide_from_listing": false,
+        "max_users": 32
+    },
+    {
+        "id": "S-84b4a57b-af87-4638-bcbb-4ec079c1bb4b",
+        "name": "OtherWorld",
+        "description": null,
+        "access_level": "anyone",
+        "away_kick_interval": 5,
+        "hide_from_listing": false,
+        "max_users": 32
+    }
+]

@@ -5,14 +5,21 @@
 //
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 using System.Text.Json;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Remora.Neos.Control.API;
 using RichardSzalay.MockHttp;
 using Xunit;
+using StreamWriter = System.IO.StreamWriter;
 
 #pragma warning disable SA1402
 
@@ -22,9 +29,10 @@ namespace Remora.Neos.Control.Tests.TestBases;
 /// Serves as a base class for REST API tests.
 /// </summary>
 [Collection("Verb tests")]
-public abstract class VerbTestBase
+public abstract class VerbTestBase : IDisposable
 {
     private readonly MockHttpMessageHandler _mockHandler;
+    private readonly MemoryStream _outputStream;
 
     /// <summary>
     /// Gets the services available to the test.
@@ -38,8 +46,10 @@ public abstract class VerbTestBase
     protected VerbTestBase(VerbTestFixture fixture)
     {
         _mockHandler = new();
+        _outputStream = new();
 
         var serviceCollection = new ServiceCollection()
+            .AddSingleton<TextWriter>(new StreamWriter(_outputStream, Encoding.UTF8))
             .AddSingleton(fixture);
 
         Program.ConfigureHeadlessAPIServices(1, "xunit", serviceCollection, b => b.ConfigurePrimaryHttpMessageHandler
@@ -63,6 +73,52 @@ public abstract class VerbTestBase
     {
         builder(_mockHandler);
         return this.Services.GetRequiredService<TAPI>();
+    }
+
+    /// <summary>
+    /// Gets the current total output from the program.
+    /// </summary>
+    /// <returns>The output as a set of lines.</returns>
+    protected IReadOnlyList<string> GetOutput()
+    {
+        var writer = this.Services.GetRequiredService<TextWriter>();
+        writer.Flush();
+
+        var outputPosition = _outputStream.Position;
+        _outputStream.Seek(0, SeekOrigin.Begin);
+
+        using var reader = new StreamReader(_outputStream, Encoding.UTF8, leaveOpen: true);
+        var value = reader.ReadToEnd();
+
+        _outputStream.Seek(outputPosition, SeekOrigin.Begin);
+        var lines = value.Split(Environment.NewLine);
+
+        // if the last line is empty, strip it out
+        return string.IsNullOrWhiteSpace(lines[^1]) ? lines[..^1] : lines;
+    }
+
+    /// <summary>
+    /// Gets the contents of an embedded response payload.
+    /// </summary>
+    /// <param name="filename">The filename of the payload.</param>
+    /// <returns>The contents of the payload.</returns>
+    // ReSharper disable once Html.PathError
+    protected string GetResponsePayload([PathReference("~/Data")] string filename)
+    {
+        using var stream = Assembly
+            .GetExecutingAssembly()
+            .GetManifestResourceStream
+            (
+                $"Remora.Neos.Control.Tests.Data.{filename}".Replace(Path.DirectorySeparatorChar, '.')
+            );
+
+        if (stream is null)
+        {
+            throw new InvalidOperationException();
+        }
+
+        using var reader = new StreamReader(stream);
+        return reader.ReadToEnd();
     }
 
     /// <summary>
@@ -123,6 +179,15 @@ public abstract class VerbTestBase
                 ? _fixture.Options
                 : _actual.Create(name);
         }
+    }
+
+    /// <inheritdoc />
+    public virtual void Dispose()
+    {
+        GC.SuppressFinalize(this);
+
+        _mockHandler.Dispose();
+        _outputStream.Dispose();
     }
 }
 
