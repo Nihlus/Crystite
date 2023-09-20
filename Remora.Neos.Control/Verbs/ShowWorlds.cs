@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,27 +39,26 @@ public class ShowWorlds : HeadlessVerb
     public override async ValueTask<Result> ExecuteAsync(IServiceProvider services, CancellationToken ct = default)
     {
         var worldAPI = services.GetRequiredService<HeadlessWorldAPI>();
+        var outputWriter = services.GetRequiredService<TextWriter>();
+        var outputOptions = services.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Remora.Neos.Headless");
 
         var getWorlds = await worldAPI.GetWorldsAsync(ct);
-        if (!getWorlds.IsSuccess)
+        if (!getWorlds.IsDefined(out var worlds))
         {
             return (Result)getWorlds;
         }
 
-        var table = new ConsoleTable("Name", "ID", "Description")
+        if (!this.Verbose)
         {
-            Options =
+            foreach (var world in worlds)
             {
-                EnableCount = false
+                await outputWriter.WriteLineAsync(world.Name);
             }
-        };
 
-        foreach (var world in getWorlds.Entity)
-        {
-            table.AddRow(world.Name, world.Id, world.Description);
+            return Result.FromSuccess();
         }
 
-        table.Write();
+        await outputWriter.WriteAsync(JsonSerializer.Serialize(worlds, outputOptions));
         return Result.FromSuccess();
     }
 }
