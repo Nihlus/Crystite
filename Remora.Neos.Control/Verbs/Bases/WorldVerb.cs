@@ -4,7 +4,7 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System;
+using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 
 namespace Remora.Neos.Control.Verbs.Bases;
@@ -31,10 +31,10 @@ public abstract class WorldVerb : HeadlessVerb
      /// </summary>
      /// <param name="name">The name of the world. Mutually exclusive with <paramref name="id"/>.</param>
      /// <param name="id">The ID of the world. Mutually exclusive with <paramref name="name"/>.</param>
-     /// <param name="port">The port.</param>
-     /// <param name="server">The server.</param>
-     protected WorldVerb(string? name, string? id, ushort port, string server)
-          : base(port, server)
+     /// <inheritdoc cref="HeadlessVerb(ushort, string, bool)" path="/param" />
+     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
+     protected WorldVerb(string? name, string? id, ushort port, string server, bool verbose)
+          : base(port, server, verbose)
      {
           this.Name = name;
           this.ID = id;

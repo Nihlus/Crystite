@@ -5,6 +5,7 @@
 //
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -27,12 +28,10 @@ public sealed class ShowWorld : WorldVerb
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowWorld"/> class.
     /// </summary>
-    /// <param name="name">The name of the world. Mutually exclusive with <paramref name="id"/>.</param>
-    /// <param name="id">The ID of the world. Mutually exclusive with <paramref name="name"/>.</param>
-    /// <param name="port">The port.</param>
-    /// <param name="server">The server.</param>
-    public ShowWorld(string? name, string? id, ushort port, string server)
-        : base(name, id, port, server)
+    /// <inheritdoc cref="WorldVerb(string, string, ushort, string, bool)" path="/param" />
+    [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
+    public ShowWorld(string? name, string? id, ushort port, string server, bool verbose)
+        : base(name, id, port, server, verbose)
     {
     }
 

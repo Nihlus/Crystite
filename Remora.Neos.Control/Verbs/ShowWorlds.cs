@@ -5,11 +5,13 @@
 //
 
 using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
-using ConsoleTables;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Remora.Neos.Control.API;
 using Remora.Neos.Control.Verbs.Bases;
 using Remora.Results;
@@ -25,10 +27,10 @@ public class ShowWorlds : HeadlessVerb
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowWorlds"/> class.
     /// </summary>
-    /// <param name="port">The port.</param>
-    /// <param name="server">The server.</param>
-    public ShowWorlds(ushort port, string server)
-        : base(port, server)
+    /// <inheritdoc cref="HeadlessVerb(ushort, string, bool)" path="/param" />
+    [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
+    public ShowWorlds(ushort port, string server, bool verbose)
+        : base(port, server, verbose)
     {
     }
 

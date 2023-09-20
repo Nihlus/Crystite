@@ -5,6 +5,7 @@
 //
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
@@ -41,10 +42,8 @@ public sealed class StartWorld : WorldVerb
     /// </summary>
     /// <param name="template">The name of the builtin template to start.</param>
     /// <param name="url">The record URL of the world to start.</param>
-    /// <param name="name">The name of the world. Mutually exclusive with <paramref name="id"/>.</param>
-    /// <param name="id">The ID of the world. Mutually exclusive with <paramref name="name"/>.</param>
-    /// <param name="port">The port.</param>
-    /// <param name="server">The server.</param>
+    /// <inheritdoc cref="WorldVerb(string, string, ushort, string, bool)" path="/param" />
+    [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
     public StartWorld
     (
         string? template,
@@ -52,9 +51,10 @@ public sealed class StartWorld : WorldVerb
         string? name,
         string? id,
         ushort port,
-        string server
+        string server,
+        bool verbose
     )
-        : base(name, id, port, server)
+        : base(name, id, port, server, verbose)
     {
         this.Template = template;
         this.Url = url;

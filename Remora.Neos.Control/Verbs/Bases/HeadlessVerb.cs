@@ -30,14 +30,22 @@ public abstract class HeadlessVerb : IExecutableVerb
     public string Server { get; }
 
     /// <summary>
+    /// Gets a value indicating whether more detailed information should be displayed.
+    /// </summary>
+    [Option('v', "verbose", Default = false, HelpText = "Whether to output detailed information")]
+    public bool Verbose { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="HeadlessVerb"/> class.
     /// </summary>
     /// <param name="port">The port.</param>
     /// <param name="server">The server.</param>
-    protected HeadlessVerb(ushort port, string server)
+    /// <param name="verbose">Whether to output detailed information.</param>
+    protected HeadlessVerb(ushort port, string server, bool verbose)
     {
         this.Port = port;
         this.Server = server;
+        this.Verbose = verbose;
     }
 
     /// <inheritdoc />
