@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,6 +40,7 @@ public sealed class ShowWorld : WorldVerb
     public override async ValueTask<Result> ExecuteAsync(IServiceProvider services, CancellationToken ct = default)
     {
         var worldAPI = services.GetRequiredService<HeadlessWorldAPI>();
+        var outputWriter = services.GetRequiredService<TextWriter>();
 
         IRestWorld? world;
         if (this.ID is null)
@@ -68,7 +70,8 @@ public sealed class ShowWorld : WorldVerb
         {
             Options =
             {
-                EnableCount = false
+                EnableCount = false,
+                OutputTo = outputWriter
             }
         };
 

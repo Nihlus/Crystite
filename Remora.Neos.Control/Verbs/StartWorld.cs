@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
@@ -65,6 +66,7 @@ public sealed class StartWorld : WorldVerb
     {
         var worldAPI = services.GetRequiredService<HeadlessWorldAPI>();
         var jobAPI = services.GetRequiredService<HeadlessJobAPI>();
+        var outputWriter = services.GetRequiredService<TextWriter>();
 
         OneOf<string, Uri> startArgument;
         if (this.Template is not null)
@@ -92,7 +94,7 @@ public sealed class StartWorld : WorldVerb
             return (Result)awaitJob;
         }
 
-        Console.WriteLine("World started");
+        await outputWriter.WriteLineAsync("World started");
         return Result.FromSuccess();
     }
 }

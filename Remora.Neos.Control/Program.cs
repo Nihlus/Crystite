@@ -33,6 +33,8 @@ if (verb is null)
 }
 
 var serviceCollection = new ServiceCollection();
+serviceCollection.AddSingleton(Console.Out);
+
 ConfigureJsonSerializerOptions(serviceCollection);
 ConfigureHeadlessAPIServices(verb.Port, verb.Server, serviceCollection);
 
