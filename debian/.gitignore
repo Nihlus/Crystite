@@ -1,5 +1,5 @@
 .debhelper/
-remora-neos-headless/
+crystite/
 
 debhelper-build-stamp
 files

@@ -1,54 +1,54 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: remora-neos-headless
+Upstream-Name: crystite
 Upstream-Contact: Jarl Gullberg <jarl.gullberg@gmail.com>
-Source: https://github.com/Remora/Remora.Neos.Headless
+Source: https://github.com/Nihlus/Crystite
 
 Files: *
 Copyright: 2023 Jarl Gullberg <jarl.gullberg@gmail.com>
 License: AGPL-3.0+
 
-Files: usr/lib/remora-neos-headless/0Harmony.dll
+Files: usr/lib/crystite/0Harmony.dll
 Copyright: 2017 Andreas Pardeike
 License: MIT
 
-Files: usr/lib/remora-neos-headless/Hardware.Info.dll
+Files: usr/lib/crystite/Hardware.Info.dll
 Copyright: 2020 Urban
 License: MIT
 
-Files: usr/lib/remora-neos-headless/JsonDocumentPath.dll
+Files: usr/lib/crystite/JsonDocumentPath.dll
 Copyright: 2020 Nie
 License: MIT
 
-Files: usr/lib/remora-neos-headless/Microsoft.*
+Files: usr/lib/crystite/Microsoft.*
 Copyright: 2017 Microsoft
 License: MIT
 
-Files: usr/lib/remora-neos-headless/Mono.Cecil.*
+Files: usr/lib/crystite/Mono.Cecil.*
 Copyright:
  2008 - 2015 Jb Evain
  2008 - 2011 Novell, Inc.
 License: MIT
 
-Files: usr/lib/remora-neos-headless/MonoMod.*
+Files: usr/lib/crystite/MonoMod.*
 Copyright:
  2015 - 2020 0x0ade
 License: MIT
 
-Files: usr/lib/usr/lib/remora-neos-headless/OneOf.dll
+Files: usr/lib/usr/lib/crystite/OneOf.dll
 Copyright: 2016 Harry McIntyre
 License: MIT
 
 Files:
- usr/lib/remora-neos-headless/Remora.Rest.*
- usr/lib/remora-neos-headless/Remora.Results.*
+ usr/lib/crystite/Remora.Rest.*
+ usr/lib/crystite/Remora.Results.*
 Copyright: 2023 Jarl Gullberg <jarl.gullberg@gmail.com>
 License: LGPL-3.0+
 
-Files: usr/lib/remora-neos-headless/Serilog.*
+Files: usr/lib/crystite/Serilog.*
 Copyright: 2013-2020 Serilog Contributors
 License: Apache-2.0
 
-Files: usr/lib/remora-neos-headless/System.*
+Files: usr/lib/crystite/System.*
 Copyright: 2017 Microsoft
 License: MIT
 

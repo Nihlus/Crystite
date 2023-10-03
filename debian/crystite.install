@@ -1,0 +1,6 @@
+bin/appsettings.json etc/crystite/
+bin/*.dll usr/lib/crystite/
+bin/*.deps.json usr/lib/crystite/
+bin/*.runtimeconfig.json usr/lib/crystite/
+bin/steam_appid.txt usr/lib/crystite/
+bin/Remora.Neos.Headless usr/lib/crystite/

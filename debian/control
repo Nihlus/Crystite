@@ -1,4 +1,4 @@
-Source: remora-neos-headless
+Source: crystite
 Section: games
 Priority: optional
 Maintainer: Jarl Gullberg <jarl.gullberg@gmail.com>
@@ -6,12 +6,12 @@ Build-Depends:
  debhelper-compat (= 13),
  dotnet-sdk-7.0
 Standards-Version: 4.6.0
-Homepage: https://github.com/Remora/Remora.Neos.Headless
-Vcs-Browser: https://github.com/Remora/Remora.Neos.Headless
-Vcs-Git: https://github.com/Remora/Remora.Neos.Headless.git
+Homepage: https://github.com/Nihlus/Crystite
+Vcs-Browser: https://github.com/Nihlus/Crystite
+Vcs-Git: https://github.com/Nihlus/Crystite.git
 Rules-Requires-Root: no
 
-Package: remora-neos-headless
+Package: crystite
 Architecture: any
 Depends:
  ${shlibs:Depends},
@@ -26,7 +26,7 @@ Depends:
 Recommends:
  steamcmd,
  yt-dlp | youtube-dl
-Description: Headless server for NeosVR
- Provides a headless server for NeosVR built for modern .NET. The
+Description: Headless server for Resonite
+ Provides a headless server for Resonite built for modern .NET. The
  server also comes with with several additional features, such as
  native systemd integration and a REST API for remote control.

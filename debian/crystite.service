@@ -1,17 +1,17 @@
 [Unit]
-Description=NeosVR headless server
+Description=Resonite headless server
 Requires=network-online.target
 After=network-online.target
 
 [Service]
 Type=notify
-ExecStart=/usr/lib/remora-neos-headless/Remora.Neos.Headless
+ExecStart=/usr/lib/crystite/Crystite
 Restart=always
 
 User=neosvr
 Group=neosvr
 
-WorkingDirectory=/var/lib/neosvr
+WorkingDirectory=/var/lib/crystite
 
 # Various security options. These are mainly recommended becase NeosVR contains a complete code execution engine that
 # runs in-process, and is by its very nature always running unknown external user code. LogiX is theoretically already
@@ -40,9 +40,9 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 RestrictNamespaces=true
 RestrictRealtime=true
 
-ReadWritePaths=/var/lib/neosvr /var/log/neosvr
-NoExecPaths=/var/lib/neosvr /var/log/neosvr
-ExecPaths=/var/lib/neosvr/NeosVR
+ReadWritePaths=/var/lib/crystite /var/log/neosvr
+NoExecPaths=/var/lib/crystite /var/log/neosvr
+ExecPaths=/var/lib/crystite/Resonite
 
 [Install]
 WantedBy=multi-user.target

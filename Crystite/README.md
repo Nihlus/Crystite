@@ -105,7 +105,7 @@ The following keys are defined for this section.
 
 | Name                 | Type      | Description                                                            | Default                    | Required |
 |----------------------|-----------|------------------------------------------------------------------------|----------------------------|----------|
-| neosPath             | string    | The path to the Resonite installation directory                          | /var/lib/crystite/Resonite   | yes      |
+| resonitePath             | string    | The path to the Resonite installation directory                          | /var/lib/crystite/Resonite   | yes      |
 | assetCleanupInterval | string    | The interval at which cached files should be cleaned up                | null                       | no       |
 | maxAssetAge          | string    | The maximum time a cached asset can remain unused before being deleted | null                       | no       |
 | cleanupTypes         | dict      | The asset types to clean and their associated max ages.                | all types at `maxAssetAge` | no       |
@@ -276,7 +276,7 @@ Required dependencies will be downloaded automatically, so you will need an
 internet connection to build.
 
 ```bash
-dotnet publish -f net7.0 -c Release -r linux-x64 --self-contained false -o bin Remora.Neos.Headless
+dotnet publish -f net7.0 -c Release -r linux-x64 --self-contained false -o bin Crystite
 ```
 
 Replace `linux-x64` with the target OS you want to run the server on. Do note

@@ -19,7 +19,7 @@
 
     <PropertyGroup>
         <VersionPrefix>1.0.0</VersionPrefix>
-        <Description>Defines default implementations of interfaces and data models for programmatic control of a NeosVR headless client</Description>
+        <Description>Defines default implementations of interfaces and data models for programmatic control of a Resonite headless client</Description>
     </PropertyGroup>
 
     <PropertyGroup>
