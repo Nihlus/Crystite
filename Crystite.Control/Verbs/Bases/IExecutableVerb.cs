@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Remora.Results;
 
-namespace Remora.Neos.Control.Verbs.Bases;
+namespace Crystite.Control.Verbs.Bases;
 
 /// <summary>
 /// Represents an executable verb.

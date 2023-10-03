@@ -4,7 +4,7 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-namespace Remora.Neos.Control;
+namespace Crystite.Control;
 
 /// <summary>
 /// Represents a simple error returned by the API.

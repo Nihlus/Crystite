@@ -7,7 +7,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <ProjectReference Include="..\..\Remora.Neos.Control\Remora.Neos.Control.csproj" />
+    <ProjectReference Include="..\..\Crystite.Control\Crystite.Control.csproj" />
   </ItemGroup>
   
   <ItemGroup>

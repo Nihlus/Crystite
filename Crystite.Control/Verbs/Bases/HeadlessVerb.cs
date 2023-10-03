@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using CommandLine;
 using Remora.Results;
 
-namespace Remora.Neos.Control.Verbs.Bases;
+namespace Crystite.Control.Verbs.Bases;
 
 /// <summary>
 /// Represents common options for all verbs.

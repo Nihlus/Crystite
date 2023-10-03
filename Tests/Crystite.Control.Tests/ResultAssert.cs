@@ -7,7 +7,7 @@
 using Remora.Results;
 using Xunit;
 
-namespace Remora.Neos.Control.Tests;
+namespace Crystite.Control.Tests;
 
 /// <summary>
 /// Contains helper assertions for results.

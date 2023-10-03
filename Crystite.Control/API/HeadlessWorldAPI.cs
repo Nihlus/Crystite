@@ -10,13 +10,13 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Crystite.API.Abstractions;
+using Crystite.API.Abstractions.Services;
 using OneOf;
-using Remora.Neos.Headless.API.Abstractions;
-using Remora.Neos.Headless.API.Abstractions.Services;
 using Remora.Rest;
 using Remora.Results;
 
-namespace Remora.Neos.Control.API;
+namespace Crystite.Control.API;
 
 /// <summary>
 /// Defines API endpoints for the headless world API.

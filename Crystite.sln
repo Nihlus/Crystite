@@ -10,9 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2EA42C3D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crystite.Tests", "Tests\Crystite.Tests\Crystite.Tests.csproj", "{E2CAD203-05F7-46DB-86DA-6D85F6223FBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Control", "Remora.Neos.Control\Remora.Neos.Control.csproj", "{C3563CE0-1248-43B7-A7B8-3DBDEB0891C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crystite.Control", "Crystite.Control\Crystite.Control.csproj", "{C3563CE0-1248-43B7-A7B8-3DBDEB0891C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Remora.Neos.Control.Tests", "Tests\Remora.Neos.Control.Tests\Remora.Neos.Control.Tests.csproj", "{72E06891-8FC3-4852-86A0-A0045D055E47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crystite.Control.Tests", "Tests\Crystite.Control.Tests\Crystite.Control.Tests.csproj", "{72E06891-8FC3-4852-86A0-A0045D055E47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

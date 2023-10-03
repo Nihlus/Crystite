@@ -5,14 +5,14 @@
     <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
     <UseSPDXFileHeaders>true</UseSPDXFileHeaders>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
 
   <PropertyGroup>
     <VersionPrefix>1.0.0</VersionPrefix>
-    <Description>Control companion for the Remora headless NeosVR server.</Description>
+    <Description>Control companion for the Remora headless Crystite server.</Description>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -29,6 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Remora.Neos.Headless.API.Abstractions\Remora.Neos.Headless.API.Abstractions.csproj" />
+    <ProjectReference Include="..\Crystite.API.Abstractions\Crystite.API.Abstractions.csproj" />
   </ItemGroup>
 </Project>

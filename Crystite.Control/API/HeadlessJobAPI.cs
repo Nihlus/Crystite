@@ -8,12 +8,12 @@ using System;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Remora.Neos.Headless.API.Abstractions.Services;
+using Crystite.API.Abstractions.Services;
 using Remora.Rest;
 using Remora.Rest.Results;
 using Remora.Results;
 
-namespace Remora.Neos.Control.API;
+namespace Crystite.Control.API;
 
 /// <summary>
 /// Defines API endpoints for the headless job API.

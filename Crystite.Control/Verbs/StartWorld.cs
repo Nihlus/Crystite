@@ -10,15 +10,13 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
+using Crystite.Control.API;
+using Crystite.Control.Verbs.Bases;
 using Microsoft.Extensions.DependencyInjection;
 using OneOf;
-using Remora.Neos.Control.API;
-using Remora.Neos.Control.Verbs.Bases;
-using Remora.Neos.Headless.API.Abstractions.Services;
-using Remora.Rest.Results;
 using Remora.Results;
 
-namespace Remora.Neos.Control.Verbs;
+namespace Crystite.Control.Verbs;
 
 /// <summary>
 /// Starts a world.

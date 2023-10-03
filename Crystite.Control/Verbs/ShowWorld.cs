@@ -12,13 +12,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
 using ConsoleTables;
+using Crystite.API.Abstractions;
+using Crystite.Control.API;
+using Crystite.Control.Verbs.Bases;
 using Microsoft.Extensions.DependencyInjection;
-using Remora.Neos.Control.API;
-using Remora.Neos.Control.Verbs.Bases;
-using Remora.Neos.Headless.API.Abstractions;
 using Remora.Results;
 
-namespace Remora.Neos.Control.Verbs;
+namespace Crystite.Control.Verbs;
 
 /// <summary>
 /// Shows a specific running world.

@@ -9,14 +9,14 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Remora.Neos.Control.API;
-using Remora.Neos.Control.Tests.TestBases;
-using Remora.Neos.Control.Verbs;
+using Crystite.Control.API;
+using Crystite.Control.Tests.TestBases;
+using Crystite.Control.Verbs;
 using Remora.Rest.Xunit;
 using RichardSzalay.MockHttp;
 using Xunit;
 
-namespace Remora.Neos.Control.Tests.VerbTests;
+namespace Crystite.Control.Tests.VerbTests;
 
 /// <summary>
 /// Tests the <see cref="ShowWorlds"/> verb.

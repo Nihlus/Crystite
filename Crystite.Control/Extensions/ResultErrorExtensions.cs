@@ -9,7 +9,7 @@ using System.Net.Sockets;
 using Remora.Rest.Results;
 using Remora.Results;
 
-namespace Remora.Neos.Control.Extensions;
+namespace Crystite.Control.Extensions;
 
 /// <summary>
 /// Defines extension methods for the <see cref="IResultError"/> interface.

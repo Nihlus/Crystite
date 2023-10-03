@@ -1,11 +1,11 @@
-Remora.Neos.Control
+Crystite.Control
 ================================================================================
-Remora.Neos.Control (or `neosctl`) is a companion application for administration
-of a Remora.Neos.Headless server. It acts as a simple frontend for the REST API,
-enabling quick interactive management of various common tasks.
+Crystite.Control (or `crystitectl`) is a companion application for the 
+administration of a Crystite server. It acts as a simple frontend for the REST 
+API, enabling quick interactive management of various common tasks.
 
 # Usage
-Typically, `neosctl` is invoked with an action verb followed by optional 
+Typically, `crystitectl` is invoked with an action verb followed by optional 
 arguments.
 
 ## User control

@@ -8,7 +8,7 @@ using System.Text.Json;
 using JetBrains.Annotations;
 using Remora.Rest;
 
-namespace Remora.Neos.Control.API;
+namespace Crystite.Control.API;
 
 /// <summary>
 /// Acts as an abstract base for REST API instances.
@@ -29,7 +29,7 @@ public abstract class AbstractHeadlessRestAPI
     /// <summary>
     /// Initializes a new instance of the <see cref="AbstractHeadlessRestAPI"/> class.
     /// </summary>
-    /// <param name="restHttpClient">The Discord-specialized Http client.</param>
+    /// <param name="restHttpClient">The Crystite-specialized Http client.</param>
     /// <param name="jsonOptions">The Remora-specialized JSON options.</param>
     protected AbstractHeadlessRestAPI
     (

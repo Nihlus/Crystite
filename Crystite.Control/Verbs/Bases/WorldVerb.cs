@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 
-namespace Remora.Neos.Control.Verbs.Bases;
+namespace Crystite.Control.Verbs.Bases;
 
 /// <summary>
 /// Represents a base class for world-related verbs.

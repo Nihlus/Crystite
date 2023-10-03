@@ -5,25 +5,24 @@
 //
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Crystite.Control.API;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Remora.Neos.Control.API;
 using RichardSzalay.MockHttp;
 using Xunit;
 using StreamWriter = System.IO.StreamWriter;
 
 #pragma warning disable SA1402
 
-namespace Remora.Neos.Control.Tests.TestBases;
+namespace Crystite.Control.Tests.TestBases;
 
 /// <summary>
 /// Serves as a base class for REST API tests.
@@ -109,7 +108,7 @@ public abstract class VerbTestBase : IDisposable
             .GetExecutingAssembly()
             .GetManifestResourceStream
             (
-                $"Remora.Neos.Control.Tests.Data.{filename}".Replace(Path.DirectorySeparatorChar, '.')
+                $"Crystite.Control.Tests.Data.{filename}".Replace(Path.DirectorySeparatorChar, '.')
             );
 
         if (stream is null)
@@ -175,7 +174,7 @@ public abstract class VerbTestBase : IDisposable
 
         public JsonSerializerOptions Create(string name)
         {
-            return name is "Remora.Neos.Headless"
+            return name is "Crystite"
                 ? _fixture.Options
                 : _actual.Create(name);
         }
@@ -212,7 +211,7 @@ public class VerbTestFixture
         var services = serviceCollection.BuildServiceProvider();
 
         this.Options = services.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>()
-            .Get("Remora.Neos.Headless");
+            .Get("Crystite");
     }
 }
 

@@ -11,16 +11,16 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text.Json;
 using CommandLine;
+using Crystite.API.Abstractions;
+using Crystite.API.Abstractions.Services;
+using Crystite.Control;
+using Crystite.Control.API;
+using Crystite.Control.Extensions;
+using Crystite.Control.Verbs;
+using Crystite.Control.Verbs.Bases;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-using Remora.Neos.Control;
-using Remora.Neos.Control.API;
-using Remora.Neos.Control.Extensions;
-using Remora.Neos.Control.Verbs;
-using Remora.Neos.Control.Verbs.Bases;
-using Remora.Neos.Headless.API.Abstractions;
-using Remora.Neos.Headless.API.Abstractions.Services;
 using Remora.Rest;
 using Remora.Rest.Extensions;
 using Remora.Rest.Json;
@@ -84,7 +84,7 @@ public static partial class Program
         // configure JSON options
         serviceCollection.Configure<JsonSerializerOptions>
         (
-            "Remora.Neos.Headless",
+            "Crystite",
             o =>
             {
                 o.PropertyNamingPolicy = new SnakeCaseNamingPolicy();
@@ -123,16 +123,16 @@ public static partial class Program
         serviceCollection.TryAddTransient(s => new HeadlessWorldAPI
         (
             s.GetRequiredService<IRestHttpClient>(),
-            s.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Remora.Neos.Headless")
+            s.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Crystite")
         ));
 
         // configure the HTTP client
         var clientBuilder = serviceCollection
-            .AddRestHttpClient<APIError>("Remora.Neos.Headless")
+            .AddRestHttpClient<APIError>("Crystite")
             .ConfigureHttpClient((_, client) =>
             {
                 var assemblyName = Assembly.GetExecutingAssembly().GetName();
-                var name = assemblyName.Name ?? "Remora.Neos.Control";
+                var name = assemblyName.Name ?? "Crystite.Control";
                 var version = assemblyName.Version ?? new Version(1, 0, 0);
 
                 var builder = new UriBuilder(server)

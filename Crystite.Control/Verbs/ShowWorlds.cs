@@ -11,13 +11,13 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
+using Crystite.Control.API;
+using Crystite.Control.Verbs.Bases;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Remora.Neos.Control.API;
-using Remora.Neos.Control.Verbs.Bases;
 using Remora.Results;
 
-namespace Remora.Neos.Control.Verbs;
+namespace Crystite.Control.Verbs;
 
 /// <summary>
 /// Shows the running worlds.
@@ -40,7 +40,7 @@ public class ShowWorlds : HeadlessVerb
     {
         var worldAPI = services.GetRequiredService<HeadlessWorldAPI>();
         var outputWriter = services.GetRequiredService<TextWriter>();
-        var outputOptions = services.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Remora.Neos.Headless");
+        var outputOptions = services.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Crystite");
 
         var getWorlds = await worldAPI.GetWorldsAsync(ct);
         if (!getWorlds.IsDefined(out var worlds))
