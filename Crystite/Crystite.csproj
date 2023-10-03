@@ -1,0 +1,86 @@
+<Project>
+    <Sdk Name="Remora.Sdk" Version="2.1.2" />
+    <Sdk Name="Remora.Neos.Sdk" Version="1.2.2" />
+    <Sdk Name="Microsoft.NET.Sdk.Web" />
+
+    <PropertyGroup>
+        <NeosProjectType>standalone</NeosProjectType>
+        <NeosTarget>headless</NeosTarget>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework />
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <LegalLicense>AGPL-3.0-or-later</LegalLicense>
+        <LegalAuthor>Jarl Gullberg</LegalAuthor>
+        <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
+        <UseSPDXFileHeaders>true</UseSPDXFileHeaders>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <VersionPrefix>1.0.0</VersionPrefix>
+        <Description>Open-source headless client wrapper for NeosVR</Description>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <NeosReference Include="FrooxEngine" Private="false" />
+        <NeosReference Include="BaseX" Private="false" />
+        <NeosReference Include="CloudX.Shared" Private="false" />
+        <NeosReference Include="PostX" Private="false" />
+        <NeosReference Include="LiteDB" Private="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CommandLiners.Posix" />
+      <PackageReference Include="Hardware.Info" />
+      <PackageReference Include="Humanizer.Core" />
+      <PackageReference Include="Lib.Harmony" />
+      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" />
+      <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" />
+      <PackageReference Include="Remora.Extensions.Options.Immutable" />
+      <PackageReference Include="Remora.Rest" />
+      <PackageReference Include="Remora.Results" />
+      <PackageReference Include="Serilog.AspNetCore" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- bring in Newtonsoft.Json as a ship-only dependency to ensure we always have a strongly-named copy -->
+        <PackageReference Include="Newtonsoft.Json" IncludeAssets="runtime" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="steam_appid.txt">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Crystite.API\Crystite.API.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="NeosDependentHostConfiguration.cs">
+        <DependentUpon>Program.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Configuration\AssetCleanupLocation.cs">
+        <DependentUpon>HeadlessApplicationConfiguration.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Configuration\AssetCleanupType.cs">
+        <DependentUpon>HeadlessApplicationConfiguration.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Configuration\WorldStartupParameters.cs">
+        <DependentUpon>NeosHeadlessConfig.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+</Project>

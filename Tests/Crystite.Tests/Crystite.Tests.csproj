@@ -1,0 +1,25 @@
+<Project>
+    <Sdk Name="Remora.Tests.Sdk" Version="2.0.5" />
+    <Sdk Name="Remora.Neos.Sdk" Version="1.2.2" />
+
+    <PropertyGroup>
+        <NeosProjectType>standalone</NeosProjectType>
+        <NeosTarget>headless</NeosTarget>
+        <TargetFramework />
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <LegalLicense>AGPL-3.0-or-later</LegalLicense>
+        <LegalAuthor>Jarl Gullberg</LegalAuthor>
+        <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
+        <UseSPDXFileHeaders>true</UseSPDXFileHeaders>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\Crystite\Crystite.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <NeosReference Include="FrooxEngine"/>
+    </ItemGroup>
+</Project>
