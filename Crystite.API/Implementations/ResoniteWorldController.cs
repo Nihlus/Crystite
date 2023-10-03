@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: NeosWorldController.cs
+//  SPDX-FileName: ResoniteWorldController.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -22,15 +22,15 @@ namespace Crystite.API;
 /// <summary>
 /// Implements world control logic for the stock headless client.
 /// </summary>
-public abstract class NeosWorldController : INeosWorldController
+public abstract class ResoniteWorldController : IResoniteWorldController
 {
     private readonly WorldManager _worldManager;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NeosWorldController"/> class.
+    /// Initializes a new instance of the <see cref="ResoniteWorldController"/> class.
     /// </summary>
     /// <param name="worldManager">The world manager.</param>
-    protected NeosWorldController(WorldManager worldManager)
+    protected ResoniteWorldController(WorldManager worldManager)
     {
         _worldManager = worldManager;
     }

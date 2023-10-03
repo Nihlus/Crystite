@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: NeosApplicationController.cs
+//  SPDX-FileName: ResoniteApplicationController.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -11,15 +11,15 @@ namespace Crystite.Implementations;
 /// <summary>
 /// Implements application-level control logic for the headless client.
 /// </summary>
-public class NeosApplicationController : INeosApplicationController
+public class ResoniteApplicationController : IResoniteApplicationController
 {
     private readonly IHostApplicationLifetime _applicationLifetime;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NeosApplicationController"/> class.
+    /// Initializes a new instance of the <see cref="ResoniteApplicationController"/> class.
     /// </summary>
     /// <param name="applicationLifetime">The application lifetime controller.</param>
-    public NeosApplicationController(IHostApplicationLifetime applicationLifetime)
+    public ResoniteApplicationController(IHostApplicationLifetime applicationLifetime)
     {
         _applicationLifetime = applicationLifetime;
     }

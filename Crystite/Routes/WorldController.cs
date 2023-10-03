@@ -19,7 +19,7 @@ namespace Crystite.Routes;
 [Route("worlds")]
 public class WorldController : ControllerBase
 {
-    private readonly INeosWorldController _worldController;
+    private readonly IResoniteWorldController _worldController;
     private readonly IJobService _jobService;
 
     /// <summary>
@@ -27,7 +27,7 @@ public class WorldController : ControllerBase
     /// </summary>
     /// <param name="worldController">The world controller.</param>
     /// <param name="jobService">The job service.</param>
-    public WorldController(INeosWorldController worldController, IJobService jobService)
+    public WorldController(IResoniteWorldController worldController, IJobService jobService)
     {
         _worldController = worldController;
         _jobService = jobService;

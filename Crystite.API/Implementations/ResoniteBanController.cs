@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: NeosBanController.cs
+//  SPDX-FileName: ResoniteBanController.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -16,15 +16,15 @@ namespace Crystite.API;
 /// <summary>
 /// Implements application control logic for the stock headless client.
 /// </summary>
-public class NeosBanController : INeosBanController
+public class ResoniteBanController : IResoniteBanController
 {
     private readonly Engine _engine;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NeosBanController"/> class.
+    /// Initializes a new instance of the <see cref="ResoniteBanController"/> class.
     /// </summary>
     /// <param name="engine">The game engine.</param>
-    public NeosBanController(Engine engine)
+    public ResoniteBanController(Engine engine)
     {
         _engine = engine;
     }

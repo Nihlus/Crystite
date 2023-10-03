@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: NeosDependentHostConfiguration.cs
+//  SPDX-FileName: ResoniteDependentHostConfiguration.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -9,8 +9,8 @@ using Crystite.API.Extensions;
 using Crystite.Configuration;
 using Crystite.Implementations;
 using Crystite.Patches.Generic;
-using Crystite.Patches.NeosAssemblyPostProcessor;
 using Crystite.Patches.RecordUploadTaskBase;
+using Crystite.Patches.ResoniteAssemblyPostProcessor;
 using Crystite.Patches.SteamConnector;
 using Crystite.Patches.VideoTextureProvider;
 using Crystite.Services;
@@ -24,14 +24,14 @@ namespace Crystite;
 /// <summary>
 /// Contains second-stage host configuration, usable only after assembly loading is set up.
 /// </summary>
-public static class NeosDependentHostConfiguration
+public static class ResoniteDependentHostConfiguration
 {
     /// <summary>
-    /// Configures host components that require NeosVR assemblies.
+    /// Configures host components that require Resonite assemblies.
     /// </summary>
     /// <param name="hostBuilder">The host builder.</param>
     /// <returns>The host builder, with the configured components.</returns>
-    public static IHostBuilder ConfigureNeosDependentCode(this IHostBuilder hostBuilder) => hostBuilder
+    public static IHostBuilder ConfigureResoniteDependentCode(this IHostBuilder hostBuilder) => hostBuilder
         .UseSerilog
         (
             (context, provider, log) =>
@@ -39,7 +39,7 @@ public static class NeosDependentHostConfiguration
                 log.ReadFrom.Configuration(context.Configuration);
 
                 // Backwards compatibility
-                var config = provider.GetRequiredService<IOptions<NeosHeadlessConfig>>().Value;
+                var config = provider.GetRequiredService<IOptions<ResoniteHeadlessConfig>>().Value;
                 if (config.LogsFolder is not null)
                 {
                     log.WriteTo.File(Path.Combine(config.LogsFolder, UniLog.GenerateLogName(Engine.VersionNumber)));
@@ -48,7 +48,7 @@ public static class NeosDependentHostConfiguration
         )
         .ConfigureServices
         (
-            s => s.AddNeosControllerServices<NeosApplicationController, CustomHeadlessNeosWorldController>()
+            s => s.AddResoniteControllerServices<ResoniteApplicationController, CustomHeadlessResoniteWorldController>()
                 .AddSingleton<HeadlessSystemInfo>()
                 .AddSingleton<ISystemInfo>(p => p.GetRequiredService<HeadlessSystemInfo>())
                 .AddSingleton<Engine>()
@@ -60,7 +60,7 @@ public static class NeosDependentHostConfiguration
         );
 
     /// <summary>
-    /// Configures additional host-external components that require NeosVR assemblies.
+    /// Configures additional host-external components that require Resonite assemblies.
     /// </summary>
     /// <param name="host">The host.</param>
     public static void PostConfigureHost(this IHost host)
@@ -68,12 +68,12 @@ public static class NeosDependentHostConfiguration
         var logger = host.Services.GetRequiredService<ILogger<Program>>();
 
         OverrideCecilAssemblyResolver.OverridingAssemblyResolver = host.Services
-            .GetRequiredService<NeosAssemblyResolver>();
+            .GetRequiredService<ResoniteAssemblyResolver>();
 
         var flags = host.Services.GetRequiredService<IOptionsMonitor<CommandLineOptions>>().CurrentValue;
         var headlessConfig = host.Services.GetRequiredService<IOptionsMonitor<HeadlessApplicationConfiguration>>()
             .CurrentValue;
-        var neosConfig = host.Services.GetRequiredService<IOptionsMonitor<NeosHeadlessConfig>>().CurrentValue;
+        var resoniteConfig = host.Services.GetRequiredService<IOptionsMonitor<ResoniteHeadlessConfig>>().CurrentValue;
 
         var logFactory = host.Services.GetRequiredService<ILoggerFactory>();
 
@@ -110,7 +110,7 @@ public static class NeosDependentHostConfiguration
             }
         }
 
-        var harmony = new Harmony("nu.algiz.remora.neos.headless");
+        var harmony = new Harmony("nu.algiz.crystite");
         harmony.PatchAllUncategorized();
 
         // Generic patches
@@ -118,28 +118,28 @@ public static class NeosDependentHostConfiguration
 
         RedirectCommandLineParsing.Configure<Engine>(nameof(Engine.Initialize), args =>
         {
-            if (neosConfig.PluginAssemblies is not null)
+            if (resoniteConfig.PluginAssemblies is not null)
             {
-                foreach (var pluginAssembly in neosConfig.PluginAssemblies)
+                foreach (var pluginAssembly in resoniteConfig.PluginAssemblies)
                 {
                     args.Add("LoadAssembly");
                     args.Add(pluginAssembly);
                 }
             }
 
-            if (neosConfig.GeneratePreCache is true)
+            if (resoniteConfig.GeneratePreCache is true)
             {
                 args.Add("GeneratePreCache");
             }
 
-            if (neosConfig.BackgroundWorkers is { } backgroundWorkers)
+            if (resoniteConfig.BackgroundWorkers is { } backgroundWorkers)
             {
                 args.Add("backgroundworkers");
                 args.Add(backgroundWorkers.ToString());
             }
 
             // ReSharper disable once InvertIf
-            if (neosConfig.PriorityWorkers is { } priorityWorkers)
+            if (resoniteConfig.PriorityWorkers is { } priorityWorkers)
             {
                 args.Add("priorityworkers");
                 args.Add(priorityWorkers.ToString());

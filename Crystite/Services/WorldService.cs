@@ -21,7 +21,7 @@ namespace Crystite.Services;
 /// </summary>
 public class WorldService
 {
-    private readonly NeosHeadlessConfig _config;
+    private readonly ResoniteHeadlessConfig _config;
     private readonly ILogger<WorldService> _log;
     private readonly Engine _engine;
     private readonly ConcurrentDictionary<string, SessionWrapper> _activeWorlds;
@@ -40,7 +40,7 @@ public class WorldService
     /// <param name="config">The application configuration.</param>
     /// <param name="log">The logging instance for this type.</param>
     /// <param name="engine">The engine.</param>
-    public WorldService(IOptions<NeosHeadlessConfig> config, ILogger<WorldService> log, Engine engine)
+    public WorldService(IOptions<ResoniteHeadlessConfig> config, ILogger<WorldService> log, Engine engine)
     {
         _config = config.Value;
         _log = log;

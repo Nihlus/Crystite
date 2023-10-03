@@ -9,7 +9,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using Mono.Cecil;
 
-namespace Crystite.Patches.NeosAssemblyPostProcessor;
+namespace Crystite.Patches.ResoniteAssemblyPostProcessor;
 
 /// <summary>
 /// Replaces the assembly resolver used by PostX with our own.

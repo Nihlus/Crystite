@@ -1,18 +1,18 @@
-Remora.Neos.Headless
+Crystite
 ====================
 
 > **Warning**
 > This is experimental software in early alpha. Only use it for worlds you are
 > comfortable damaging beyond repair should you hit a bug in the software. 
 
-Remora.Neos.Headless is a custom headless server for NeosVR for modern .NET. The
+Crystite is a custom headless server for Resonite for modern .NET. The
 server comes with a variety of benefits, chief among them a faster and more
 efficient runtime. In addition, the server exposes a REST API for programmatic
 control over its execution and configuration.
 
 The server is not a drop-in replacement for the stock headless client and 
 requires some additional configuration before you can run it. It does, however,
-aim to be compatible with NeosVR's own configuration format, allowing you to
+aim to be compatible with Resonite's own configuration format, allowing you to
 reuse existing configuration files.
 
 > The server is currently in an open alpha. Use with caution! If you run into
@@ -23,20 +23,20 @@ Binary releases are currently only available for Debian 11. To install the
 server, run the following commands.
 
 ```bash
-echo 'deb [signed-by=/usr/share/keyrings/algiz.gpg] https://repo.algiz.nu/neos bullseye main' | sudo tee /etc/apt/sources.list.d/remora-neos-headless.list
+echo 'deb [signed-by=/usr/share/keyrings/algiz.gpg] https://repo.algiz.nu/crystite bullseye main' | sudo tee /etc/apt/sources.list.d/crystite.list
 sudo mkdir -p /usr/share/keyrings
 sudo wget -O /usr/share/keyrings/algiz.gpg https://repo.algiz.nu/algiz.gpg
 
 sudo apt update
-sudo apt install remora-neos-headless
+sudo apt install crystite
 ```
 
 By default, the server will not be enabled nor started. Primarily, this is due
-to the fact that NeosVR must also be installed and the server configured before
+to the fact that Resonite must also be installed and the server configured before
 it can start.
 
-By default, the server expects NeosVR to be installed under a system user's home
-directory. To install NeosVR, run the following commands after installing the
+By default, the server expects Resonite to be installed under a system user's home
+directory. To install Resonite, run the following commands after installing the
 server.
 
 ```bash
@@ -48,23 +48,23 @@ sudo apt install steamcmd
 
 # ...
 
-cd /var/lib/neosvr
-sudo -u neosvr /usr/games/steamcmd \
-  +force_install_dir /var/lib/neosvr/NeosVR \
+cd /var/lib/Resonite
+sudo -u crystite /usr/games/steamcmd \
+  +force_install_dir /var/lib/crystite/Resonite \
   +login USERNAME PASSWORD \
-  +app_update 740250 \
+  +app_update 2519830 \
   -beta headless-client \
   -betapassword BETA_PASSWORD \
   +validate \
   +quit
 
 # This is to work around a bug in SteamCMD's installation procedures
-sudo -u neosvr ln -s \
-  /var/lib/neosvr/.local/share/Steam/steamcmd/linux64 \
-  /var/lib/neosvr/.steam/sdk64 
+sudo -u resonite ln -s \
+  /var/lib/crystite/.local/share/Steam/steamcmd/linux64 \
+  /var/lib/crystite/.steam/sdk64 
 ```
 
-Replace `USERNAME` and `PASSWORD` with a Steam account that has NeosVR in its
+Replace `USERNAME` and `PASSWORD` with a Steam account that has Resonite in its
 library and `BETA_PASSWORD` with the headless client beta password. 
 
 The server is built against the API available in the stock headless client, but 
@@ -73,9 +73,9 @@ configuration, however, and may come with unexpected issues.
 
 ## Configuration
 The server's main configuration file is located at 
-`/etc/remora-neos-headless/appsettings.json`. This file contains several 
+`/etc/crystite/appsettings.json`. This file contains several 
 subsections used to configure various parts of the program, but the most 
-important ones are the `Headless` and the `Neos` sections.
+important ones are the `Headless` and the `Resonite` sections.
 
 > More configuration sections than the ones listed here may work, depending on
 > the libraries and systems in use by the current version of the server.
@@ -85,7 +85,7 @@ important ones are the `Headless` and the `Neos` sections.
 
 If you don't want to edit the configuration file shipped with the package, you
 can also use drop-in JSON configuration files in the 
-`/etc/remora-neos-headless/conf.d` directory. Any files placed here will 
+`/etc/crystite/conf.d` directory. Any files placed here will 
 be merged with `appsettings.json`, overriding any values specified there. 
 Drop-ins can also override each other and are ordered by their filename. This
 means that if two drop-in files define the same key, the latter file overrides
@@ -105,7 +105,7 @@ The following keys are defined for this section.
 
 | Name                 | Type      | Description                                                            | Default                    | Required |
 |----------------------|-----------|------------------------------------------------------------------------|----------------------------|----------|
-| neosPath             | string    | The path to the NeosVR installation directory                          | /var/lib/neosvr/NeosVR     | yes      |
+| neosPath             | string    | The path to the Resonite installation directory                          | /var/lib/crystite/Resonite   | yes      |
 | assetCleanupInterval | string    | The interval at which cached files should be cleaned up                | null                       | no       |
 | maxAssetAge          | string    | The maximum time a cached asset can remain unused before being deleted | null                       | no       |
 | cleanupTypes         | dict      | The asset types to clean and their associated max ages.                | all types at `maxAssetAge` | no       |
@@ -117,8 +117,8 @@ The following keys are defined for this section.
 | enableYoutubeDL      | bool      | Whether to enable youtube-dl integration                               | true                       | no       |
 | youtubeDLPaths       | string[]? | Paths to check for youtube-dl binaries                                 | (internal)                 | no       |
 
-> It is an absolute requirement that `neosPath` points to a valid NeosVR 
-> installation. The server will not run without access to NeosVR's assemblies.
+> It is an absolute requirement that `resonitePath` points to a valid Resonite 
+> installation. The server will not run without access to Resonite's assemblies.
 
 `assetCleanupInterval`, `maxAssetAge`, and `retryDelay` are C# `TimeSpan` strings, meaning that they are formatted as 
 colon-separated groups of units of time. For example, ten days would be expressed as `10:00:00:00`, five seconds as 
@@ -140,7 +140,7 @@ By default, all locations are cleaned up.
 | Value  | Description          |
 |--------|----------------------|
 | Local  | `local://` assets    |
-| NeosDB | `neosdb://` assets   |
+| ResoniteDB | `resonitedb://` assets   |
 | Other  | any other URI scheme |
 
 #### `AssetCleanupLocation`
@@ -156,15 +156,15 @@ or use one or more alternate search paths for the program used.
 By default, the server will look for `yt-dlp` and `youtube-dl`, prioritizing the former, in the following order:
   1. (Non-Windows only) /usr/bin
   2. (Non-Windows only) /usr/local/bin
-  3. (Windows only) `neosPath`\RuntimeData
+  3. (Windows only) `resonitePath`\RuntimeData
   4. $PWD
 
 If you set `youtubeDLPaths` to `null` or omit it from your configuration, this is the paths that will be searched. If
 you set your own list of paths, they will be tried in the order you enter them.
 
-### `Neos`
+### `Resonite`
 This section contains the normal headless client's JSON configuration as defined
-by [NeosVR][1]. A few additional configuration keys have been added to
+by [Resonite][1]. A few additional configuration keys have been added to
 supplement the existing schema as defined below.
 
 | Name              | Type         | Description                                                                                          | Default     | Required |
@@ -175,9 +175,9 @@ supplement the existing schema as defined below.
 | priorityWorkers   | int          | The number of priority workers to create.                                                            | (internal)  | no       |
 
 > **Warning**
-> Ensure that any assemblies referenced in `pluginAssemblies` are *not* stored in the root of the NeosVR installation
-> directory (or, if you're using the desktop client, any directory containing NeosVR assemblies). Doing so can cause
-> runtime conflicts between assembly versions shipped by the server and ones shipped by NeosVR (or ones shipped with the
+> Ensure that any assemblies referenced in `pluginAssemblies` are *not* stored in the root of the Resonite installation
+> directory (or, if you're using the desktop client, any directory containing Resonite assemblies). Doing so can cause
+> runtime conflicts between assembly versions shipped by the server and ones shipped by Resonite (or ones shipped with the
 > plugin!).
 
 Additionally, the following extra keys can be used in the `startWorlds` array.
@@ -207,14 +207,14 @@ customize the address and port the web server listens on. See
 information.
 
 ## Mods
-[NeosModLoader][7] can be used with the server to add runtime patches and normal headless mods. Compatibility is not 
+[ResoniteModLoader][7] can be used with the server to add runtime patches and normal headless mods. Compatibility is not 
 guaranteed, however, depending on what the mods do - as always, use with caution and your mileage may vary.
 
 To install NML, follow their guide but replace step 4 (where you add the command-line argument) with an appropriate 
 modification to `appsettings.json`'s `pluginAssemblies` property. Add the full path to the NML assembly there.
 
 There are some use cases that are affected by the security hardening options in use by the systemd service. Primarily, 
-you cannot store mod files outside of `/var/lib/neosvr` as Neos requires write permissions to mod files in order to 
+you cannot store mod files outside of `/var/lib/crystite` as Resonite requires write permissions to mod files in order to 
 perform certain postprocessing steps. You should also consider the restrictions imposed when testing mods, as some mod
 behaviour may be blocked for security reasons and isn't always the mod's fault.
 
@@ -223,8 +223,8 @@ Once you've configured the server, you can start it by enabling and starting the
 associated systemd service.
 
 ```bash
-sudo systemctl enable remora-neos-headless
-sudo systemctl start remora-neos-headless
+sudo systemctl enable crystite
+sudo systemctl start crystite
 ```
 
 > Logs can be viewed through journalctl just like any other service.
@@ -234,10 +234,10 @@ server directly and pass one or more command-line options. If you do, ensure
 that the server is first shut down.
 
 ```bash
-sudo systemctl stop remora-neos-headless
+sudo systemctl stop crystite
 
-cd /var/lib/neosvr
-sudo -u neosvr /usr/lib/remora-neos-headless/Remora.Neos.Headless <option>...
+cd /var/lib/crystite
+sudo -u crystite /usr/lib/crystite/Crystite <option>...
 ```
 
 Do note that this runs the server with more access rights and privileges than
@@ -302,7 +302,7 @@ prospective runners of the software might want to know about.
 
 ### systemd-sysusers and SSSD
 If you use the Debian package, a sysusers.d file is installed that specifies
-the presence of a neosvr user. This can sometimes conflict with or override
+the presence of a crystite user. This can sometimes conflict with or override
 users defined externally, such as via LDAP.
 
 In order to avoid problems with this, ensure that `systemd-sysusers` runs 
@@ -314,7 +314,7 @@ if you just want some informal technical reading, please check out [this][6]
 document.
 
 It contains a bit of a dive into some internals and has a couple of explanations
-that could be useful for future work with NeosVR and headless servers.
+that could be useful for future work with Resonite and headless servers.
 
 
 [1]: https://raw.githubusercontent.com/Neos-Metaverse/JSONSchemas/main/schemas/NeosHeadlessConfig.schema.json

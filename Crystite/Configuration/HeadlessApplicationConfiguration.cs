@@ -7,9 +7,9 @@
 namespace Crystite.Configuration;
 
 /// <summary>
-/// Represents application-level configuration of the headless client outside of NeosVR-defined configuration.
+/// Represents application-level configuration of the headless client outside of Resonite-defined configuration.
 /// </summary>
-/// <param name="NeosPath">The path to the NeosVR installation directory.</param>
+/// <param name="ResonitePath">The path to the Resonite installation directory.</param>
 /// <param name="AssetCleanupInterval">The interval at which to clean up on-disk assets.</param>
 /// <param name="MaxAssetAge">The maximum time an asset can be untouched for until it is deleted.</param>
 /// <param name="CleanupTypes">The asset types to clean and their associated max ages.</param>
@@ -20,7 +20,7 @@ namespace Crystite.Configuration;
 /// <param name="EnableSteam">Whether to enable Steam API integration.</param>
 public record HeadlessApplicationConfiguration
 (
-    string NeosPath,
+    string ResonitePath,
     TimeSpan? AssetCleanupInterval = null,
     TimeSpan? MaxAssetAge = null,
     IReadOnlyDictionary<AssetCleanupType, TimeSpan?>? CleanupTypes = null,

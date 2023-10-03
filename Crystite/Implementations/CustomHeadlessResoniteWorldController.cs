@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: CustomHeadlessNeosWorldController.cs
+//  SPDX-FileName: CustomHeadlessResoniteWorldController.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -17,16 +17,16 @@ namespace Crystite.Implementations;
 /// <summary>
 /// Implements world-related functionality specific to the custom headless client.
 /// </summary>
-public class CustomHeadlessNeosWorldController : NeosWorldController
+public class CustomHeadlessResoniteWorldController : ResoniteWorldController
 {
     private readonly WorldService _worldService;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CustomHeadlessNeosWorldController"/> class.
+    /// Initializes a new instance of the <see cref="CustomHeadlessResoniteWorldController"/> class.
     /// </summary>
     /// <param name="worldManager">The world manager.</param>
     /// <param name="worldService">The world service.</param>
-    public CustomHeadlessNeosWorldController(WorldManager worldManager, WorldService worldService)
+    public CustomHeadlessResoniteWorldController(WorldManager worldManager, WorldService worldService)
         : base(worldManager)
     {
         _worldService = worldService;

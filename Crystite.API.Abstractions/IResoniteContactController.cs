@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: INeosContactController.cs
+//  SPDX-FileName: IResoniteContactController.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -13,10 +13,10 @@ using Remora.Results;
 namespace Crystite.API.Abstractions;
 
 /// <summary>
-/// Represents the public API of friend-related functionality of a headless NeosVR client.
+/// Represents the public API of friend-related functionality of a headless Resonite client.
 /// </summary>
 [PublicAPI]
-public interface INeosContactController
+public interface IResoniteContactController
 {
     /// <summary>
     /// Gets the contacts of the current account.

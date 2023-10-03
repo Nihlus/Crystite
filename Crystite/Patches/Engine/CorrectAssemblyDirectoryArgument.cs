@@ -33,7 +33,7 @@ public static class CorrectAssemblyDirectoryArgument
     {
         foreach (var instruction in instructions)
         {
-            if (instruction.Is(OpCodes.Ldstr, "Neos_Data\\Managed"))
+            if (instruction.Is(OpCodes.Ldstr, "Resonite_Data\\Managed"))
             {
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
                 yield return new CodeInstruction(OpCodes.Ldfld, _appPathField);

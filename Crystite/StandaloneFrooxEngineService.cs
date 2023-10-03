@@ -24,7 +24,7 @@ public class StandaloneFrooxEngineService : BackgroundService
 {
     private readonly ILogger<StandaloneFrooxEngineService> _log;
     private readonly HeadlessApplicationConfiguration _applicationConfig;
-    private readonly NeosHeadlessConfig _config;
+    private readonly ResoniteHeadlessConfig _config;
     private readonly Engine _engine;
     private readonly HeadlessSystemInfo _systemInfo;
     private readonly WorldService _worldService;
@@ -46,7 +46,7 @@ public class StandaloneFrooxEngineService : BackgroundService
     (
         ILogger<StandaloneFrooxEngineService> log,
         IOptions<HeadlessApplicationConfiguration> applicationConfig,
-        IOptions<NeosHeadlessConfig> config,
+        IOptions<ResoniteHeadlessConfig> config,
         Engine engine,
         HeadlessSystemInfo systemInfo,
         WorldService worldService,
@@ -90,16 +90,16 @@ public class StandaloneFrooxEngineService : BackgroundService
         _engine.EnvironmentShutdownCallback = () => _engineShutdownComplete = true;
 
         var dataFolder = string.IsNullOrWhiteSpace(_config.DataFolder)
-            ? NeosHeadlessConfig.DefaultDataFolder
+            ? ResoniteHeadlessConfig.DefaultDataFolder
             : _config.DataFolder;
 
         var cacheFolder = string.IsNullOrWhiteSpace(_config.CacheFolder)
-            ? NeosHeadlessConfig.DefaultCacheFolder
+            ? ResoniteHeadlessConfig.DefaultCacheFolder
             : _config.CacheFolder;
 
         await _engine.Initialize
         (
-            _applicationConfig.NeosPath,
+            _applicationConfig.ResonitePath,
             dataFolder,
             cacheFolder,
             _systemInfo,

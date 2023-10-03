@@ -17,15 +17,15 @@ namespace Crystite.Routes;
 [Route("bans")]
 public class BanController : ControllerBase
 {
-    private readonly INeosBanController _neosBanController;
+    private readonly IResoniteBanController _resoniteBanController;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BanController"/> class.
     /// </summary>
-    /// <param name="neosBanController">The Neos ban controller.</param>
-    public BanController(INeosBanController neosBanController)
+    /// <param name="resoniteBanController">The Resonite ban controller.</param>
+    public BanController(IResoniteBanController resoniteBanController)
     {
-        _neosBanController = neosBanController;
+        _resoniteBanController = resoniteBanController;
     }
 
     /// <summary>
@@ -37,7 +37,7 @@ public class BanController : ControllerBase
     [Route("")]
     public async Task<ActionResult<IEnumerable<IRestBan>>> GetBansAsync(CancellationToken ct = default)
     {
-        var bans = await _neosBanController.GetBansAsync(ct);
+        var bans = await _resoniteBanController.GetBansAsync(ct);
         return new(bans);
     }
 
@@ -51,7 +51,7 @@ public class BanController : ControllerBase
     [Route("{userIdOrName}")]
     public async Task<ActionResult<IRestBan>> BanUserAsync(string userIdOrName, CancellationToken ct = default)
     {
-        return (await _neosBanController.BanUserAsync(userIdOrName, ct)).ToActionResult();
+        return (await _resoniteBanController.BanUserAsync(userIdOrName, ct)).ToActionResult();
     }
 
     /// <summary>
@@ -64,6 +64,6 @@ public class BanController : ControllerBase
     [Route("{userIdOrName}")]
     public async Task<ActionResult> UnbanUserAsync(string userIdOrName, CancellationToken ct = default)
     {
-        return (await _neosBanController.UnbanUserAsync(userIdOrName, ct)).ToActionResult();
+        return (await _resoniteBanController.UnbanUserAsync(userIdOrName, ct)).ToActionResult();
     }
 }

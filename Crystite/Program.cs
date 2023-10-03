@@ -29,7 +29,7 @@ hardwareInfo.RefreshMemoryList();
 var applicationBuilder = WebApplication.CreateBuilder(args);
 
 var systemConfigBase = OperatingSystem.IsLinux() || OperatingSystem.IsFreeBSD()
-    ? Path.Combine("/", "etc", "remora-neos-headless")
+    ? Path.Combine("/", "etc", "crystite")
     : Directory.GetCurrentDirectory();
 
 var systemConfig = Path.Combine(systemConfigBase, "appsettings.json");
@@ -48,7 +48,7 @@ if (Directory.Exists(systemConfigDropInDirectory))
 var headlessConfig = applicationBuilder.Configuration.GetSection("Headless").Get<HeadlessApplicationConfiguration>()
                      ?? new HeadlessApplicationConfiguration();
 
-var assemblyResolver = new NeosAssemblyResolver(new[] { headlessConfig.NeosPath });
+var assemblyResolver = new ResoniteAssemblyResolver(new[] { headlessConfig.ResonitePath });
 
 var oldProvider = applicationBuilder.Configuration.Sources.FirstOrDefault(s => s is CommandLineConfigurationSource);
 if (oldProvider is not null)
@@ -69,7 +69,7 @@ applicationBuilder.Configuration.AddCommandLineOptions
 
 applicationBuilder.Host
     .UseSystemd()
-    .ConfigureNeosDependentCode()
+    .ConfigureResoniteDependentCode()
     .ConfigureServices
     (
         (config, services) =>
@@ -80,7 +80,7 @@ applicationBuilder.Host
                 .AddSingleton(assemblyResolver ?? throw new InvalidOperationException())
                 .AddSingleton<IHardwareInfo>(hardwareInfo)
                 .Configure<CommandLineOptions>(o => applicationBuilder.Configuration.Bind(o))
-                .Configure<NeosHeadlessConfig>(config.Configuration.GetSection("Neos"))
+                .Configure<ResoniteHeadlessConfig>(config.Configuration.GetSection("Resonite"))
                 .Configure
                 (
                     () => config.Configuration
@@ -96,7 +96,7 @@ applicationBuilder.Host
                             CleanupTypes = c.CleanupTypes ?? new Dictionary<AssetCleanupType, TimeSpan?>
                             {
                                { AssetCleanupType.Local, c.MaxAssetAge },
-                               { AssetCleanupType.NeosDB, c.MaxAssetAge },
+                               { AssetCleanupType.ResoniteDB, c.MaxAssetAge },
                                { AssetCleanupType.Other, c.MaxAssetAge }
                             },
                             CleanupLocations = c.CleanupLocations?.Distinct().ToArray() ?? new[]
@@ -118,9 +118,9 @@ applicationBuilder.Host
                             {
                                 return new[]
                                 {
-                                    Path.GetFullPath(Path.Combine(c.NeosPath, "RuntimeData", "yt-dlp.exe")),
+                                    Path.GetFullPath(Path.Combine(c.ResonitePath, "RuntimeData", "yt-dlp.exe")),
                                     Path.GetFullPath("yt-dlp.exe"),
-                                    Path.GetFullPath(Path.Combine(c.NeosPath, "RuntimeData", "youtube-dl.exe")),
+                                    Path.GetFullPath(Path.Combine(c.ResonitePath, "RuntimeData", "youtube-dl.exe")),
                                     Path.GetFullPath("youtube-dl.exe")
                                 };
                             }

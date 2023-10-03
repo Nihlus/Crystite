@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: NeosHeadlessConfig.cs
+//  SPDX-FileName: ResoniteHeadlessConfig.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -9,7 +9,7 @@ using System.Text.Json.Serialization;
 namespace Crystite.Configuration;
 
 /// <summary>
-/// Options used to configure a Neos Headless server. Read in from a JSON file on Headless start.
+/// Options used to configure a Resonite Headless server. Read in from a JSON file on Headless start.
 /// </summary>
 /// <remarks>
 /// The base schema has been extended with some more properties, enabling further configuration.
@@ -20,19 +20,19 @@ namespace Crystite.Configuration;
 /// <param name="TickRate">Configures how many ticks(updates), should occur per second. Default is 60.</param>
 /// <param name="MaxConcurrentAssetTransfers">Specifies the maximum concurrent asset transfers for this headless server. Default is 4.</param>
 /// <param name="UsernameOverride">Configures a username which will override LoginCredential, within the world browser etc.</param>
-/// <param name="LoginCredential">Neos username for this Headless Server to use.</param>
-/// <param name="LoginPassword">Neos user password for the Headless Server to use.</param>
+/// <param name="LoginCredential">Resonite username for this Headless Server to use.</param>
+/// <param name="LoginPassword">Resonite user password for the Headless Server to use.</param>
 /// <param name="StartWorlds">A list of worlds/sessions to start/create when this Headless Server starts.</param>
-/// <param name="DataFolder">Optionally, override the folder which Neos will use to store data for this Headless Server.</param>
-/// <param name="CacheFolder">Optionally, override the folder which Neos will use to store cache for this Headless Server.</param>
-/// <param name="LogsFolder">Optionally, override the folder which Neos will use to store logs for this Headless Server.</param>
-/// <param name="AllowedUrlHosts">A list of hosts which will automatically be allowed for in-Neos HTTP/WebSocket operations.</param>
+/// <param name="DataFolder">Optionally, override the folder which Resonite will use to store data for this Headless Server.</param>
+/// <param name="CacheFolder">Optionally, override the folder which Resonite will use to store cache for this Headless Server.</param>
+/// <param name="LogsFolder">Optionally, override the folder which Resonite will use to store logs for this Headless Server.</param>
+/// <param name="AllowedUrlHosts">A list of hosts which will automatically be allowed for in-Resonite HTTP/WebSocket operations.</param>
 /// <param name="AutoSpawnItems">A list of item URIs to spawn in when a world starts.</param>
 /// <param name="PluginAssemblies">Additional assemblies to tell the engine to load.</param>
 /// <param name="GeneratePreCache">Whether pre-caches should be generated.</param>
 /// <param name="BackgroundWorkers">The number of background workers to create.</param>
 /// <param name="PriorityWorkers">The number of priority workers to create.</param>
-public record NeosHeadlessConfig
+public record ResoniteHeadlessConfig
 (
     string? Comment = null,
     string? UniverseID = null,
@@ -75,9 +75,9 @@ public record NeosHeadlessConfig
     public static string DefaultCacheFolder => Path.Combine(Directory.GetCurrentDirectory(), "Cache");
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NeosHeadlessConfig"/> class.
+    /// Initializes a new instance of the <see cref="ResoniteHeadlessConfig"/> class.
     /// </summary>
-    public NeosHeadlessConfig()
+    public ResoniteHeadlessConfig()
         : this(Comment: null) // force overload resolution
     {
     }

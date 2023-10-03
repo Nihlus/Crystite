@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: NeosAssemblyResolver.cs
+//  SPDX-FileName: ResoniteAssemblyResolver.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -12,9 +12,9 @@ using Mono.Cecil;
 namespace Crystite;
 
 /// <summary>
-/// Defines functionality to assist with resolution of NeosVR assemblies.
+/// Defines functionality to assist with resolution of Resonite assemblies.
 /// </summary>
-public class NeosAssemblyResolver : DefaultAssemblyResolver
+public class ResoniteAssemblyResolver : DefaultAssemblyResolver
 {
     private readonly IReadOnlyList<string> _additionalSearchPaths;
     private readonly IReadOnlyDictionary<string, string[]> _knownNativeLibraryMappings = new Dictionary<string, string[]>
@@ -31,16 +31,16 @@ public class NeosAssemblyResolver : DefaultAssemblyResolver
     private bool _isDisposed;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NeosAssemblyResolver"/> class.
+    /// Initializes a new instance of the <see cref="ResoniteAssemblyResolver"/> class.
     /// </summary>
     /// <param name="additionalSearchPaths">The additional search paths to look in for native libraries.</param>
-    public NeosAssemblyResolver(IReadOnlyList<string> additionalSearchPaths)
+    public ResoniteAssemblyResolver(IReadOnlyList<string> additionalSearchPaths)
     {
         // Add some unity-specific search paths for desktop client compatibility
         var paths = new List<string>(additionalSearchPaths);
-        paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Neos_Data", "Managed")));
-        paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Neos_Data", "Plugins", "x86_64")));
-        paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Neos_Data", "Plugins")));
+        paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Resonite_Data", "Managed")));
+        paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Resonite_Data", "Plugins", "x86_64")));
+        paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Resonite_Data", "Plugins")));
 
         _additionalSearchPaths = paths;
 

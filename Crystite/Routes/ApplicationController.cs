@@ -17,15 +17,15 @@ namespace Crystite.Routes;
 [Route("application")]
 public class ApplicationController : ControllerBase
 {
-    private readonly INeosApplicationController _applicationController;
+    private readonly IResoniteApplicationController _applicationController;
     private readonly IJobService _jobService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationController"/> class.
     /// </summary>
-    /// <param name="applicationController">The Neos application controller.</param>
+    /// <param name="applicationController">The Resonite application controller.</param>
     /// <param name="jobService">The job service.</param>
-    public ApplicationController(INeosApplicationController applicationController, IJobService jobService)
+    public ApplicationController(IResoniteApplicationController applicationController, IJobService jobService)
     {
         _applicationController = applicationController;
         _jobService = jobService;

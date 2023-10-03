@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: INeosApplicationController.cs
+//  SPDX-FileName: IResoniteApplicationController.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -13,7 +13,7 @@ namespace Crystite.API.Abstractions;
 /// Represents the public API of application-level control logic.
 /// </summary>
 [PublicAPI]
-public interface INeosApplicationController
+public interface IResoniteApplicationController
 {
     /// <summary>
     /// Gets a value indicating whether shutdown has been requested.

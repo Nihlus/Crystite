@@ -17,24 +17,24 @@ namespace Crystite.API.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Adds the NeosVR controller services to the container.
+    /// Adds the Resonite controller services to the container.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <typeparam name="TApplicationController">The concrete application controller type.</typeparam>
     /// <typeparam name="TWorldController">The concrete world controller type.</typeparam>
     /// <returns>The service collection, with the services added.</returns>
-    public static IServiceCollection AddNeosControllerServices<TApplicationController, TWorldController>
+    public static IServiceCollection AddResoniteControllerServices<TApplicationController, TWorldController>
     (
         this IServiceCollection services
     )
-        where TApplicationController : class, INeosApplicationController
-        where TWorldController : class, INeosWorldController
+        where TApplicationController : class, IResoniteApplicationController
+        where TWorldController : class, IResoniteWorldController
     {
         return services
-            .AddSingleton<INeosApplicationController, TApplicationController>()
-            .AddSingleton<INeosBanController, NeosBanController>()
-            .AddSingleton<INeosContactController, NeosContactController>()
-            .AddSingleton<INeosWorldController, TWorldController>()
+            .AddSingleton<IResoniteApplicationController, TApplicationController>()
+            .AddSingleton<IResoniteBanController, ResoniteBanController>()
+            .AddSingleton<IResoniteContactController, ResoniteContactController>()
+            .AddSingleton<IResoniteWorldController, TWorldController>()
             .AddSingleton<IJobService, JobService>();
     }
 }

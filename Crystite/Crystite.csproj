@@ -70,7 +70,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="NeosDependentHostConfiguration.cs">
+      <Compile Update="ResoniteDependentHostConfiguration.cs">
         <DependentUpon>Program.cs</DependentUpon>
       </Compile>
       <Compile Update="Configuration\AssetCleanupLocation.cs">

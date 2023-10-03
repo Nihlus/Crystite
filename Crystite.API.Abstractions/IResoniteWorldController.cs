@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: INeosWorldController.cs
+//  SPDX-FileName: IResoniteWorldController.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -15,10 +15,10 @@ using Remora.Results;
 namespace Crystite.API.Abstractions;
 
 /// <summary>
-/// Represents the public API of world-related functionality of a headless NeosVR client.
+/// Represents the public API of world-related functionality of a headless Resonite client.
 /// </summary>
 [PublicAPI]
-public interface INeosWorldController
+public interface IResoniteWorldController
 {
     /// <summary>
     /// Gets the available worlds.

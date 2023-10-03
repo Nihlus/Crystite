@@ -1,5 +1,5 @@
 //
-//  SPDX-FileName: NeosContactController.cs
+//  SPDX-FileName: ResoniteContactController.cs
 //  SPDX-FileCopyrightText: Copyright (c) Jarl Gullberg
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
@@ -20,15 +20,15 @@ namespace Crystite.API;
 /// <summary>
 /// Implements contact control logic for the stock headless client.
 /// </summary>
-public class NeosContactController : INeosContactController
+public class ResoniteContactController : IResoniteContactController
 {
     private readonly Engine _engine;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="NeosContactController"/> class.
+    /// Initializes a new instance of the <see cref="ResoniteContactController"/> class.
     /// </summary>
     /// <param name="engine">The game engine.</param>
-    public NeosContactController(Engine engine)
+    public ResoniteContactController(Engine engine)
     {
         _engine = engine;
     }

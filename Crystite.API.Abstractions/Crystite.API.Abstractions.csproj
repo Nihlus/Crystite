@@ -14,7 +14,7 @@
 
     <PropertyGroup>
         <VersionPrefix>1.0.0</VersionPrefix>
-        <Description>Defines common interfaces and data models for programmatic control of a NeosVR headless client</Description>
+        <Description>Defines common interfaces and data models for programmatic control of a Resonite headless client</Description>
     </PropertyGroup>
 
     <PropertyGroup>

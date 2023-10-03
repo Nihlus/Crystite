@@ -17,13 +17,13 @@ namespace Crystite.Routes;
 [Route("contacts")]
 public class ContactController : ControllerBase
 {
-    private readonly INeosContactController _contactController;
+    private readonly IResoniteContactController _contactController;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ContactController"/> class.
     /// </summary>
     /// <param name="contactController">The contact controller.</param>
-    public ContactController(INeosContactController contactController)
+    public ContactController(IResoniteContactController contactController)
     {
         _contactController = contactController;
     }

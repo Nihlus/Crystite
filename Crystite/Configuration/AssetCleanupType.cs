@@ -17,9 +17,9 @@ public enum AssetCleanupType
     Local,
 
     /// <summary>
-    /// Clean up assets with a NeosDB URI.
+    /// Clean up assets with a ResoniteDB URI.
     /// </summary>
-    NeosDB,
+    ResoniteDB,
 
     /// <summary>
     /// Clean up assets with a URI not matching any of the other categories.
