@@ -4,12 +4,8 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using CommandLine;
 using Crystite.Control.API;
 using Crystite.Control.Verbs.Bases;
@@ -48,17 +44,22 @@ public class ShowWorlds : HeadlessVerb
             return (Result)getWorlds;
         }
 
-        if (!this.Verbose)
+        if (this.Verbose)
+        {
+            await outputWriter.WriteLineAsync(JsonSerializer.Serialize(worlds, outputOptions));
+        }
+        else
         {
             foreach (var world in worlds)
             {
-                await outputWriter.WriteLineAsync(world.Name);
-            }
+                var description = world.Description is null
+                    ? string.Empty
+                    : $"\t{world.Description}";
 
-            return Result.FromSuccess();
+                await outputWriter.WriteLineAsync($"{world.Name}\t{world.Id}{description}");
+            }
         }
 
-        await outputWriter.WriteAsync(JsonSerializer.Serialize(worlds, outputOptions));
         return Result.FromSuccess();
     }
 }

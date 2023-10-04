@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using CommandLine;
@@ -16,6 +17,7 @@ using Crystite.API.Abstractions;
 using Crystite.Control.API;
 using Crystite.Control.Verbs.Bases;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Remora.Results;
 
 namespace Crystite.Control.Verbs;
@@ -41,6 +43,7 @@ public sealed class ShowWorld : WorldVerb
     {
         var worldAPI = services.GetRequiredService<HeadlessWorldAPI>();
         var outputWriter = services.GetRequiredService<TextWriter>();
+        var outputOptions = services.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Crystite");
 
         IRestWorld? world;
         if (this.ID is null)
@@ -66,17 +69,18 @@ public sealed class ShowWorld : WorldVerb
             }
         }
 
-        var table = new ConsoleTable("Name", "ID", "Description")
+        if (this.Verbose)
         {
-            Options =
-            {
-                EnableCount = false,
-                OutputTo = outputWriter
-            }
-        };
+            await outputWriter.WriteLineAsync(JsonSerializer.Serialize(world, outputOptions));
+        }
+        else
+        {
+            var description = world.Description is null
+                ? string.Empty
+                : $"\t{world.Description}";
 
-        table.AddRow(world.Name, world.Id, world.Description);
-        table.Write();
+            await outputWriter.WriteLineAsync($"{world.Name}\t{world.Id}{description}");
+        }
 
         return Result.FromSuccess();
     }
