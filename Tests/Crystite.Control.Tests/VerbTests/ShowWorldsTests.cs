@@ -10,7 +10,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Crystite.Control.API;
 using Crystite.Control.Tests.TestBases;
 using Crystite.Control.Verbs;
 using Remora.Rest.Xunit;

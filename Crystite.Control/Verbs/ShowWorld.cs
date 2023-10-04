@@ -4,15 +4,9 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
 using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 using CommandLine;
-using ConsoleTables;
 using Crystite.API.Abstractions;
 using Crystite.Control.API;
 using Crystite.Control.Verbs.Bases;

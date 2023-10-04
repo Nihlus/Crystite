@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System.Net.Http;
 using System.Net.Sockets;
 using Remora.Rest.Results;
 using Remora.Results;
