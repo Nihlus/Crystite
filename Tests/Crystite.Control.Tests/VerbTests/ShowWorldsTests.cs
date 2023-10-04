@@ -5,6 +5,7 @@
 //
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
@@ -42,21 +43,21 @@ public class ShowWorldsTests : VerbTestBase
     [Theory]
     [InlineData("no-running-worlds.json", new string[] { }, new string[] { })]
     [InlineData("no-running-worlds.json", new[] { "-v" }, null)]
-    [InlineData("single-running-world.json", new string[] { }, new[] { "SpaceWorld" })]
-    [InlineData("multiple-running-worlds.json", new string[] { }, new[] { "SpaceWorld", "OtherWorld" })]
+    [InlineData("single-running-world.json", new string[] { }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62" })]
+    [InlineData("multiple-running-worlds.json", new string[] { }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62", "OtherWorld\tS-84b4a57b-af87-4638-bcbb-4ec079c1bb4b\twith description!" })]
     [InlineData("single-running-world.json", new[] { "-v" }, null)]
     [InlineData("multiple-running-worlds.json", new[] { "-v" }, null)]
     public async Task DisplaysCorrectOutput(string payloadFile, string[] arguments, string[]? expected)
     {
-        var payload = GetResponsePayload(payloadFile);
-        ConfigureAPI<HeadlessWorldAPI>
+        var payload = GetResponsePayload(Path.Combine("show_worlds", payloadFile));
+        ConfigureServer
         (
-            api => api
+            server => server
                 .Expect(HttpMethod.Get, "http://xunit:1/worlds")
                 .Respond("application/json", payload)
         );
 
-        var args = new[] { "show-worlds" }.Concat(arguments);
+        var args = new[] { "show-worlds" }.Concat(GetFixtureConnectionArguments()).Concat(arguments);
         var verb = Program.ParseVerb(args);
 
         Assert.NotNull(verb);

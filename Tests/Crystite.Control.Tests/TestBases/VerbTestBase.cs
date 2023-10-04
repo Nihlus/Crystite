@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Crystite.Control.API;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -63,15 +64,19 @@ public abstract class VerbTestBase : IDisposable
     }
 
     /// <summary>
+    /// Gets the connection arguments used to contact the text fixture. These arguments are virtual, and no server
+    /// exists at them, but they are matched against in the HTTP message handler.
+    /// </summary>
+    /// <returns>The fixture connection arguments.</returns>
+    protected string[] GetFixtureConnectionArguments() => new[] { "-p", "1", "-s", "xunit" };
+
+    /// <summary>
     /// Creates a configured, mocked API instance.
     /// </summary>
-    /// <typeparam name="TAPI">The type of the API class to configure and create.</typeparam>
     /// <param name="builder">The mock builder.</param>
-    /// <returns>The API instance.</returns>
-    protected TAPI ConfigureAPI<TAPI>(Action<MockHttpMessageHandler> builder) where TAPI : AbstractHeadlessRestAPI
+    protected void ConfigureServer(Action<MockHttpMessageHandler> builder)
     {
         builder(_mockHandler);
-        return this.Services.GetRequiredService<TAPI>();
     }
 
     /// <summary>
@@ -108,7 +113,7 @@ public abstract class VerbTestBase : IDisposable
             .GetExecutingAssembly()
             .GetManifestResourceStream
             (
-                $"Crystite.Control.Tests.Data.{filename}".Replace(Path.DirectorySeparatorChar, '.')
+                $"Crystite.Control.Tests.Data.{filename.Replace(Path.DirectorySeparatorChar, '.')}"
             );
 
         if (stream is null)

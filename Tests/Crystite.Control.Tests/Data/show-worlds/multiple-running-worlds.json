@@ -11,7 +11,7 @@
     {
         "id": "S-84b4a57b-af87-4638-bcbb-4ec079c1bb4b",
         "name": "OtherWorld",
-        "description": null,
+        "description": "with description!",
         "access_level": "anyone",
         "away_kick_interval": 5,
         "hide_from_listing": false,
