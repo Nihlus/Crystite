@@ -10,6 +10,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
+        <AssemblyName>crystite</AssemblyName>
         <TargetFramework />
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
