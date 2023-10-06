@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using CloudX.Shared;
 using Crystite.Configuration;
 using Crystite.Extensions;
 using Crystite.Services;
@@ -98,14 +97,26 @@ public class StandaloneFrooxEngineService : BackgroundService
             ? ResoniteHeadlessConfig.DefaultCacheFolder
             : _config.CacheFolder;
 
+        var launchOptions = new LaunchOptions
+        {
+            AdditionalAssemblies = new List<string>(_config.PluginAssemblies ?? Array.Empty<string>()),
+            CacheDirectory = cacheFolder,
+            DataDirectory = dataFolder,
+            GeneratePrecache = _config.GeneratePreCache.GetValueOrDefault(false),
+            LogsDirectory = null,
+            BackgroundWorkerCount = _config.BackgroundWorkers,
+            PriorityWorkerCount = _config.PriorityWorkers,
+            StartInvisible = _applicationConfig.Invisible,
+            VerboseInit = true
+        };
+
         await _engine.Initialize
         (
             _applicationConfig.ResonitePath,
-            dataFolder,
-            cacheFolder,
+            launchOptions,
             _systemInfo,
             null,
-            true
+            null // TODO: pass an init progress implementation that forwards to ILogger<Engine> here
         );
 
         var userspaceWorld = Userspace.SetupUserspace(_engine);

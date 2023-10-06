@@ -117,36 +117,6 @@ public static class ResoniteDependentHostConfiguration
         // Generic patches
         RedirectCommandLineParsing.Configure<InputInterface>(_ => { });
 
-        RedirectCommandLineParsing.Configure<Engine>(nameof(Engine.Initialize), args =>
-        {
-            if (resoniteConfig.PluginAssemblies is not null)
-            {
-                foreach (var pluginAssembly in resoniteConfig.PluginAssemblies)
-                {
-                    args.Add("LoadAssembly");
-                    args.Add(pluginAssembly);
-                }
-            }
-
-            if (resoniteConfig.GeneratePreCache is true)
-            {
-                args.Add("GeneratePreCache");
-            }
-
-            if (resoniteConfig.BackgroundWorkers is { } backgroundWorkers)
-            {
-                args.Add("backgroundworkers");
-                args.Add(backgroundWorkers.ToString());
-            }
-
-            // ReSharper disable once InvertIf
-            if (resoniteConfig.PriorityWorkers is { } priorityWorkers)
-            {
-                args.Add("priorityworkers");
-                args.Add(priorityWorkers.ToString());
-            }
-        });
-
         RedirectCommandLineParsing.Configure<LocalDB>(nameof(LocalDB.Initialize), args =>
         {
             if (!flags.RepairDatabase)
@@ -164,14 +134,6 @@ public static class ResoniteDependentHostConfiguration
         });
 
         RedirectCommandLineParsing.Configure<EngineSkyFrostInterface>(_ => { });
-        RedirectCommandLineParsing.Configure<UserStatusManager>(args =>
-        {
-            if (headlessConfig.Invisible)
-            {
-                args.Add("invisible");
-            }
-        });
-
         RedirectCommandLineParsing.Configure<Userspace>(new[] { "OnAttach", "Bootstrap" }, args =>
         {
             args.Add("noui");
