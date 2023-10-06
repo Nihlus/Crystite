@@ -18,7 +18,6 @@ using FrooxEngine;
 using HarmonyLib;
 using Microsoft.Extensions.Options;
 using Serilog;
-using SkyFrost.Base;
 
 namespace Crystite;
 
