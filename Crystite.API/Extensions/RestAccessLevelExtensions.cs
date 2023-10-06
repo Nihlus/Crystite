@@ -5,8 +5,8 @@
 //
 
 using System;
-using CloudX.Shared;
 using Crystite.API.Abstractions;
+using SkyFrost.Base;
 
 namespace Crystite.API.Extensions;
 
@@ -24,8 +24,8 @@ public static class RestAccessLevelExtensions
     {
         RestAccessLevel.Private => SessionAccessLevel.Private,
         RestAccessLevel.LAN => SessionAccessLevel.LAN,
-        RestAccessLevel.Friends => SessionAccessLevel.Friends,
-        RestAccessLevel.FriendsOfFriends => SessionAccessLevel.FriendsOfFriends,
+        RestAccessLevel.Contacts => SessionAccessLevel.Contacts,
+        RestAccessLevel.ContactsPlus => SessionAccessLevel.ContactsPlus,
         RestAccessLevel.RegisteredUsers => SessionAccessLevel.RegisteredUsers,
         RestAccessLevel.Anyone => SessionAccessLevel.Anyone,
         _ => throw new ArgumentOutOfRangeException(nameof(accessLevel), accessLevel, null)

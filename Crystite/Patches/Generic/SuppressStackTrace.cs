@@ -7,7 +7,7 @@
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
-using BaseX;
+using Elements.Core;
 using HarmonyLib;
 using JetBrains.Annotations;
 

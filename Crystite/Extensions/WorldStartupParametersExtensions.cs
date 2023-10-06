@@ -21,7 +21,7 @@ internal static class WorldStartupParametersExtensions
     /// <param name="startupParameters">The startup parameters.</param>
     /// <param name="sessionID">The ID of the new session.</param>
     /// <returns>The start settings.</returns>
-    public static async Task<Result<WorldStartSettings>> CreateWorldStartSettingsAsync
+    public static Result<WorldStartSettings> CreateWorldStartSettings
     (
         this WorldStartupParameters startupParameters,
         string? sessionID
@@ -34,7 +34,7 @@ internal static class WorldStartupParametersExtensions
         }
         else if (startupParameters.LoadWorldPresetName is not null)
         {
-            var worldPreset = (await WorldPresets.GetPresets()).FirstOrDefault
+            var worldPreset = WorldPresets.Presets.FirstOrDefault
             (
                 p => startupParameters.LoadWorldPresetName.Equals(p.Name, StringComparison.InvariantCultureIgnoreCase)
             );

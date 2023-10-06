@@ -5,13 +5,13 @@
 //
 
 using System.Collections.Concurrent;
-using CloudX.Shared;
 using Crystite.Configuration;
 using Crystite.Extensions;
 using Crystite.Patches.EngineRecordUploadTask;
 using FrooxEngine;
 using Microsoft.Extensions.Options;
 using Remora.Results;
+using SkyFrost.Base;
 using Record = FrooxEngine.Record;
 
 namespace Crystite.Services;
@@ -90,7 +90,7 @@ public class WorldService
             }
         }
 
-        var createStartSettings = await startupParameters.CreateWorldStartSettingsAsync(sessionID);
+        var createStartSettings = startupParameters.CreateWorldStartSettings(sessionID);
         if (!createStartSettings.IsDefined(out var startSettings))
         {
             return Result<ActiveSession>.FromError(createStartSettings);
@@ -319,7 +319,7 @@ public class WorldService
             if (autosaveInterval > TimeSpan.Zero && timeSinceLastSave > autosaveInterval && Userspace.CanSave(world))
             {
                 // only attempt a save if the last save has been synchronized and we're not shutting down
-                if (world.CorrespondingRecord.IsSynced && !(Userspace.IsExitingNeos || _engine.ShutdownRequested))
+                if (world.CorrespondingRecord.IsSynced && !(Userspace.IsExitingApp || _engine.ShutdownRequested))
                 {
                     _log.LogInformation("Autosaving {World}", world.RawName);
                     await Userspace.SaveWorldAuto(world, SaveType.Overwrite, false);

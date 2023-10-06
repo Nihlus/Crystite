@@ -9,11 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using BaseX;
 using Crystite.API.Abstractions;
 using Crystite.API.Extensions;
+using Elements.Core;
 using FrooxEngine;
-using FrooxEngine.LogiX.ProgramFlow;
 using OneOf;
 using Remora.Results;
 
@@ -80,7 +79,7 @@ public abstract class ResoniteWorldController : IResoniteWorldController
             return new InvalidOperationError("The world is currently synchronizing.");
         }
 
-        if (Userspace.IsExitingNeos || _worldManager.Engine.ShutdownRequested)
+        if (Userspace.IsExitingApp || _worldManager.Engine.ShutdownRequested)
         {
             return new InvalidOperationError("The application is currently shutting down.");
         }

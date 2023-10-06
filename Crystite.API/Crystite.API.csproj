@@ -1,6 +1,6 @@
 <Project>
     <Sdk Name="Remora.Sdk" Version="2.1.2" />
-    <Sdk Name="Remora.Neos.Sdk" Version="1.2.2" />
+    <Sdk Name="Remora.Resonite.Sdk" Version="1.0.0" />
 
     <PropertyGroup>
         <LegalLicense>AGPL-3.0-or-later</LegalLicense>
@@ -10,9 +10,9 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <NeosTarget>headless</NeosTarget>
-        <NeosProjectType>library</NeosProjectType>
-        <NeosForceReferenceAssemblies>true</NeosForceReferenceAssemblies>
+        <ResoniteTarget>headless</ResoniteTarget>
+        <ResoniteProjectType>library</ResoniteProjectType>
+        <ResoniteForceReferenceAssemblies>true</ResoniteForceReferenceAssemblies>
         <TargetFramework/>
         <LibraryFrameworks>net462;net7.0</LibraryFrameworks>
     </PropertyGroup>
@@ -33,9 +33,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <NeosReference Include="BaseX" />
-        <NeosReference Include="CloudX.Shared" />
-        <NeosReference Include="FrooxEngine" />
+        <ResoniteReference Include="Elements.Core" />
+        <ResoniteReference Include="SkyFrost.Base" />
+        <ResoniteReference Include="FrooxEngine" />
     </ItemGroup>
 
     <ItemGroup>

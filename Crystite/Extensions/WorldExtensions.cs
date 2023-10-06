@@ -4,8 +4,8 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using CloudX.Shared;
 using FrooxEngine;
+using SkyFrost.Base;
 
 namespace Crystite.Extensions;
 
@@ -112,18 +112,18 @@ public static class WorldExtensions
 
         foreach (var username in startupParameters.AutoInviteUsernames)
         {
-            var friend = world.Engine.Cloud.Friends.FindFriend
+            var contact = world.Engine.Cloud.Contacts.FindContact
             (
-                f => f.FriendUsername.Equals(username, StringComparison.InvariantCultureIgnoreCase)
+                f => f.ContactUsername.Equals(username, StringComparison.InvariantCultureIgnoreCase)
             );
 
-            if (friend is null)
+            if (contact is null)
             {
                 log.LogWarning("{Username} is not in the friends list, cannot auto-invite", username);
                 continue;
             }
 
-            var messages = world.Engine.Cloud.Messages.GetUserMessages(friend.FriendUserId);
+            var messages = world.Engine.Cloud.Messages.GetUserMessages(contact.ContactUserId);
             if (startupParameters.AutoInviteMessage is not null)
             {
                 if (!await messages.SendTextMessage(startupParameters.AutoInviteMessage))
@@ -132,8 +132,9 @@ public static class WorldExtensions
                 }
             }
 
-            world.AllowUserToJoin(friend.FriendUserId);
-            if (!await messages.SendMessage(messages.CreateInviteMessage(world)))
+            world.AllowUserToJoin(contact.ContactUserId);
+            var inviteMessage = await messages.CreateInviteMessage(world);
+            if (!await messages.SendMessage(inviteMessage))
             {
                 log.LogWarning("Failed to send auto-invite");
             }
@@ -184,7 +185,7 @@ public static class WorldExtensions
                             );
                         }
 
-                        args.World.Permissions.DefaultFriendRole.ForceWrite(permissionSet);
+                        args.World.Permissions.DefaultContactRole.ForceWrite(permissionSet);
                     }
                 }
 
@@ -249,7 +250,7 @@ public static class WorldExtensions
 
                 foreach (var (user, role) in args.Startup.DefaultUserRoles)
                 {
-                    var userByName = await args.World.Engine.Cloud.GetUserByName(user);
+                    var userByName = await args.World.Engine.Cloud.Users.GetUserByName(user);
                     if (userByName.IsError)
                     {
                         args.Log.LogWarning("User {User} not found: {Reason}", user, userByName.State);

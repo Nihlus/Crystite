@@ -14,7 +14,7 @@ namespace Crystite.Patches.ResoniteAssemblyPostProcessor;
 /// <summary>
 /// Replaces the assembly resolver used by PostX with our own.
 /// </summary>
-[HarmonyPatch(typeof(PostX.NeosAssemblyPostProcessor), nameof(PostX.NeosAssemblyPostProcessor.Process))]
+[HarmonyPatch(typeof(FrooxEngine.Weaver.AssemblyPostProcessor), nameof(FrooxEngine.Weaver.AssemblyPostProcessor.Process))]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public static class OverrideCecilAssemblyResolver
 {

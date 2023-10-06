@@ -5,8 +5,8 @@
 //
 
 using System;
-using CloudX.Shared;
 using Crystite.API.Abstractions;
+using SkyFrost.Base;
 
 namespace Crystite.API.Extensions;
 
@@ -16,17 +16,17 @@ namespace Crystite.API.Extensions;
 public static class RestContactStatusExtensions
 {
     /// <summary>
-    /// Converts a <see cref="RestContactStatus"/> to a <see cref="FriendStatus"/>.
+    /// Converts a <see cref="RestContactStatus"/> to a <see cref="ContactStatus"/>.
     /// </summary>
     /// <param name="status">The status to convert.</param>
     /// <returns>The converted status.</returns>
-    public static FriendStatus ToFriendStatus(this RestContactStatus status) => status switch
+    public static ContactStatus ToContactStatus(this RestContactStatus status) => status switch
     {
-        RestContactStatus.None => FriendStatus.None,
-        RestContactStatus.Ignored => FriendStatus.Ignored,
-        RestContactStatus.Blocked => FriendStatus.Blocked,
-        RestContactStatus.Friend => FriendStatus.Accepted,
-        RestContactStatus.Requested => FriendStatus.Requested,
+        RestContactStatus.None => ContactStatus.None,
+        RestContactStatus.Ignored => ContactStatus.Ignored,
+        RestContactStatus.Blocked => ContactStatus.Blocked,
+        RestContactStatus.Friend => ContactStatus.Accepted,
+        RestContactStatus.Requested => ContactStatus.Requested,
         _ => throw new ArgumentOutOfRangeException(nameof(status), status, null)
     };
 }

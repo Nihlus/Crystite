@@ -22,14 +22,14 @@ public enum RestAccessLevel
     LAN,
 
     /// <summary>
-    /// Friends of the session owner can join the world.
+    /// Contacts of the session owner can join the world.
     /// </summary>
-    Friends,
+    Contacts,
 
     /// <summary>
-    /// Friends and friends of friends of the session owner can join the world.
+    /// Contacts and contacts of contacts of the session owner can join the world.
     /// </summary>
-    FriendsOfFriends,
+    ContactsPlus,
 
     /// <summary>
     /// Registered users can join the world.

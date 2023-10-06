@@ -56,7 +56,7 @@ public class CustomHeadlessResoniteWorldController : ResoniteWorldController
                 LoadWorldPresetName = templateName
             };
 
-            var preset = (await WorldPresets.GetPresets()).FirstOrDefault<WorldPreset>
+            var preset = WorldPresets.Presets.FirstOrDefault<WorldPreset>
             (
                 p =>
                 {

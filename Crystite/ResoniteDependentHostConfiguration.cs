@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using BaseX;
 using Crystite.API.Extensions;
 using Crystite.Configuration;
 using Crystite.Implementations;
@@ -14,10 +13,12 @@ using Crystite.Patches.ResoniteAssemblyPostProcessor;
 using Crystite.Patches.SteamConnector;
 using Crystite.Patches.VideoTextureProvider;
 using Crystite.Services;
+using Elements.Core;
 using FrooxEngine;
 using HarmonyLib;
 using Microsoft.Extensions.Options;
 using Serilog;
+using SkyFrost.Base;
 
 namespace Crystite;
 
@@ -162,9 +163,8 @@ public static class ResoniteDependentHostConfiguration
             args.Add("repairdatabase");
         });
 
-        RedirectCommandLineParsing.Configure<EngineCloudXInterface>(_ => { });
-
-        RedirectCommandLineParsing.Configure<StatusManager>(args =>
+        RedirectCommandLineParsing.Configure<EngineSkyFrostInterface>(_ => { });
+        RedirectCommandLineParsing.Configure<UserStatusManager>(args =>
         {
             if (headlessConfig.Invisible)
             {

@@ -5,7 +5,7 @@
 //
 
 using System.Text.Json.Serialization;
-using CloudX.Shared;
+using SkyFrost.Base;
 
 namespace Crystite.Configuration;
 

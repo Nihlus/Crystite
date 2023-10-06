@@ -50,10 +50,10 @@ public class ResoniteBanController : IResoniteBanController
     /// <inheritdoc />
     public async Task<Result<IRestBan>> BanUserAsync(string userIdOrName, CancellationToken ct = default)
     {
-        var getUser = await _engine.Cloud.GetUser(userIdOrName);
+        var getUser = await _engine.Cloud.Users.GetUser(userIdOrName);
         if (!getUser.IsOK)
         {
-            getUser = await _engine.Cloud.GetUserByName(userIdOrName);
+            getUser = await _engine.Cloud.Users.GetUserByName(userIdOrName);
             if (!getUser.IsOK)
             {
                 return new NotFoundError("No user with that ID or name could be found.");
@@ -61,23 +61,24 @@ public class ResoniteBanController : IResoniteBanController
         }
 
         var user = getUser.Entity;
+        var fingerprint = new UserFingerprint(user);
 
-        if (BanManager.IsBanned(user.Id, null, null))
+        if (BanManager.IsBanned(fingerprint))
         {
             return new InvalidOperationError("The user is already banned.");
         }
 
-        BanManager.AddToBanList(user.Username, user.Id, null, null);
+        BanManager.AddToBanList(fingerprint);
         return new RestBan(user.Id, user.Username);
     }
 
     /// <inheritdoc />
     public async Task<Result> UnbanUserAsync(string userIdOrName, CancellationToken ct = default)
     {
-        var getUser = await _engine.Cloud.GetUser(userIdOrName);
+        var getUser = await _engine.Cloud.Users.GetUser(userIdOrName);
         if (!getUser.IsOK)
         {
-            getUser = await _engine.Cloud.GetUserByName(userIdOrName);
+            getUser = await _engine.Cloud.Users.GetUserByName(userIdOrName);
             if (!getUser.IsOK)
             {
                 return new NotFoundError();
@@ -85,8 +86,9 @@ public class ResoniteBanController : IResoniteBanController
         }
 
         var user = getUser.Entity;
+        var fingerprint = new UserFingerprint(user);
 
-        if (!BanManager.IsBanned(user.Id, null, null))
+        if (!BanManager.IsBanned(fingerprint))
         {
             return new InvalidOperationError("The user is not banned.");
         }

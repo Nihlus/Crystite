@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CloudX.Shared;
 using Crystite.API.Abstractions;
 using Crystite.API.Extensions;
 using FrooxEngine;
 using Remora.Results;
+using SkyFrost.Base;
 
 namespace Crystite.API;
 
@@ -36,34 +36,31 @@ public class ResoniteContactController : IResoniteContactController
     /// <inheritdoc />
     public Task<Result<IReadOnlyList<IRestContact>>> GetContactsAsync(CancellationToken ct = default)
     {
-        var friends = new List<Friend>();
-        _engine.Cloud.Friends.GetFriends(friends);
+        var contacts = new List<Contact>();
+        _engine.Cloud.Contacts.GetContacts(contacts);
 
-        return Task.FromResult<Result<IReadOnlyList<IRestContact>>>(friends.Select(f => f.ToRestContact()).ToArray());
+        return Task.FromResult<Result<IReadOnlyList<IRestContact>>>(contacts.Select(f => f.ToRestContact()).ToArray());
     }
 
     /// <inheritdoc />
-    public Task<Result<IRestContact>> ModifyContactAsync(string userIdOrName, RestContactStatus status, CancellationToken ct = default)
+    public async Task<Result<IRestContact>> ModifyContactAsync(string userIdOrName, RestContactStatus status, CancellationToken ct = default)
     {
-        var friends = new List<Friend>();
-        _engine.Cloud.Friends.GetFriends(friends);
+        var contacts = new List<Contact>();
+        _engine.Cloud.Contacts.GetContacts(contacts);
 
-        var friendRequest = friends.FirstOrDefault(f => f.FriendUserId == userIdOrName);
-        if (friendRequest is null)
+        var contact = contacts.FirstOrDefault(f => f.ContactUserId == userIdOrName);
+        if (contact is null)
         {
-            friendRequest = friends.FirstOrDefault(f => string.Equals(userIdOrName, f.FriendUsername, StringComparison.InvariantCultureIgnoreCase));
-            if (friendRequest is null)
+            contact = contacts.FirstOrDefault(f => string.Equals(userIdOrName, f.ContactUsername, StringComparison.InvariantCultureIgnoreCase));
+            if (contact is null)
             {
-                return Task.FromResult<Result<IRestContact>>(new NotFoundError());
+                return new NotFoundError();
             }
         }
 
-        if (friendRequest.FriendStatus == status.ToFriendStatus())
+        if (contact.ContactStatus == status.ToContactStatus())
         {
-            return Task.FromResult<Result<IRestContact>>
-            (
-                new InvalidOperationException($"The contact is already {status.ToString().ToLowerInvariant()}.")
-            );
+            return new InvalidOperationException($"The contact is already {status.ToString().ToLowerInvariant()}.");
         }
 
         switch (status)
@@ -71,25 +68,25 @@ public class ResoniteContactController : IResoniteContactController
             case RestContactStatus.None:
             {
                 // Remove friend
-                _engine.Cloud.Friends.RemoveFriend(friendRequest);
+                await _engine.Cloud.Contacts.RemoveContact(contact);
                 break;
             }
             case RestContactStatus.Ignored:
             {
                 // ignore
-                _engine.Cloud.Friends.IgnoreRequest(friendRequest);
+                await _engine.Cloud.Contacts.IgnoreRequest(contact);
                 break;
             }
             case RestContactStatus.Blocked:
             {
-                return Task.FromResult<Result<IRestContact>>(new NotSupportedError("Blocking is currently unimplemented."));
+                return new NotSupportedError("Blocking is currently unimplemented.");
             }
             case RestContactStatus.Requested:
             case RestContactStatus.Friend:
             {
                 // accept or request
                 // TODO: ensure friend requests can actually be sent this way
-                _engine.Cloud.Friends.AddFriend(friendRequest);
+                await _engine.Cloud.Contacts.AddContact(contact);
                 break;
             }
             default:
@@ -98,6 +95,6 @@ public class ResoniteContactController : IResoniteContactController
             }
         }
 
-        return Task.FromResult<Result<IRestContact>>(friendRequest.ToRestContact() with { Status = status });
+        return contact.ToRestContact() with { Status = status };
     }
 }

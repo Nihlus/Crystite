@@ -1,11 +1,11 @@
 <Project>
     <Sdk Name="Remora.Sdk" Version="2.1.2" />
-    <Sdk Name="Remora.Neos.Sdk" Version="1.2.2" />
+    <Sdk Name="Remora.Resonite.Sdk" Version="1.0.0" />
     <Sdk Name="Microsoft.NET.Sdk.Web" />
 
     <PropertyGroup>
-        <NeosProjectType>standalone</NeosProjectType>
-        <NeosTarget>headless</NeosTarget>
+        <ResoniteProjectType>standalone</ResoniteProjectType>
+        <ResoniteTarget>headless</ResoniteTarget>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -33,11 +33,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <NeosReference Include="FrooxEngine" Private="false" />
-        <NeosReference Include="BaseX" Private="false" />
-        <NeosReference Include="CloudX.Shared" Private="false" />
-        <NeosReference Include="PostX" Private="false" />
-        <NeosReference Include="LiteDB" Private="false" />
+        <ResoniteReference Include="FrooxEngine" Private="false" />
+        <ResoniteReference Include="Elements.Core" Private="false" />
+        <ResoniteReference Include="SkyFrost.Base" Private="false" />
+        <ResoniteReference Include="FrooxEngine.Weaver" Private="false" />
     </ItemGroup>
 
     <ItemGroup>
@@ -45,6 +44,7 @@
       <PackageReference Include="Hardware.Info" />
       <PackageReference Include="Humanizer.Core" />
       <PackageReference Include="Lib.Harmony" />
+      <PackageReference Include="LiteDB" />
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
@@ -81,7 +81,7 @@
         <DependentUpon>HeadlessApplicationConfiguration.cs</DependentUpon>
       </Compile>
       <Compile Update="Configuration\WorldStartupParameters.cs">
-        <DependentUpon>NeosHeadlessConfig.cs</DependentUpon>
+        <DependentUpon>ResoniteHeadlessConfig.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 </Project>

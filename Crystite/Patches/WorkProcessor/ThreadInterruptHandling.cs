@@ -12,7 +12,7 @@ namespace Crystite.Patches.WorkProcessor;
 /// <summary>
 /// Wraps job workers in order to catch <see cref="ThreadInterruptedException"/>s.
 /// </summary>
-[HarmonyPatch(typeof(BaseX.WorkProcessor), "JobWorker")]
+[HarmonyPatch(typeof(Elements.Core.WorkProcessor), "JobWorker")]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public class ThreadInterruptHandling
 {

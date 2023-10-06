@@ -1,10 +1,10 @@
 <Project>
     <Sdk Name="Remora.Tests.Sdk" Version="2.0.5" />
-    <Sdk Name="Remora.Neos.Sdk" Version="1.2.2" />
+    <Sdk Name="Remora.Resonite.Sdk" Version="1.0.0" />
 
     <PropertyGroup>
-        <NeosProjectType>standalone</NeosProjectType>
-        <NeosTarget>headless</NeosTarget>
+        <ResoniteProjectType>standalone</ResoniteProjectType>
+        <ResoniteTarget>headless</ResoniteTarget>
         <TargetFramework />
     </PropertyGroup>
 
@@ -20,6 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <NeosReference Include="FrooxEngine"/>
+        <ResoniteReference Include="FrooxEngine"/>
     </ItemGroup>
 </Project>

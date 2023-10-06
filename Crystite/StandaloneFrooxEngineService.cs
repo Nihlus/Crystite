@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Hosting.Systemd;
 using Microsoft.Extensions.Options;
+using SkyFrost.Base;
 
 namespace Crystite;
 
@@ -218,16 +219,16 @@ public class StandaloneFrooxEngineService : BackgroundService
         var field = AccessTools.Field(typeof(HubConnection), "Closed");
         field.SetValue(connection, null);
 
-        var cancellationTokenField = AccessTools.Field(typeof(CloudXInterface), "_hubConnectionToken");
+        var cancellationTokenField = AccessTools.Field(typeof(SkyFrostInterface), "_hubConnectionToken");
 
         var connectDelegate = AccessTools.MethodDelegate<Func<Task>>
         (
-            AccessTools.DeclaredMethod(typeof(CloudXInterface), "ConnectToHub"), _engine.Cloud
+            AccessTools.DeclaredMethod(typeof(SkyFrostInterface), "ConnectToHub"), _engine.Cloud
         );
 
         connection.Closed += async error =>
         {
-            var tokenSource = AccessTools.FieldRefAccess<CloudXInterface, CancellationTokenSource>
+            var tokenSource = AccessTools.FieldRefAccess<SkyFrostInterface, CancellationTokenSource>
             (
                 _engine.Cloud,
                 cancellationTokenField
@@ -309,7 +310,7 @@ public class StandaloneFrooxEngineService : BackgroundService
             }
 
             isShuttingDown = true;
-            Userspace.ExitNeos(false);
+            Userspace.ExitApp(false);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Crystite.Patches.WorldAnnouncer;
 /// <summary>
 /// Ensures the local announce listener terminates gracefully if the thread is interrupted.
 /// </summary>
-[HarmonyPatch(typeof(FrooxEngine.WorldAnnouncer), "LocalAnnounceListener")]
+[HarmonyPatch(typeof(FrooxEngine.SessionAnnouncer), "LocalAnnounceListener")]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public class GracefulInterruptTermination
 {
