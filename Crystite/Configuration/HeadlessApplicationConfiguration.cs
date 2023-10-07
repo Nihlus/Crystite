@@ -18,6 +18,8 @@ namespace Crystite.Configuration;
 /// <param name="RetryDelay">The delay between attempts to upload a record again.</param>
 /// <param name="Invisible">Whether to set the logged-in user as invisible.</param>
 /// <param name="EnableSteam">Whether to enable Steam API integration.</param>
+/// <param name="EnableYoutubeDL">Whether to enable YoutubeDL integration.</param>
+/// <param name="YoutubeDLPaths">The paths to consider when looking for valid YoutubeDL executables.</param>
 public record HeadlessApplicationConfiguration
 (
     string ResonitePath,
