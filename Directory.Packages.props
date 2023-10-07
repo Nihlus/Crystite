@@ -1,4 +1,4 @@
- <Project>
+<Project>
   <ItemGroup>
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     <PackageVersion Include="CommandLiners.Posix" Version="1.0.36" />
@@ -8,8 +8,9 @@
     <PackageVersion Include="Humanizer.Core" Version="2.14.1" />
     <PackageVersion Include="Lib.Harmony" Version="2.3.0-prerelease.2" />
     <PackageVersion Include="LiteDB" Version="5.0.16" />
+    <PackageVersion Include="LiteDB.Async" Version="0.1.6" />
     <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.5" />
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="5.0.11" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="7.0.11" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />

@@ -6,10 +6,9 @@
 
 using System.Reflection;
 using Crystite.Configuration;
-using Flettu.Lock;
 using FrooxEngine;
 using Humanizer;
-using LiteDB;
+using LiteDB.Async;
 using Microsoft.Extensions.Options;
 
 namespace Crystite;
@@ -57,8 +56,6 @@ public class AssetHooverService : BackgroundService
             return;
         }
 
-        var lockField = typeof(LocalDB).GetField("_lock", BindingFlags.Instance | BindingFlags.NonPublic)
-                        ?? throw new InvalidOperationException();
         var assetsField = typeof(LocalDB).GetField("assets", BindingFlags.Instance | BindingFlags.NonPublic)
                           ?? throw new InvalidOperationException();
 
@@ -69,8 +66,7 @@ public class AssetHooverService : BackgroundService
 
         var db = _engine.LocalDB;
 
-        var dbLock = (AsyncLock)(lockField.GetValue(db) ?? throw new InvalidOperationException());
-        var assets = (LiteCollection<AssetRecord>)(assetsField.GetValue(db) ?? throw new InvalidOperationException());
+        var assets = (ILiteCollectionAsync<AssetRecord>)(assetsField.GetValue(db) ?? throw new InvalidOperationException());
 
         var directories = GetTargetDirectories();
 
@@ -97,62 +93,63 @@ public class AssetHooverService : BackgroundService
 
             var paths = files.Select(f => f.FullName).ToArray();
 
-            using (await dbLock.AcquireAsync(stoppingToken))
-            {
-                // data assets aren't stored in the database with their full path; check the Assets directory too
-                var oldAssets = assets
-                    .Find(a => paths.Contains(a.path) || paths.Contains(Path.Combine(_engine.DataPath, "Assets", a.path)))
-                    .Select
+            // data assets aren't stored in the database with their full path; check the Assets directory too
+            var records = await assets.FindAsync
+            (
+                a => paths.Contains(a.path) || paths.Contains(Path.Combine(_engine.DataPath, "Assets", a.path))
+            );
+
+            var oldAssets = records
+                .Select
+                (
+                    a =>
                     (
-                        a =>
+                        Url: new Uri(a.url),
+                        Path: a.path,
+                        File: files.Single
                         (
-                            Url: new Uri(a.url),
-                            Path: a.path,
-                            File: files.Single
-                            (
-                                f => f.FullName == (Path.IsPathRooted(a.path)
-                                    ? a.path
-                                    : Path.Combine(_engine.DataPath, "Assets", a.path))
-                            )
+                            f => f.FullName == (Path.IsPathRooted(a.path)
+                                ? a.path
+                                : Path.Combine(_engine.DataPath, "Assets", a.path))
                         )
                     )
-                    .Where(a =>
+                )
+                .Where(a =>
+                {
+                    var type = Enum.TryParse<AssetCleanupType>(a.Url.Scheme, true, out var val)
+                        ? val
+                        : AssetCleanupType.Other;
+
+                    if (!_config.CleanupTypes.TryGetValue(type, out var maxAssetAge))
                     {
-                        var type = Enum.TryParse<AssetCleanupType>(a.Url.Scheme, true, out var val)
-                            ? val
-                            : AssetCleanupType.Other;
+                        return false;
+                    }
 
-                        if (!_config.CleanupTypes.TryGetValue(type, out var maxAssetAge))
-                        {
-                            return false;
-                        }
+                    // age check
+                    maxAssetAge ??= _config.MaxAssetAge;
+                    return now - a.File.LastAccessTimeUtc > maxAssetAge;
+                })
+                .ToArray();
 
-                        // age check
-                        maxAssetAge ??= _config.MaxAssetAge;
-                        return now - a.File.LastAccessTimeUtc > maxAssetAge;
-                    })
-                    .ToArray();
+            if (oldAssets.Length <= 0)
+            {
+                continue;
+            }
 
-                if (oldAssets.Length <= 0)
-                {
-                    continue;
-                }
+            _log.LogInformation("Cleaning up cached assets");
 
-                _log.LogInformation("Cleaning up cached assets");
+            var totalSize = oldAssets.Sum(f => f.File.Length);
+            _log.LogInformation
+            (
+                "{Count} expired assets found (total {Size})",
+                oldAssets.Length,
+                totalSize.Bytes().Humanize()
+            );
 
-                var totalSize = oldAssets.Sum(f => f.File.Length);
-                _log.LogInformation
-                (
-                    "{Count} expired assets found (total {Size})",
-                    oldAssets.Length,
-                    totalSize.Bytes().Humanize()
-                );
-
-                foreach (var (url, _, _) in oldAssets)
-                {
-                    _log.LogInformation("Deleting {Url}", url);
-                    await db.DeleteCacheRecordAsync(url);
-                }
+            foreach (var (url, _, _) in oldAssets)
+            {
+                _log.LogInformation("Deleting {Url}", url);
+                await db.DeleteCacheRecordAsync(url);
             }
         }
     }

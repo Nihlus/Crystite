@@ -45,6 +45,7 @@
       <PackageReference Include="Humanizer.Core" />
       <PackageReference Include="Lib.Harmony" />
       <PackageReference Include="LiteDB" />
+      <PackageReference Include="LiteDB.Async" />
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
