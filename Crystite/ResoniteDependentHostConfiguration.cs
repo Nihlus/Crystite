@@ -73,7 +73,6 @@ public static class ResoniteDependentHostConfiguration
         var flags = host.Services.GetRequiredService<IOptionsMonitor<CommandLineOptions>>().CurrentValue;
         var headlessConfig = host.Services.GetRequiredService<IOptionsMonitor<HeadlessApplicationConfiguration>>()
             .CurrentValue;
-        var resoniteConfig = host.Services.GetRequiredService<IOptionsMonitor<ResoniteHeadlessConfig>>().CurrentValue;
 
         var logFactory = host.Services.GetRequiredService<ILoggerFactory>();
 
