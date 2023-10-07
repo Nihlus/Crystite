@@ -22,8 +22,6 @@ using Remora.Extensions.Options.Immutable;
 using Remora.Rest.Extensions;
 using Remora.Rest.Json.Policies;
 
-Harmony.DEBUG = true;
-
 var hardwareInfo = new HardwareInfo();
 hardwareInfo.RefreshCPUList();
 hardwareInfo.RefreshVideoControllerList();
