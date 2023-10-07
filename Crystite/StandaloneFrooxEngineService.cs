@@ -134,7 +134,6 @@ public class StandaloneFrooxEngineService : BackgroundService
 
         if (_config.UniverseID is not null)
         {
-            _engine.WorldAnnouncer.UniverseId = _config.UniverseID;
             Engine.Config.UniverseId = _config.UniverseID;
         }
 
