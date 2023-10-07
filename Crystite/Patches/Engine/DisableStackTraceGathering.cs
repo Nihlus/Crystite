@@ -16,7 +16,7 @@ namespace Crystite.Patches.Engine;
 /// <summary>
 /// Disables stack trace gathering for threads other than the current one.
 /// </summary>
-[HarmonyPatch("FrooxEngine.Engine+<<RunUpdateLoop>b__328_0>d", "MoveNext")]
+[HarmonyPatch("FrooxEngine.Engine+<<RunUpdateLoop>b__358_0>d", "MoveNext")]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public static class DisableStackTraceGathering
 {
@@ -39,7 +39,9 @@ public static class DisableStackTraceGathering
     }
 
     /// <summary>
-    /// Replaces a hard-coded path with a reference to an input argument.
+    /// Replaces a call to GetStackTrace with our own. Normally, you'd use a prefix for this, but since the method uses
+    /// an overload for StackTrace's construct that no longer exists, we need to alter the callsite instead of the
+    /// actual method.
     /// </summary>
     /// <param name="instructions">The instructions of the method.</param>
     /// <returns>The patched code.</returns>
