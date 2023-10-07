@@ -404,7 +404,7 @@ public static class WorldExtensions
         startupParameters = startupParameters with
         {
             SaveAsOwner = null,
-            LoadWorldURL = savedRecord.URL
+            LoadWorldURL = new Uri(savedRecord.AssetURI)
         };
 
         return startupParameters;
