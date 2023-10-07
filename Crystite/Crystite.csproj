@@ -42,13 +42,14 @@
 
     <ItemGroup>
       <PackageReference Include="CommandLiners.Posix" />
-      <PackageReference Include="CSGL.MSDFGen" />
-      <PackageReference Include="CSharpGameLibrary" GeneratePathProperty="true" />
+      <PackageReference Include="CSGL.MSDFGen" ExcludeAssets="build" />
+      <PackageReference Include="CSharpGameLibrary" ExcludeAssets="build" GeneratePathProperty="true" />
       <PackageReference Include="Hardware.Info" />
       <PackageReference Include="Humanizer.Core" />
       <PackageReference Include="Lib.Harmony" />
       <PackageReference Include="LiteDB" />
       <PackageReference Include="LiteDB.Async" />
+      <PackageReference Include="Microsoft.AspNetCore.Http.Connections.Client" />
       <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
