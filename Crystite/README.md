@@ -237,7 +237,7 @@ that the server is first shut down.
 sudo systemctl stop crystite
 
 cd /var/lib/crystite
-sudo -u crystite /usr/lib/crystite/Crystite <option>...
+sudo -u crystite /usr/lib/crystite/crystite <option>...
 ```
 
 Do note that this runs the server with more access rights and privileges than
