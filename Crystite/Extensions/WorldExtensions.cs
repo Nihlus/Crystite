@@ -392,7 +392,7 @@ public static class WorldExtensions
         else
         {
             record.OwnerId = ownerID;
-            record.RecordId = RecordUtil.GenerateRecordID();
+            record.RecordId = RecordHelper.GenerateRecordID();
         }
 
         var transferer = new RecordOwnerTransferer(world.Engine, record.OwnerId, record.RecordId);
