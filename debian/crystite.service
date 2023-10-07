@@ -5,15 +5,15 @@ After=network-online.target
 
 [Service]
 Type=notify
-ExecStart=/usr/lib/crystite/Crystite
+ExecStart=/usr/lib/crystite/crystite
 Restart=always
 
-User=neosvr
-Group=neosvr
+User=crystite
+Group=crystite
 
 WorkingDirectory=/var/lib/crystite
 
-# Various security options. These are mainly recommended becase NeosVR contains a complete code execution engine that
+# Various security options. These are mainly recommended becase Resonite contains a complete code execution engine that
 # runs in-process, and is by its very nature always running unknown external user code. LogiX is theoretically already
 # sandboxed, but better safe than sorry.
 #
@@ -40,8 +40,8 @@ RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
 RestrictNamespaces=true
 RestrictRealtime=true
 
-ReadWritePaths=/var/lib/crystite /var/log/neosvr
-NoExecPaths=/var/lib/crystite /var/log/neosvr
+ReadWritePaths=/var/lib/crystite /var/log/crystite
+NoExecPaths=/var/lib/crystite /var/log/crystite
 ExecPaths=/var/lib/crystite/Resonite
 
 [Install]

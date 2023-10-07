@@ -6,10 +6,10 @@ set -e
 
 case "${1}" in
   configure)
-    chown root:neosvr /etc/crystite/appsettings.json
+    chown root:crystite /etc/crystite/appsettings.json
     chmod 640 /etc/crystite/appsettings.json
 
-    chown neosvr:neosvr /var/log/neosvr
+    chown crystite:crystite /var/log/crystite
     ;;
   *)
     ;;
