@@ -11,8 +11,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Crystite.API.Abstractions;
 using Crystite.API.Extensions;
-using Elements.Core;
 using FrooxEngine;
+using FrooxEngine.ProtoFlux;
 using OneOf;
 using Remora.Results;
 
@@ -383,7 +383,7 @@ public abstract class ResoniteWorldController : IResoniteWorldController
     }
 
     /// <inheritdoc />
-    public Task<Result> SendImpulseAsync
+    public async Task<Result> SendImpulseAsync
     (
         string worldId,
         string tag,
@@ -394,72 +394,30 @@ public abstract class ResoniteWorldController : IResoniteWorldController
         var findWorld = FindWorld(worldId);
         if (!findWorld.IsDefined(out var world))
         {
-            return Task.FromResult((Result)findWorld);
+            return (Result)findWorld;
         }
 
         switch (value)
         {
             case null:
             {
-                var list = Pool.BorrowList<DynamicImpulseReceiver>();
-                {
-                    world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
-                    foreach (var dynamicImpulseReceiver in list)
-                    {
-                        dynamicImpulseReceiver.Impulse.Trigger();
-                    }
-                }
-                Pool.Return(ref list);
-
+                await ProtoFluxHelper.DynamicImpulseHandler.TriggerAsyncDynamicImpulse(world.RootSlot, tag, true);
                 break;
             }
             default:
             {
-                value.Value.Switch
+                await value.Value.Match
                 (
-                    i =>
-                    {
-                        var list = Pool.BorrowList<DynamicImpulseReceiverWithValue<int>>();
-                        {
-                            world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
-                            foreach (var dynamicImpulseReceiver in list)
-                            {
-                                dynamicImpulseReceiver.Trigger(i);
-                            }
-                        }
-                        Pool.Return(ref list);
-                    },
-                    f =>
-                    {
-                        var list = Pool.BorrowList<DynamicImpulseReceiverWithValue<float>>();
-                        {
-                            world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
-                            foreach (var dynamicImpulseReceiver in list)
-                            {
-                                dynamicImpulseReceiver.Trigger(f);
-                            }
-                        }
-                        Pool.Return(ref list);
-                    },
-                    s =>
-                    {
-                        var list = Pool.BorrowList<DynamicImpulseReceiverWithValue<string>>();
-                        {
-                            world.RootSlot.GetComponentsInChildren(list, r => r.Tag.Evaluate() == tag);
-                            foreach (var dynamicImpulseReceiver in list)
-                            {
-                                dynamicImpulseReceiver.Trigger(s);
-                            }
-                        }
-                        Pool.Return(ref list);
-                    }
+                    async i => await ProtoFluxHelper.DynamicImpulseHandler.TriggerAsyncDynamicImpulseWithArgument(world.RootSlot, tag, true, i),
+                    async f => await ProtoFluxHelper.DynamicImpulseHandler.TriggerAsyncDynamicImpulseWithArgument(world.RootSlot, tag, true, f),
+                    async s => await ProtoFluxHelper.DynamicImpulseHandler.TriggerAsyncDynamicImpulseWithArgument(world.RootSlot, tag, true, s)
                 );
 
                 break;
             }
         }
 
-        return Task.FromResult(Result.FromSuccess());
+        return Result.FromSuccess();
     }
 
     /// <summary>
