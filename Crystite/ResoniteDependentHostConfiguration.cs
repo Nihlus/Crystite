@@ -18,6 +18,7 @@ using FrooxEngine;
 using HarmonyLib;
 using Microsoft.Extensions.Options;
 using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Crystite;
 
@@ -26,6 +27,56 @@ namespace Crystite;
 /// </summary>
 public static class ResoniteDependentHostConfiguration
 {
+    private static readonly IReadOnlyDictionary<string, LogLevel> _messagePatterns = new Dictionary<string, LogLevel>
+    {
+        { "Compatibility Hash:", LogLevel.Trace },
+        { "MachineID:", LogLevel.Trace },
+        { "Assembly:", LogLevel.Debug },
+        { "Initializing App:", LogLevel.Debug },
+        { "Configuring System.Net.ServicePointManager", LogLevel.Debug },
+        { "Calling Coder<T>", LogLevel.Debug },
+        { "Performing a dummy texture decode", LogLevel.Debug },
+        { "Gathering all types", LogLevel.Debug },
+        { "Unmapped element", LogLevel.Debug },
+        { "SIGNALR: BroadcastSession SessionInfo", LogLevel.Debug },
+        { "SIGNALR: BroadcastSessionEnded", LogLevel.Debug },
+        { "Updated:", LogLevel.Debug },
+        { "FreeImage Version:", LogLevel.Debug },
+        { "BepuPhysics Version:", LogLevel.Debug },
+        { "FreeType Version:", LogLevel.Debug },
+        { "Opus Version:", LogLevel.Debug },
+        { "Available locales:", LogLevel.Debug },
+        { "Supported network protocols:", LogLevel.Debug },
+        { "Supported texture formats:", LogLevel.Debug },
+        { "Supported 3D model formats:", LogLevel.Debug },
+        { "Supported point cloud formats:", LogLevel.Debug },
+        { "Supported audio formats:", LogLevel.Debug },
+        { "Supported image formats:", LogLevel.Debug },
+        { "Supported video formats:", LogLevel.Debug },
+        { "Supported font formats:", LogLevel.Debug },
+        { "Supported subtitle formats:", LogLevel.Debug },
+        { "HttpClient AutomaticDecompressionSupported:", LogLevel.Debug },
+        { "Setting URL:", LogLevel.Debug },
+        { "Rebuild:", LogLevel.Debug },
+        { "Unused candidates:", LogLevel.Debug },
+        { "PreserveWithAssets:", LogLevel.Debug },
+        { "Associating self-reference with", LogLevel.Debug },
+        { "Injected Start Async", LogLevel.Debug },
+        { "ElementSource:", LogLevel.Debug },
+        { "INJECTING source for", LogLevel.Debug },
+        { "NetworkInitStart", LogLevel.Debug },
+        { "Processing commandline arguments", LogLevel.Debug },
+        { "Running default bootstrap", LogLevel.Debug },
+    };
+
+    private static readonly IReadOnlyDictionary<string, LogLevel> _warningPatterns = new Dictionary<string, LogLevel>();
+
+    private static readonly IReadOnlyDictionary<string, LogLevel> _errorPatterns = new Dictionary<string, LogLevel>
+    {
+        { "Exception when Updating object", LogLevel.Warning },
+        { "Exception getting types from assembly", LogLevel.Warning },
+    };
+
     /// <summary>
     /// Configures host components that require Resonite assemblies.
     /// </summary>
@@ -179,7 +230,81 @@ public static class ResoniteDependentHostConfiguration
         UseThreadInterrupt.Configure(AccessTools.Inner(typeof(WorkProcessor), "ThreadWorker"), "Abort");
         UseThreadInterrupt.PatchAll(harmony);
 
-        UniLog.OnLog += s => logger.LogInformation("{Message}", s);
-        UniLog.OnError += s => logger.LogError("{Message}", s);
+        UniLog.OnLog += message => ClassifyAndLogMessage(logger, message);
+        UniLog.OnWarning += warning => ClassifyAndLogWarning(logger, warning);
+        UniLog.OnError += error => ClassifyAndLogError(logger, error);
+    }
+
+    /// <summary>
+    /// Attempts to classify and assign an appropriate log level before actually logging the message. This is done to
+    /// reduce unwanted log noise, since UniLog has no concept of a log level.
+    ///
+    /// Generally, a lot of the information logged by FrooxEngine is entirely irrelevant to an end user, and is
+    /// therefore relegated to the lower, more detailed levels.
+    /// </summary>
+    /// <param name="logger">The logging instance.</param>
+    /// <param name="message">The message.</param>
+    private static void ClassifyAndLogMessage(ILogger logger, string message)
+    {
+        message = message.Trim();
+
+        var logLevel = LogLevel.Information;
+        foreach (var messagePattern in _messagePatterns.Keys)
+        {
+            if (message.StartsWith(messagePattern, StringComparison.OrdinalIgnoreCase))
+            {
+                logLevel = _messagePatterns[messagePattern];
+            }
+        }
+
+        logger.Log(logLevel, "{Message}", message);
+    }
+
+    /// <summary>
+    /// Attempts to classify and assign an appropriate log level before actually logging the warning. This is done to
+    /// reduce unwanted log noise, since UniLog has no concept of a log level.
+    /// </summary>
+    /// <param name="logger">The logging instance.</param>
+    /// <param name="warning">The warning.</param>
+    private static void ClassifyAndLogWarning(ILogger logger, string warning)
+    {
+        warning = warning.Trim();
+
+        var logLevel = LogLevel.Warning;
+        foreach (var warningPattern in _warningPatterns.Keys)
+        {
+            if (warning.StartsWith(warningPattern, StringComparison.OrdinalIgnoreCase))
+            {
+                logLevel = _warningPatterns[warningPattern];
+            }
+        }
+
+        logger.Log(logLevel, "{Message}", warning);
+    }
+
+    /// <summary>
+    /// Attempts to classify and assign an appropriate log level before actually logging the error. This is done to
+    /// reduce unwanted log noise, since UniLog has no concept of a log level.
+    ///
+    /// Some of the errors produced by the engine are not really errors - a typical example is when a user does
+    /// something invalid or silly in-game, causing a node update to fail. Instances like this are, for example, moved
+    /// down to warnings.
+    /// </summary>
+    /// <param name="logger">The logging instance.</param>
+    /// <param name="error">The warning.</param>
+    private static void ClassifyAndLogError(ILogger logger, string error)
+    {
+        error = error.Trim();
+
+        var logLevel = LogLevel.Error;
+        foreach (var errorPattern in _errorPatterns.Keys)
+        {
+            if (error.StartsWith(errorPattern, StringComparison.OrdinalIgnoreCase))
+            {
+                logLevel = _errorPatterns[errorPattern];
+            }
+        }
+
+        logger.Log(logLevel, "{Message}", error);
     }
 }
