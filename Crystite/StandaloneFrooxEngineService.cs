@@ -191,15 +191,12 @@ public class StandaloneFrooxEngineService : BackgroundService
             {
                 args.Log.LogInformation("Logging in as {Credential}", args.Config.LoginCredential);
 
-                // TODO: LoginToken?
-                var login = await args.Engine.Cloud.Login
+                var login = await args.Engine.Cloud.Session.Login
                 (
                     args.Config.LoginCredential,
-                    args.Config.LoginPassword,
-                    null,
+                    new PasswordLogin(args.Config.LoginPassword),
                     args.Engine.LocalDB.SecretMachineID,
                     false,
-                    null,
                     null
                 );
 
