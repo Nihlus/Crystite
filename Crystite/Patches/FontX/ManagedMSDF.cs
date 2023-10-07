@@ -217,7 +217,11 @@ public static class ManagedMSDF
         {
             for (var x = 0; x < num12; ++x)
             {
-                var rgb = workingBitmap.Data[workingBitmap.GetIndex(x, y)];
+                var index = shape.InverseYAxis
+                    ? workingBitmap.GetIndex(y, x)
+                    : workingBitmap.GetIndex(x, y);
+
+                var rgb = workingBitmap.Data[index];
                 bitmap.SetPixel(regionOffsetX + x, regionOffsetY + y, new color(rgb.r, rgb.g, rgb.b));
             }
         }
