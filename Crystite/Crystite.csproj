@@ -35,12 +35,15 @@
     <ItemGroup>
         <ResoniteReference Include="FrooxEngine" Private="false" />
         <ResoniteReference Include="Elements.Core" Private="false" />
+        <ResoniteReference Include="Elements.Assets" Private="false" />
         <ResoniteReference Include="SkyFrost.Base" Private="false" />
         <ResoniteReference Include="FrooxEngine.Weaver" Private="false" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="CommandLiners.Posix" />
+      <PackageReference Include="CSGL.MSDFGen" />
+      <PackageReference Include="CSharpGameLibrary" GeneratePathProperty="true" />
       <PackageReference Include="Hardware.Info" />
       <PackageReference Include="Humanizer.Core" />
       <PackageReference Include="Lib.Harmony" />
@@ -59,6 +62,13 @@
     <ItemGroup>
         <!-- bring in Newtonsoft.Json as a ship-only dependency to ensure we always have a strongly-named copy -->
         <PackageReference Include="Newtonsoft.Json" IncludeAssets="runtime" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- something is wrong with this package, so we need to explicitly tell MSBuild where the assembly is -->
+        <Reference Include="CSharpGameLibrary, Version=1.0.0.0, Culture=neutral">
+            <HintPath>$(PkgCSharpGameLibrary)\lib\net452\CSharpGameLibrary.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
