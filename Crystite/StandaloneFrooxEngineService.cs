@@ -322,6 +322,10 @@ public class StandaloneFrooxEngineService : BackgroundService
                 continue;
             }
 
+            // explicitly terminate all worlds here so we don't have any leftovers once the engine starts to dispose
+            // things
+            _engine.RegisterShutdownTask(_worldService.StopAllWorldsAsync(CancellationToken.None));
+
             isShuttingDown = true;
             Userspace.ExitApp(false);
         }
