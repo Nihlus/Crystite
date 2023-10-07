@@ -4,6 +4,14 @@ export DOTNET_NOLOGO=true
 export DOTNET_CLI_TELEMETRY_OPTOUT=true
 export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=true
 
+ifeq ($(BUILD_HOST_ARCH), amd64)
+	export RID=linux-amd64
+else ifeq ($(BUILD_HOST_ARCH), arm64)
+	export RID=linux-arm64
+else
+	$(error unsupported runtime architecture - consult the .NET documentation)
+endif
+
 %:
 	dh $@
 
@@ -11,7 +19,7 @@ override_dh_auto_clean:
 	dotnet clean
 
 override_dh_auto_build:
-	dotnet publish -f net7.0 -c Release -r linux-x64 --self-contained false -o bin Crystite
+	dotnet publish -f net7.0 -c Release -r $(RID) --self-contained false -o bin Crystite
 	chmod -x bin/*.dll
 
 override_dh_installsystemd:
