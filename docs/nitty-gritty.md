@@ -2,9 +2,13 @@ Technical Details
 =================
 
 This document details the major parts of the headless and how they fit together.
-It also discusses some of the challenges that cropped up when trying to get Neos
+It also discusses some of the challenges that cropped up when trying to get Resonite
 running on a .NET runtime it wasn't compiled for, and the solutions that makes
 it - despite everything - work.
+
+> As a quick note, this document was written back in the NeosVR days. The
+> terminology has been updated where applicable, but the timelines may seem a
+> bit off here and there.
 
 ## General design
 Overall, the server follows modern .NET design patterns and uses plenty of 
@@ -45,8 +49,8 @@ foreground program.
 
 ## Challenges of a new runtime
 Okay, so, let's address the elephant in the room - how the hell does this run on
-.NET 7? NeosVR is compiled with Unity in mind, and Unity (at least the version 
-used by Neos) runs on Mono, which means the assemblies are all targeting the
+.NET 7? Resonite is compiled with Unity in mind, and Unity (at least the version 
+used by Resonite) runs on Mono, which means the assemblies are all targeting the
 ancient and Windows-only .NET Framework. The runtimes are fundamentally 
 different in implementation and architecture, and running one on the other 
 sounds completely impossible at first glance.
@@ -77,13 +81,13 @@ implementation at runtime.
 
 So, what does this mean for us? Well, it means that - theoretically - we 
 *should* be able to create a .NET 7 executable and "just" reference the 
-FrooxEngine assemblies shipped with Neos, string together some glue code, and
-we'd be off to the races. Simple, right?
+FrooxEngine assemblies shipped with Resonite, string together some glue code, 
+and we'd be off to the races. Simple, right?
 
 ### Narrator: it was not simple
 Confession: it was pretty simple. Referencing the assemblies did just work, and
 within a couple of hours I had a prototype up and running that could connect to
-and authenticate with Neos's server infrastructure. Assets were downloading, 
+and authenticate with the server infrastructure. Assets were downloading, 
 records were syncing, happy days.
 
 However, a few issues did crop up that needed addressing before the client could
@@ -103,7 +107,7 @@ if it's just not there at all).
 Fortunately, Microsoft has provided a number of [resources][3] that help 
 developers analyze and identify [compatibility issues][4] with their programs. 
 
-In the case of NeosVR and FrooxEngine, Frooxius has fortunately not used many 
+In the case of Resonite and FrooxEngine, Frooxius has fortunately not used many 
 Windows-specific APIs, and in the cases where they are used, they're typically
 guarded with a platform check beforehand. This is great, because even if the
 method is missing from the runtime, it won't actually raise an error until you
@@ -126,11 +130,11 @@ methods and ciphers that can be negotiated between the server and the client.
 The technologies behind TLS have evolved a lot over the last 20 or so years, 
 leaving several previously standardized cipher sets and TLS protocols deprecated
 due to irreparable security problems. One of these is `SSLv3`, which is 
-requested as an allowed protocol by Neos.
+requested as an allowed protocol by Resonite.
 
 This protocol (and the earlier ones) is so insecure that modern .NET simply 
 refuses to use it even if requested, throwing an error instead. Fortunately, 
-Neos's servers have kept up with the times and support more modern TLS 
+Resonite's servers have kept up with the times and support more modern TLS 
 protocols. The fix is simple - remove SSLv3 from the requested protocol set and
 off we go.
 
@@ -169,7 +173,7 @@ contention and a large gap in .NET's cross-platform ambitions. .NET Core 3.0
 introduced the `NativeLibrary` class and a number of associated events that 
 applications could hook into instead, enabling flexible overrides at runtime.
 
-Neos uses a number of native libraries to do things like font rendering, image
+Resonite uses a number of native libraries to do things like font rendering, image
 loading, mesh transformations, etc. By default, it relies on both having the 
 native libraries in the current working directory and the names exactly 
 matching. On top of this, Assimp's C# bindings roll their own native library
@@ -178,7 +182,7 @@ dynamic library loading functions of the platform.
 
 The fix is relatively simple - add library mapping logic that uses 
 `NativeLibrary` (which is aware of platform-specific loading quirks) and checks
-both system directories as well as Neos's own.
+both system directories as well as Resonite's own.
 
 #### Stack traces from other threads
 In .NET Framework, it was possible to suspend and gather a stack trace from any
@@ -204,12 +208,12 @@ reimplementation of platform logic etc. The next - and by far most complex -
 problem took a couple of days to debug. [art0007i][6]'s help was invaluable 
 during this part of the testing.
 
-In short, once the client was successfully booting up and connecting to Neos's
-servers, a session could be established and published in Neos's world browser.
+In short, once the client was successfully booting up and connecting to Resonite's
+servers, a session could be established and published in Resonite's world browser.
 Any user that tried to join the world, however, was instantly booted out with
 an obscure reference to a `NullReferenceException`. 
 
-Digging into the issue, it turns out that Neos's `WorkerManager` relies on the
+Digging into the issue, it turns out that Resonite's `WorkerManager` relies on the
 full type name as generated by the runtime when serializing and deserializing
 records. Since the client and server are now running on different runtimes, many
 system types are defined in different assemblies and as such their full type 
@@ -239,7 +243,7 @@ which the above slide shows as `NETSTANDARD.DLL`. Effectively, when an existing
 the real assembly (in the case of `object`, that happens to be in 
 `System.Private.CoreLib` on modern runtimes).
 
-However, since Neos simply uses the assembly-qualified name without any 
+However, since Resonite simply uses the assembly-qualified name without any 
 modification, the client (which does not have a shim for 
 `System.Private.CoreLib`!) cannot find the requested type and chokes.
 
@@ -264,7 +268,7 @@ goes for `FrooxEngine.SaveControl.StoreTypeVersions`, which also accesses the
 full type name directly.
 
 If you're interested in the specifics, I highly recommend perusing the patches
-in the source code. There are some interesting nuances to how Neos uses the 
+in the source code. There are some interesting nuances to how Resonite uses the 
 type name in its serialization logic that necessitated a little bit of 
 finagling.
 
@@ -273,7 +277,7 @@ At this point, incredibly, the client actually *works*. Multiple people can join
 the session, play together, execute LogiX, chat with each other, and do some
 pretty performance-heavy stuff without major problems.
 
-Focus has shifted from just making things work to actually improving the NeosVR
+Focus has shifted from just making things work to actually improving the Resonite
 hosting experience for server owners, and part of that is taking care of 
 frustrating bugs or oddities in the code. In no particular order, that has so
 far included
