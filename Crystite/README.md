@@ -321,7 +321,7 @@ that could be useful for future work with Resonite and headless servers.
 [2]: https://learn.microsoft.com/en-us/dotnet/core/extensions/logging#configure-logging
 [3]: https://github.com/serilog/serilog-settings-configuration
 [4]: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/options
-[5]: ../docs/index.md
+[5]: docs/index.md
 [6]: docs/nitty-gritty.md
 [7]: https://github.com/neos-modding-group/NeosModLoader
 [8]: https://github.com/dotnet/runtime/issues/36569
