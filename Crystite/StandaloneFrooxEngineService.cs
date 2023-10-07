@@ -110,6 +110,12 @@ public class StandaloneFrooxEngineService : BackgroundService
             VerboseInit = true
         };
 
+        // These assemblies need to be loaded into the AppDomain for the engine to initialize correctly. Depending on
+        // what we do, these may not actually be present at the point the engine needs them, so we force their loading
+        // here
+        AppDomain.CurrentDomain.Load("ProtoFlux.Nodes.FrooxEngine");
+        AppDomain.CurrentDomain.Load("ProtoFluxBindings");
+
         await _engine.Initialize
         (
             _applicationConfig.ResonitePath,
@@ -229,7 +235,7 @@ public class StandaloneFrooxEngineService : BackgroundService
 
         var cancellationTokenField = AccessTools.Field(typeof(SkyFrostInterface), "_hubConnectionToken");
 
-        var connectDelegate = AccessTools.MethodDelegate<Func<Task>>
+        var connectDelegate = AccessTools.MethodDelegate<Func<string, Task>>
         (
             AccessTools.DeclaredMethod(typeof(SkyFrostInterface), "ConnectToHub"), _engine.Cloud
         );
@@ -253,7 +259,7 @@ public class StandaloneFrooxEngineService : BackgroundService
             _log.LogInformation("Running manual reconnect");
             try
             {
-                await connectDelegate();
+                await connectDelegate("Manual reconnect");
             }
             catch (Exception connectException)
             {
