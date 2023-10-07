@@ -7,6 +7,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
+using CSGL;
 using Mono.Cecil;
 
 namespace Crystite;
@@ -76,6 +77,11 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
 
     private IntPtr ResolveNativeAssembly(Assembly sourceAssembly, string assemblyName)
     {
+        if (assemblyName is "__Internal")
+        {
+            return NativeLibrary.GetMainProgramHandle();
+        }
+
         var filename = assemblyName.Contains(".so") || assemblyName.Contains(".dll")
             ? assemblyName
             : RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
