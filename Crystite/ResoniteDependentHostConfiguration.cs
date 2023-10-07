@@ -170,7 +170,6 @@ public static class ResoniteDependentHostConfiguration
         SuppressStackTrace.PatchAll(harmony);
 
         UseThreadInterrupt.Configure(AccessTools.Inner(typeof(WorkProcessor), "ThreadWorker"), "Abort");
-        UseThreadInterrupt.Configure<WorldAnnouncer>(nameof(WorldAnnouncer.Dispose));
         UseThreadInterrupt.PatchAll(harmony);
 
         UniLog.OnLog += s => logger.LogInformation("{Message}", s);
