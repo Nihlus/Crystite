@@ -1,5 +1,5 @@
 <Project>
-    <Sdk Name="Remora.Tests.Sdk" Version="2.0.5" />
+    <Sdk Name="Remora.Tests.Sdk" Version="2.0.6" />
     <Sdk Name="Remora.Resonite.Sdk" Version="1.0.0" />
 
     <PropertyGroup>
