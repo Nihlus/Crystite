@@ -113,8 +113,15 @@ public static class ResoniteDependentHostConfiguration
         harmony.PatchAllUncategorized();
 
         // Generic patches
-        RedirectCommandLineParsing.Configure<InputInterface>(_ => { });
 
+        // hide command-line args from various types
+        RedirectCommandLineParsing.Configure<CommonAvatarBuilder>(_ => { });
+        RedirectCommandLineParsing.Configure<DroneCamera>(_ => { });
+        RedirectCommandLineParsing.Configure<FirstPersonTargettingController>(_ => { });
+        RedirectCommandLineParsing.Configure<InputInterface>(_ => { });
+        RedirectCommandLineParsing.Configure<LNL_Connection>(_ => { });
+
+        // set args based on proper configuration keys
         RedirectCommandLineParsing.Configure<LocalDB>(nameof(LocalDB.Initialize), args =>
         {
             if (!flags.RepairDatabase)
@@ -131,7 +138,6 @@ public static class ResoniteDependentHostConfiguration
             args.Add("repairdatabase");
         });
 
-        RedirectCommandLineParsing.Configure<EngineSkyFrostInterface>(_ => { });
         RedirectCommandLineParsing.Configure<Userspace>(new[] { "OnAttach", "Bootstrap" }, args =>
         {
             args.Add("noui");
@@ -162,7 +168,8 @@ public static class ResoniteDependentHostConfiguration
             }
         });
 
-        RedirectCommandLineParsing.Configure<CommonAvatarBuilder>(_ => { });
+        RedirectCommandLineParsing.Configure<UserspaceRadiantDash>(_ => { });
+
         RedirectCommandLineParsing.PatchAll(harmony);
 
         SuppressStackTrace.Configure<WorldConfiguration>("FieldChanged");
