@@ -22,7 +22,7 @@ Depends:
  libfreeimage3,
  libfreetype6,
  libopus0,
- libbrotli1
+ libbrotli1,
  zlib1g
 Recommends:
  steamcmd,
