@@ -137,11 +137,11 @@ can be used to limit cleaning to one or the other of the data and cache director
 By default, all locations are cleaned up.
 
 #### `AssetCleanupType`
-| Value  | Description          |
-|--------|----------------------|
-| Local  | `local://` assets    |
-| ResoniteDB | `resonitedb://` assets   |
-| Other  | any other URI scheme |
+| Value      | Description          |
+|------------|----------------------|
+| Local      | `local://` assets    |
+| ResoniteDB | `resdb://` assets    |
+| Other      | any other URI scheme |
 
 #### `AssetCleanupLocation`
 | Value   | Description                           |
