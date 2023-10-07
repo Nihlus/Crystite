@@ -1,10 +1,10 @@
 # Contacts
-Contains routes and objects for interacting with NeosVR friends, such as 
+Contains routes and objects for interacting with Resonite contacts, such as 
 accepting friend requests or checking block lists.
 
 ## Objects
 ### RestContact
-A subset of fields from Neos's `Friend` object.
+A subset of fields from Resonite's `Contact` object.
 
 | Field         | Type                                    | Description                                  |
 |---------------|-----------------------------------------|----------------------------------------------|
@@ -24,7 +24,7 @@ A subset of fields from Neos's `Friend` object.
 ```
 
 ### RestContactStatus
-An enumeration of friend request states.
+An enumeration of contact request states.
 
 | Name      | Value |
 |-----------|-------|
