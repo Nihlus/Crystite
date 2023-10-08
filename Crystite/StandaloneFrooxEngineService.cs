@@ -113,8 +113,8 @@ public class StandaloneFrooxEngineService : BackgroundService
         // These assemblies need to be loaded into the AppDomain for the engine to initialize correctly. Depending on
         // what we do, these may not actually be present at the point the engine needs them, so we force their loading
         // here
-        AppDomain.CurrentDomain.Load("ProtoFlux.Nodes.FrooxEngine");
-        AppDomain.CurrentDomain.Load("ProtoFluxBindings");
+        EnsureAssemblyIsLoaded("ProtoFlux.Nodes.FrooxEngine");
+        EnsureAssemblyIsLoaded("ProtoFluxBindings");
 
         await _engine.Initialize
         (
@@ -329,5 +329,21 @@ public class StandaloneFrooxEngineService : BackgroundService
             isShuttingDown = true;
             Userspace.ExitApp(false);
         }
+    }
+
+    /// <summary>
+    /// Ensures an assembly with the given name is loaded into the application domain, guarding against duplicates
+    /// before performing the load.
+    /// </summary>
+    /// <remarks>The name is not exactly matched against; rather, a Contains() call is used.</remarks>
+    /// <param name="assemblyName">The name of the assembly.</param>
+    private static void EnsureAssemblyIsLoaded(string assemblyName)
+    {
+        if (AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName is not null && a.FullName.Contains(assemblyName)))
+        {
+            return;
+        }
+
+        AppDomain.CurrentDomain.Load(assemblyName);
     }
 }
