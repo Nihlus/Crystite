@@ -68,6 +68,9 @@ public static class ResoniteDependentHostConfiguration
         { "NetworkInitStart", LogLevel.Debug },
         { "Processing commandline arguments", LogLevel.Debug },
         { "Running default bootstrap", LogLevel.Debug },
+        { "Session updated, forcing status update", LogLevel.Debug },
+        { "SIGNALR: SendMessage", LogLevel.Debug },
+        { "SIGNALR: BroadcastStatus", LogLevel.Debug },
     };
 
     private static readonly IReadOnlyDictionary<string, LogLevel> _warningPatterns = new Dictionary<string, LogLevel>();
