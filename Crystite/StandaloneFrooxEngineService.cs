@@ -4,6 +4,8 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
+using System.Reflection;
+using System.Runtime.Loader;
 using Crystite.Configuration;
 using Crystite.Extensions;
 using Crystite.Services;
@@ -339,11 +341,6 @@ public class StandaloneFrooxEngineService : BackgroundService
     /// <param name="assemblyName">The name of the assembly.</param>
     private static void EnsureAssemblyIsLoaded(string assemblyName)
     {
-        if (AppDomain.CurrentDomain.GetAssemblies().Any(a => a.FullName is not null && a.FullName.Contains(assemblyName)))
-        {
-            return;
-        }
-
-        AppDomain.CurrentDomain.Load(assemblyName);
+        _ = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(assemblyName));
     }
 }
