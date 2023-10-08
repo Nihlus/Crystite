@@ -31,6 +31,8 @@ public static class ResoniteDependentHostConfiguration
     private static readonly IReadOnlyDictionary<string, LogLevel> _messagePatterns = new Dictionary<string, LogLevel>
     {
         { "Compatibility Hash:", LogLevel.Trace },
+        { "KeyListenerAdded:", LogLevel.Trace },
+        { "Sending info matching broadcast key", LogLevel.Trace },
         { "MachineID:", LogLevel.Trace },
         { "Assembly:", LogLevel.Debug },
         { "Initializing App:", LogLevel.Debug },
@@ -77,6 +79,7 @@ public static class ResoniteDependentHostConfiguration
 
     private static readonly IReadOnlyDictionary<string, LogLevel> _errorPatterns = new Dictionary<string, LogLevel>
     {
+        { "Restoring currently updating root", LogLevel.Debug },
         { "Exception when Updating object", LogLevel.Warning },
         { "Exception getting types from assembly", LogLevel.Warning },
     };
