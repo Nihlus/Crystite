@@ -143,7 +143,7 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
                 continue;
             }
 
-            var assembly = Assembly.LoadFile(libraryPath);
+            var assembly = Assembly.LoadFrom(libraryPath);
             if (assembly.FullName == args.Name)
             {
                 // exact match, prefer this to keep things like strong-naming consistent
