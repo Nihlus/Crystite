@@ -91,14 +91,14 @@ public class AssetHooverService : BackgroundService
                 continue;
             }
 
-            var paths = files.Select(f => f.FullName).ToArray();
+            // data assets aren't stored in the database with their full path; include both the full paths and the
+            // filenames
+            var paths = files
+                .Select(f => f.FullName)
+                .Concat(files.Select(f => Path.GetFileName(f.FullName)))
+                .ToArray();
 
-            // data assets aren't stored in the database with their full path; check the Assets directory too
-            var records = await assets.FindAsync
-            (
-                a => paths.Contains(a.path) || paths.Contains(Path.Combine(_engine.DataPath, "Assets", a.path))
-            );
-
+            var records = await assets.FindAsync(a => paths.Contains(a.path));
             var oldAssets = records
                 .Select
                 (
