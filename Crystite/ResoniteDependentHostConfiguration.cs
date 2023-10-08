@@ -7,6 +7,7 @@
 using Crystite.API.Extensions;
 using Crystite.Configuration;
 using Crystite.Implementations;
+using Crystite.Patches.EngineSkyFrostInterface;
 using Crystite.Patches.Generic;
 using Crystite.Patches.RecordUploadTaskBase;
 using Crystite.Patches.ResoniteAssemblyPostProcessor;
@@ -159,6 +160,8 @@ public static class ResoniteDependentHostConfiguration
                 break;
             }
         }
+
+        FixConfigInstallationPathHandling.ResoniteRoot = headlessConfig.ResonitePath;
 
         var harmony = new Harmony("nu.algiz.crystite");
         harmony.PatchAllUncategorized();
