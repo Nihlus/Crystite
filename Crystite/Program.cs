@@ -15,7 +15,6 @@ using Crystite.Configuration;
 using Crystite.Extensions;
 using Crystite.OptionConfigurators;
 using Hardware.Info;
-using HarmonyLib;
 using Microsoft.Extensions.Configuration.CommandLine;
 using Microsoft.Extensions.Options;
 using Remora.Extensions.Options.Immutable;
@@ -78,7 +77,7 @@ applicationBuilder.Host
             services.ConfigureRestJsonConverters(ApiJsonMvcJsonOptionsConfigurator.Name);
 
             services
-                .AddSingleton(assemblyResolver ?? throw new InvalidOperationException())
+                .AddSingleton(assemblyResolver)
                 .AddSingleton<IHardwareInfo>(hardwareInfo)
                 .Configure<CommandLineOptions>(o => applicationBuilder.Configuration.Bind(o))
                 .Configure<ResoniteHeadlessConfig>(config.Configuration.GetSection("Resonite"))
