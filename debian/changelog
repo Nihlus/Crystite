@@ -1,3 +1,9 @@
+crystite (1.0.0+deb11~preview6) UNRELEASED; urgency=medium
+
+  * Fix config file installation.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 8 Oct 2023 23:15:00 +0200
+
 crystite (1.0.0+deb11~preview5) UNRELEASED; urgency=medium
 
   * Check based on Contains, not an exact match.
