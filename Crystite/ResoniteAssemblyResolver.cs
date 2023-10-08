@@ -125,7 +125,10 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
     private Assembly? ResolveManagedAssembly(object? sender, ResolveEventArgs args)
     {
         // check if it's already loaded
-        var existing = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
+        var existing = AppDomain.CurrentDomain
+            .GetAssemblies()
+            .FirstOrDefault(a => a.FullName is not null && a.FullName.Contains(args.Name));
+
         if (existing is not null)
         {
             return existing;
