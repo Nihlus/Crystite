@@ -1,3 +1,10 @@
+crystite (1.0.0+deb11~preview5) UNRELEASED; urgency=medium
+
+  * Check based on Contains, not an exact match.
+  * Use LoadFrom instead of LoadFile.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 8 Oct 2023 22:45:00 +0200
+
 crystite (1.0.0+deb11~preview4) UNRELEASED; urgency=medium
 
   * Use an ALC instead of the AppDomain.
@@ -15,7 +22,6 @@ crystite (1.0.0+deb11~preview2) UNRELEASED; urgency=medium
   * Fix asset hoovering.
 
  -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 8 Oct 2023 11:30:00 +0200
-
 
 crystite (1.0.0+deb11~preview1) UNRELEASED; urgency=medium
 
