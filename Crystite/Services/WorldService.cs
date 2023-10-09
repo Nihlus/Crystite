@@ -260,8 +260,12 @@ public class WorldService
         wrapper.Session.World.WorldManager.WorldFailed += MarkAutoRecoverRestart;
         RecordStoreNotifications.RecordStored += UpdateCorrespondingRecord;
 
+        var autosaveInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.AutosaveInterval);
+        var idleRestartInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.IdleRestartInterval);
+        var forceRestartInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.ForcedRestartInterval);
+
         var lastUserCount = 1;
-        var lastIdleBeginTime = DateTimeOffset.UtcNow;
+        DateTimeOffset? idleBeginTime = null;
         var lastSaveTime = DateTimeOffset.UtcNow;
 
         while (!ct.IsCancellationRequested && !wrapper.Session.World.IsDestroyed)
@@ -315,7 +319,6 @@ public class WorldService
             }
 
             var timeSinceLastSave = DateTimeOffset.UtcNow - lastSaveTime;
-            var autosaveInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.AutosaveInterval);
             if (autosaveInterval > TimeSpan.Zero && timeSinceLastSave > autosaveInterval && Userspace.CanSave(world))
             {
                 // only attempt a save if the last save has been synchronized and we're not shutting down
@@ -328,24 +331,24 @@ public class WorldService
                 lastSaveTime = DateTimeOffset.UtcNow;
             }
 
-            // world is idle
-            if (world.UserCount == 1)
+            idleBeginTime = world.UserCount switch
             {
-                if (lastUserCount < 1)
-                {
-                    lastIdleBeginTime = DateTimeOffset.UtcNow;
-                }
+                1 when lastUserCount > 1 => DateTimeOffset.UtcNow,
+                > 1 => null,
+                _ => idleBeginTime
+            };
 
-                var idleRestartInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.IdleRestartInterval);
-                var timeSpentIdle = DateTimeOffset.UtcNow - lastIdleBeginTime;
+            if (idleBeginTime is not null && idleRestartInterval > TimeSpan.Zero)
+            {
+                var timeSpentIdle = DateTimeOffset.UtcNow - idleBeginTime.Value;
 
                 if (idleRestartInterval > TimeSpan.Zero && timeSpentIdle > idleRestartInterval)
                 {
                     _log.LogInformation
                     (
-                        "World {World} has been idle for {Time:1:F0} seconds, restarting",
+                        "World {World} has been idle for {Time} seconds, restarting",
                         world.RawName,
-                        timeSpentIdle.TotalSeconds
+                        (long)timeSpentIdle.TotalSeconds
                     );
 
                     restart = true;
@@ -355,7 +358,6 @@ public class WorldService
                 }
             }
 
-            var forceRestartInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.ForcedRestartInterval);
             var timeRunning = DateTimeOffset.UtcNow - world.Time.LocalSessionBeginTime;
             if (forceRestartInterval > TimeSpan.Zero && timeRunning > forceRestartInterval)
             {
