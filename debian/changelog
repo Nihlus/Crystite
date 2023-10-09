@@ -1,3 +1,12 @@
+crystite (1.0.0+deb11~preview7) UNRELEASED; urgency=medium
+
+  * Categorize more log messages.
+  * Log when starting a world.
+  * Warn if no worlds are configured on startup.
+  * Fix the idle restart timer.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Mon, 9 Oct 2023 18:50:00 +0200
+
 crystite (1.0.0+deb11~preview6) UNRELEASED; urgency=medium
 
   * Fix config file installation.
