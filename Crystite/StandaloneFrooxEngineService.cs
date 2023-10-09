@@ -188,6 +188,7 @@ public class StandaloneFrooxEngineService : BackgroundService
                 continue;
             }
 
+            _log.LogInformation("Starting {World}", startWorld.SessionName ?? "a world without a name");
             var worldStart = await _worldService.StartWorldAsync(startWorld, ct);
             if (!worldStart.IsSuccess)
             {
