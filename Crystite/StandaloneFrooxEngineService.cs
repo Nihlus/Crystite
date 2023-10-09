@@ -171,7 +171,17 @@ public class StandaloneFrooxEngineService : BackgroundService
 
         await _engine.RecordManager.WaitForPendingUploadsAsync(ct: ct);
 
-        foreach (var startWorld in _config.StartWorlds ?? Array.Empty<Configuration.WorldStartupParameters>())
+        var startWorlds = _config.StartWorlds ?? Array.Empty<Configuration.WorldStartupParameters>();
+        if (startWorlds.Count is 0)
+        {
+            _log.LogWarning
+            (
+                "No startup worlds have been configured. Check your configuration for errors if you expect at least"
+                + " one world to start automatically"
+            );
+        }
+
+        foreach (var startWorld in startWorlds)
         {
             if (!startWorld.IsEnabled)
             {
