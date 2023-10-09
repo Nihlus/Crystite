@@ -34,6 +34,9 @@ public static class ResoniteDependentHostConfiguration
         { "KeyListenerAdded:", LogLevel.Trace },
         { "Sending info matching broadcast key", LogLevel.Trace },
         { "MachineID:", LogLevel.Trace },
+        { "SIGNALR: ListenOnKey", LogLevel.Trace },
+        { "BroadcastKey set to", LogLevel.Trace },
+        { "BroadcastKey changed", LogLevel.Trace },
         { "Assembly:", LogLevel.Debug },
         { "Initializing App:", LogLevel.Debug },
         { "Configuring System.Net.ServicePointManager", LogLevel.Debug },
@@ -73,6 +76,7 @@ public static class ResoniteDependentHostConfiguration
         { "Session updated, forcing status update", LogLevel.Debug },
         { "SIGNALR: SendMessage", LogLevel.Debug },
         { "SIGNALR: BroadcastStatus", LogLevel.Debug },
+        { "SIGNALR: InitializeStatus", LogLevel.Debug },
     };
 
     private static readonly IReadOnlyDictionary<string, LogLevel> _warningPatterns = new Dictionary<string, LogLevel>();
