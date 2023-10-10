@@ -23,6 +23,7 @@ override_dh_auto_build:
 	ronn -r -o bin Crystite/crystite.1.ronn
 	ronn -r -o bin Crystite.Control/crystitectl.1.ronn
 	chmod -x bin/*.dll
+	chmod 640 bin/appsettings.json
 
 override_dh_installsystemd:
 	dh_installsysusers

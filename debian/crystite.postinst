@@ -7,8 +7,6 @@ set -e
 case "${1}" in
   configure)
     chown root:crystite /etc/crystite/appsettings.json
-    chmod 640 /etc/crystite/appsettings.json
-
     chown crystite:crystite /var/log/crystite
     ;;
   *)
