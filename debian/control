@@ -1,5 +1,5 @@
 Source: crystite
-Section: games
+Section: misc
 Priority: optional
 Maintainer: Jarl Gullberg <jarl.gullberg@gmail.com>
 Build-Depends:
