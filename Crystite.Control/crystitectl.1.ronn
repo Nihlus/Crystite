@@ -38,14 +38,17 @@ pieces of information or perform some other action.
   The hostname to connect to.
 * `-o`, `--output-format`=<format>:
   The output format that the program should use. <format> can be one of
-  the following:
+  the following.
 
-  * _Simple_: 
-    Default. Minimizes output and only prints basic information when output is 
-    explicitly requested, such as with `show-worlds`. 
-  * _Verbose_:
-    Adds more information where applicable, such as IDs and descriptions.
-  * _Json_: 
+  _Simple_:
+    Default. Minimizes output and only prints basic information when 
+    output is explicitly requested, such as with `show-worlds`.
+
+  _Verbose_:
+    Adds more information where applicable, such as IDs and 
+    descriptions.
+
+  _Json_:
     Prints the actual received JSON payloads from the server in lieu of 
     user-friendly output, which can be useful for scripting purposes.
 
@@ -78,102 +81,114 @@ pieces of information or perform some other action.
 ### accept-friend
 Accepts an incoming friend request.
 
-_This is a global user verb._
+**This is a global user verb.**
 
 ### block-user
 Blocks the given user; equivalent to blocking someone in your contacts list.
 
-_This is a global user verb._
+**This is a global user verb.**
 
 ### ignore-user
 Blocks the given user; equivalent to ignoring someone in your contacts list.
 
-_This is a global user verb._
+**This is a global user verb.**
 
 ### reject-friend
 Rejects an incoming friend request.
 
-_This is a global user verb._
+**This is a global user verb.**
 
 ### show-blocked
 Lists all blocked users.
 
-_This is a general verb._
+**This is a general verb.**
 
 ### show-contacts
 Lists all contacts, regardless of status.
 
-_This is a general verb._
+**This is a general verb.**
 
 ### show-friends
 Lists all friends.
 
-_This is a general verb._
+**This is a general verb.**
 
 ### show-ignored
 Lists all ignored users.
 
-_This is a general verb._
+**This is a general verb.**
 
 ### show-requested
 Lists all pending friend requests.
 
-_This is a general verb._
+**This is a general verb.**
 
 ### show-requested
 Shows a list of currently pending friend requests.
 
+**This is a general verb.**
+
 ### ban
 Bans the given user from all sessions hosted by the headless server.
 
-_This is a global user verb._
+**This is a global user verb.**
 
 ### show-banned
 Lists all globally banned users.
 
-_This is a general verb._
+**This is a general verb.**
 
 ### unban
 Unbans the given user from all sessions hosted by the headless server.
 
-_This is a global user verb._
+**This is a global user verb.**
 
 ### ban-from
 Bans the given user from the given world.
 
-_This is a world user verb._
+**This is a world user verb.**
 
 ### kick-from
 Kicks the given user from the given world.
 
-_This is a world user verb._
+**This is a world user verb.**
 
 ### respawn
 Respawns the given user in the given world.
 
-_This is a world user verb._
+**This is a world user verb.**
 
 ### set-role
 Sets the role of the given user in the given world.
 
-* `-r`, `--role`=<role>
+* `-r`, `--role`=<role>:
   <role> can be one of the following:
 
-  * _Admin_:
-  * _Builder_:
-  * _Moderator_:
-  * _Guest_:
-  * _Spectator_:
+  _Admin_:
+    The user has full access.
+
+  _Builder_:
+    The user has permission to modify the world.
+
+  _Moderator_:
+    The user has permission to kick or ban users.
+
+  _Guest_:
+    The user is visible in the world, but cannot modify it.
+
+  _Spectator_:
+    The user can view the world, but cannot interact with it or be seen by 
+    others.
 
 ### close-world
 Closes the given world.
 
-_This is a world verb._
+**This is a world verb.**
 
 ### focus-world
 Focuses the given world.
 
-_This is a world verb._
+**This is a world verb.**
 
 ### modify-world
 Modifies properties on the given world.
@@ -185,12 +200,23 @@ Modifies properties on the given world.
 * [`-a`, `--access-level`=<level>]:
   The new access level of the world. Can be one of the following:
   
-  * _Private_:
-  * _LAN_:
-  * _Contacts_:
-  * _ContactsPlus_:
-  * _RegisteredUsers_:
-  * _Anyone_:
+  _Private_: 
+    Only accessible to the local user.
+
+  _LAN_: 
+    Accessible to users on the local network.
+
+  _Contacts_: 
+     Accessible to friends of the logged-in user.
+
+  _ContactsPlus_: 
+    Accessible to friends and friends of friends of the logged-in user.
+
+  _RegisteredUsers_:
+    Accessible to any registered user.
+
+  _Anyone_:
+    No access restrictions.
 * [`-k`,`--away-kick-interval`=<interval>]:
   The new kick interval for away users (in minutes).
 * [`-h`, `--hide-from-listing`=_true_|_false_]:
@@ -201,37 +227,37 @@ Modifies properties on the given world.
 ### restart-world
 Restarts the given world.
 
-_This is a world verb._
+**This is a world verb.**
 
 ### save-world
 Saves the given world.
 
-_This is a world verb._
+**This is a world verb.**
 
 ### show-users
 Lists all users in the given world.
 
-_This is a world verb._
+**This is a world verb.**
 
 ### show-world
 Shows information about the given world.
 
-_This is a world verb._
+**This is a world verb.**
 
 ### show-worlds
 Lists all active worlds.
 
-_This is a general verb._
+**This is a general verb.**
 
 ### start-world
 Starts a new world.
 
-* `-t`, `--template`=<name>
+* `-t`, `--template`=<name>:
   The world preset to base the world on. World presets are built into the client 
   and tend to be simple, mostly featureless areas.
 
   This option is mutually exclusive with `--url`.
-* `-u`, `--url`=<url>
+* `-u`, `--url`=<url>:
   The record URL of the world to start. The world must be accessible by the 
   currently logged-in account on the server.
 
@@ -258,4 +284,4 @@ $ `crystitectl` set-role --name _GridWorld_ --user-name _Jax_ --role _Builder_
 $ `crystitectl` list-worlds --server _somewhere.else_ --port _1234_
 
 ## SEE ALSO
-jq(1)
+crystite(1), jq(1)
