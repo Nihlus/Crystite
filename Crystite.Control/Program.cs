@@ -111,7 +111,7 @@ public static partial class Program
                 o.AddDataObjectConverter<IRestContact, RestContact>();
                 o.AddDataObjectConverter<IRestUser, RestUser>();
                 o.AddDataObjectConverter<IRestWorld, RestWorld>();
-                o.AddDataObjectConverter<IJob, Job>();
+                o.AddDataObjectConverter<IRestJob, RestJob>();
             }
         );
     }
@@ -132,6 +132,30 @@ public static partial class Program
     )
     {
         // add API services
+        serviceCollection.TryAddTransient(s => new HeadlessBanAPI
+        (
+            s.GetRequiredService<IRestHttpClient>(),
+            s.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Crystite")
+        ));
+
+        serviceCollection.TryAddTransient(s => new HeadlessContactAPI
+        (
+            s.GetRequiredService<IRestHttpClient>(),
+            s.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Crystite")
+        ));
+
+        serviceCollection.TryAddTransient(s => new HeadlessJobAPI
+        (
+            s.GetRequiredService<IRestHttpClient>(),
+            s.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Crystite")
+        ));
+
+        serviceCollection.TryAddTransient(s => new HeadlessUserAPI
+        (
+            s.GetRequiredService<IRestHttpClient>(),
+            s.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Crystite")
+        ));
+
         serviceCollection.TryAddTransient(s => new HeadlessWorldAPI
         (
             s.GetRequiredService<IRestHttpClient>(),

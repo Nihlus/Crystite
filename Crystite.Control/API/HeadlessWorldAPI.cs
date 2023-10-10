@@ -54,7 +54,7 @@ public class HeadlessWorldAPI : AbstractHeadlessRestAPI
     /// <param name="startArgument">The startup argument.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>An asynchronous job description.</returns>
-    public Task<Result<IJob>> StartWorldAsync(OneOf<string, Uri> startArgument, CancellationToken ct = default)
+    public Task<Result<IRestJob>> StartWorldAsync(OneOf<string, Uri> startArgument, CancellationToken ct = default)
     {
         var form = new FormUrlEncodedContent
         (
@@ -68,7 +68,7 @@ public class HeadlessWorldAPI : AbstractHeadlessRestAPI
             }
         );
 
-        return this.RestHttpClient.PostAsync<IJob>
+        return this.RestHttpClient.PostAsync<IRestJob>
         (
             "worlds",
             r => r.With(m => m.Content = form),
@@ -82,8 +82,8 @@ public class HeadlessWorldAPI : AbstractHeadlessRestAPI
     /// <param name="id">The ID of the world.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>An asynchronous job description.</returns>
-    public Task<Result<IJob>> SaveWorldAsync(string id, CancellationToken ct = default)
-        => this.RestHttpClient.PostAsync<IJob>($"worlds/{id}/save", ct: ct);
+    public Task<Result<IRestJob>> SaveWorldAsync(string id, CancellationToken ct = default)
+        => this.RestHttpClient.PostAsync<IRestJob>($"worlds/{id}/save", ct: ct);
 
     /// <summary>
     /// Closes the given world.
@@ -91,8 +91,8 @@ public class HeadlessWorldAPI : AbstractHeadlessRestAPI
     /// <param name="id">The ID of the world.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>An asynchronous job description.</returns>
-    public Task<Result<IJob>> CloseWorldAsync(string id, CancellationToken ct = default)
-        => this.RestHttpClient.DeleteAsync<IJob>($"worlds/{id}", ct: ct);
+    public Task<Result<IRestJob>> CloseWorldAsync(string id, CancellationToken ct = default)
+        => this.RestHttpClient.DeleteAsync<IRestJob>($"worlds/{id}", ct: ct);
 
     /// <summary>
     /// Restarts the given world.
@@ -100,8 +100,8 @@ public class HeadlessWorldAPI : AbstractHeadlessRestAPI
     /// <param name="id">The ID of the world.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>An asynchronous job description.</returns>
-    public Task<Result<IJob>> RestartWorldAsync(string id, CancellationToken ct = default)
-        => this.RestHttpClient.PostAsync<IJob>($"worlds/{id}/restart", ct: ct);
+    public Task<Result<IRestJob>> RestartWorldAsync(string id, CancellationToken ct = default)
+        => this.RestHttpClient.PostAsync<IRestJob>($"worlds/{id}/restart", ct: ct);
 
     /// <summary>
     /// Modifies the given world.

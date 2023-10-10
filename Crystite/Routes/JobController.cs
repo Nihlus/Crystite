@@ -4,6 +4,8 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
+using Crystite.API.Abstractions;
+using Crystite.API.Abstractions.Extensions;
 using Crystite.API.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,7 +34,7 @@ public class JobController : ControllerBase
     /// </summary>
     /// <returns>The jobs.</returns>
     [HttpGet]
-    public ActionResult<IEnumerable<IJob>> GetJobsAsync() => new(_jobService.GetJobs());
+    public ActionResult<IEnumerable<IRestJob>> GetJobsAsync() => new(_jobService.GetJobs().Select(j => j.ToRestJob()));
 
     /// <summary>
     /// Gets the specified job.
@@ -42,17 +44,17 @@ public class JobController : ControllerBase
     /// <returns>The job.</returns>
     [HttpGet]
     [Route("{id}")]
-    public ActionResult<IJob> GetJob(Guid id, [FromQuery] bool peek = false)
+    public ActionResult<IRestJob> GetJob(Guid id, [FromQuery] bool peek = false)
     {
         if (peek)
         {
             return _jobService.TryPeekJob(id, out var peekedJob)
-                ? new ActionResult<IJob>(peekedJob)
+                ? new ActionResult<IRestJob>(peekedJob.ToRestJob())
                 : NotFound();
         }
 
         return _jobService.TryGetJob(id, out var job)
-            ? new ActionResult<IJob>(job)
+            ? new ActionResult<IRestJob>(job.ToRestJob())
             : NotFound();
     }
 

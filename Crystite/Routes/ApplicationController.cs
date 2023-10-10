@@ -5,6 +5,7 @@
 //
 
 using Crystite.API.Abstractions;
+using Crystite.API.Abstractions.Extensions;
 using Crystite.API.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -38,7 +39,7 @@ public class ApplicationController : ControllerBase
     /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
     [HttpPost]
     [Route("shutdown")]
-    public ActionResult<IJob> ShutdownAsync(CancellationToken ct = default)
+    public ActionResult<IRestJob> ShutdownAsync(CancellationToken ct = default)
     {
         if (_applicationController.HasShutdownBeenRequested)
         {
@@ -49,6 +50,6 @@ public class ApplicationController : ControllerBase
         (
             "shutdown",
             _ => _applicationController.ShutdownAsync()
-        );
+        ).ToRestJob();
     }
 }

@@ -156,11 +156,7 @@ applicationBuilder.Host
                         new JsonStringEnumConverter(new SnakeCaseNamingPolicy())
                     );
 
-                    options.JsonSerializerOptions.AddDataObjectConverter<IJob, Job>()
-                        .IncludeWhenSerializing(j => j.Status)
-                        .ExcludeWhenSerializing(j => j.Action)
-                        .ExcludeWhenSerializing(j => j.TokenSource);
-
+                    options.JsonSerializerOptions.AddDataObjectConverter<IRestJob, RestJob>();
                     options.JsonSerializerOptions.AddDataObjectConverter<IRestBan, RestBan>();
                     options.JsonSerializerOptions.AddDataObjectConverter<IRestContact, RestContact>();
                     options.JsonSerializerOptions.AddDataObjectConverter<IRestWorld, RestWorld>();

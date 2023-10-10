@@ -5,6 +5,7 @@
 //
 
 using Crystite.API.Abstractions;
+using Crystite.API.Abstractions.Extensions;
 using Crystite.API.Abstractions.Services;
 using Crystite.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -60,7 +61,7 @@ public class WorldController : ControllerBase
     /// <param name="templateName">The template name of the world.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpPost]
-    public ActionResult<IJob> StartWorld
+    public ActionResult<IRestJob> StartWorld
     (
         [FromForm(Name = "url")] Uri? worldUrl = null,
         [FromForm(Name = "template")] string? templateName = null
@@ -75,7 +76,7 @@ public class WorldController : ControllerBase
         (
             $"start world {worldUrl?.ToString() ?? templateName}",
             jct => _worldController.StartWorldAsync(worldUrl, templateName, jct)
-        );
+        ).ToRestJob();
     }
 
     /// <summary>
@@ -85,11 +86,11 @@ public class WorldController : ControllerBase
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpPost]
     [Route("{id}/save")]
-    public ActionResult<IJob> SaveWorld(string id) => _jobService.CreateJob
+    public ActionResult<IRestJob> SaveWorld(string id) => _jobService.CreateJob
     (
         $"save world {id}",
         jct => _worldController.SaveWorldAsync(id, jct)
-    );
+    ).ToRestJob();
 
     /// <summary>
     /// Closes the given world.
@@ -98,11 +99,11 @@ public class WorldController : ControllerBase
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpDelete]
     [Route("{id}")]
-    public ActionResult<IJob> CloseWorld(string id) => _jobService.CreateJob
+    public ActionResult<IRestJob> CloseWorld(string id) => _jobService.CreateJob
     (
         $"close world {id}",
         jct => _worldController.CloseWorldAsync(id, jct)
-    );
+    ).ToRestJob();
 
     /// <summary>
     /// Restarts the given world.
@@ -110,12 +111,12 @@ public class WorldController : ControllerBase
     /// <param name="id">The ID of the world.</param>
     /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
     [HttpPost]
-    [Route("{id}")]
-    public ActionResult<IJob> RestartWorld(string id) => _jobService.CreateJob
+    [Route("{id}/restart")]
+    public ActionResult<IRestJob> RestartWorld(string id) => _jobService.CreateJob
     (
         $"restart world {id}",
         jct => _worldController.RestartWorldAsync(id, jct)
-    );
+    ).ToRestJob();
 
     /// <summary>
     /// Modifies the given world.

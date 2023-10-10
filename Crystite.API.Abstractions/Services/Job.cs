@@ -14,15 +14,21 @@ namespace Crystite.API.Abstractions.Services;
 
 #pragma warning disable SA1402
 
-/// <inheritdoc />
+/// <summary>
+/// Wraps an action in a status-tracking, unique job descriptor.
+/// </summary>
+/// <param name="Id">The ID of the job.</param>
+/// <param name="Description">The human-readable description of the job.</param>
+/// <param name="Action">The running action.</param>
+/// <param name="TokenSource">The cancellation token source associated with the job.</param>
 [PublicAPI]
 public sealed record Job
 (
-    [property: JsonPropertyName("id")] Guid Id,
-    [property: JsonPropertyName("description")] string Description,
-    [property: JsonIgnore] Task Action,
-    [property: JsonIgnore] CancellationTokenSource TokenSource
-) : IJob
+    Guid Id,
+    string Description,
+    Task Action,
+    CancellationTokenSource TokenSource
+)
 {
     /// <summary>
     /// Gets the status of the job.
@@ -36,25 +42,4 @@ public sealed record Job
             : this.Action.IsCompleted
                 ? JobStatus.Completed
                 : JobStatus.Running;
-}
-
-/// <summary>
-/// Represents an ongoing job.
-/// </summary>
-public interface IJob
-{
-    /// <summary>
-    /// Gets the status of the job.
-    /// </summary>
-    JobStatus Status { get; }
-
-    /// <summary>
-    /// Gets the ID of the job.
-    /// </summary>
-    Guid Id { get; }
-
-    /// <summary>
-    /// Gets the human-readable description of the job.
-    /// </summary>
-    string Description { get; }
 }

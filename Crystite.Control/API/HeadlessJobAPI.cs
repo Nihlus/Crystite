@@ -5,6 +5,7 @@
 //
 
 using System.Text.Json;
+using Crystite.API.Abstractions;
 using Crystite.API.Abstractions.Services;
 using Remora.Rest;
 using Remora.Rest.Results;
@@ -37,8 +38,8 @@ public class HeadlessJobAPI : AbstractHeadlessRestAPI
     /// <param name="id">The ID of the job.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>The job.</returns>
-    public Task<Result<IJob>> GetJobAsync(Guid id, CancellationToken ct = default)
-        => this.RestHttpClient.GetAsync<IJob>($"jobs/{id}", ct: ct);
+    public Task<Result<IRestJob>> GetJobAsync(Guid id, CancellationToken ct = default)
+        => this.RestHttpClient.GetAsync<IRestJob>($"jobs/{id}", ct: ct);
 
     /// <summary>
     /// Cancels the given job.
@@ -50,8 +51,8 @@ public class HeadlessJobAPI : AbstractHeadlessRestAPI
     /// <param name="id">The ID of the job.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>The job.</returns>
-    public Task<Result<IJob>> CancelJobAsync(Guid id, CancellationToken ct = default)
-        => this.RestHttpClient.DeleteAsync<IJob>($"jobs/{id}", ct: ct);
+    public Task<Result<IRestJob>> CancelJobAsync(Guid id, CancellationToken ct = default)
+        => this.RestHttpClient.DeleteAsync<IRestJob>($"jobs/{id}", ct: ct);
 
     /// <summary>
     /// Asynchronously waits for completion of the given job, continuously polling the server about its status until
@@ -61,13 +62,13 @@ public class HeadlessJobAPI : AbstractHeadlessRestAPI
     /// <param name="pollTime">The time between polling operations.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>The completed job.</returns>
-    public async Task<Result<IJob>> WaitForJobAsync(IJob job, TimeSpan? pollTime = null, CancellationToken ct = default)
+    public async Task<Result<IRestJob>> WaitForJobAsync(IRestJob job, TimeSpan? pollTime = null, CancellationToken ct = default)
     {
         pollTime ??= TimeSpan.FromSeconds(1);
 
         if (job.Status is not JobStatus.Running)
         {
-            return Result<IJob>.FromSuccess(job);
+            return Result<IRestJob>.FromSuccess(job);
         }
 
         var polledJob = job;
@@ -77,7 +78,7 @@ public class HeadlessJobAPI : AbstractHeadlessRestAPI
             if (!getJob.IsDefined(out polledJob))
             {
                 // oops!
-                return Result<IJob>.FromError(getJob);
+                return Result<IRestJob>.FromError(getJob);
             }
 
             await Task.Delay(pollTime.Value, CancellationToken.None);
@@ -87,7 +88,7 @@ public class HeadlessJobAPI : AbstractHeadlessRestAPI
         {
             JobStatus.Canceled => new RestResultError<APIError>(new APIError("The world startup was canceled")),
             JobStatus.Faulted => new RestResultError<APIError>(new APIError($"Job {polledJob.Id} ({job.Description}) failed")),
-            _ => Result<IJob>.FromSuccess(polledJob)
+            _ => Result<IRestJob>.FromSuccess(polledJob)
         };
     }
 }
