@@ -21,6 +21,10 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
 
+    <PropertyGroup>
+        <IsPublishable>false</IsPublishable>
+    </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="OneOf" />
       <PackageReference Include="Remora.Results" />

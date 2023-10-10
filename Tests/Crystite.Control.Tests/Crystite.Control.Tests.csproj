@@ -5,15 +5,19 @@
     <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
     <UseSPDXFileHeaders>true</UseSPDXFileHeaders>
   </PropertyGroup>
-  
+
+  <PropertyGroup>
+    <IsPublishable>false</IsPublishable>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\Crystite.Control\Crystite.Control.csproj" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Remora.Rest.Xunit" Version="3.0.1" />
   </ItemGroup>
-  
+
   <ItemGroup>
     <EmbeddedResource Include="Data\**\*" />
   </ItemGroup>

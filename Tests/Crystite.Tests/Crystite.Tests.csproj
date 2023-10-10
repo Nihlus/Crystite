@@ -9,6 +9,10 @@
     </PropertyGroup>
 
     <PropertyGroup>
+        <IsPublishable>false</IsPublishable>
+    </PropertyGroup>
+
+    <PropertyGroup>
         <LegalLicense>AGPL-3.0-or-later</LegalLicense>
         <LegalAuthor>Jarl Gullberg</LegalAuthor>
         <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
