@@ -13,7 +13,6 @@ using Crystite.API.Abstractions.Services;
 using Crystite.Control;
 using Crystite.Control.API;
 using Crystite.Control.Extensions;
-using Crystite.Control.Verbs;
 using Crystite.Control.Verbs.Bases;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -22,6 +21,7 @@ using Remora.Rest;
 using Remora.Rest.Extensions;
 using Remora.Rest.Json;
 using Remora.Rest.Json.Policies;
+using Remora.Rest.Results;
 
 var verb = ParseVerb(args);
 if (verb is null)
@@ -43,7 +43,16 @@ if (result.IsSuccess)
     return 0;
 }
 
-Console.WriteLine(result.Error.Explain());
+if (verb.OutputFormat is OutputFormat.Json && result.Error is RestResultError<APIError> apiError)
+{
+    var outputOptions = services.GetRequiredService<IOptionsMonitor<JsonSerializerOptions>>().Get("Crystite");
+    Console.Error.WriteLine(JsonSerializer.Serialize(apiError.Error, outputOptions));
+}
+else
+{
+    Console.Error.WriteLine(result.Error.Explain());
+}
+
 return 1;
 
 /// <summary>
@@ -58,7 +67,13 @@ public static partial class Program
     /// <returns>The verb, or null if errors occurred.</returns>
     public static HeadlessVerb? ParseVerb(IEnumerable<string> args)
     {
-        var options = Parser.Default.ParseArguments<ShowWorlds, ShowWorld, StartWorld>(args);
+        var verbs = Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(t => t.GetCustomAttribute<VerbAttribute>() is not null)
+            .ToArray();
+
+        var options = Parser.Default.ParseArguments(args, verbs);
+
         if (options.Errors.Any())
         {
             return null;

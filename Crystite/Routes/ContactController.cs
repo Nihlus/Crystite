@@ -40,6 +40,23 @@ public class ContactController : ControllerBase
     }
 
     /// <summary>
+    /// Gets a specific contact from the current account.
+    /// </summary>
+    /// <param name="userIdOrName">The ID or username of the contact.</param>
+    /// <param name="ct">The cancellation token for this operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    [HttpGet]
+    [Route("{userIdOrName}")]
+    public async Task<ActionResult<IRestContact>> GetContactAsync
+    (
+        string userIdOrName,
+        CancellationToken ct = default
+    )
+    {
+        return (await _contactController.GetContactAsync(userIdOrName, ct)).ToActionResult();
+    }
+
+    /// <summary>
     /// Modifies the given contact.
     /// </summary>
     /// <param name="userIdOrName">The ID or username of the contact.</param>

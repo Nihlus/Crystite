@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Crystite.Control.API;
 using Crystite.Control.Verbs.Bases;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using OneOf;
 using Remora.Results;
@@ -17,8 +18,9 @@ namespace Crystite.Control.Verbs;
 /// <summary>
 /// Starts a world.
 /// </summary>
-[Verb("show-world", HelpText = "Shows a specific running world")]
-public sealed class StartWorld : WorldVerb
+[UsedImplicitly]
+[Verb("start-world", HelpText = "Starts a new world")]
+public sealed class StartWorld : HeadlessVerb
 {
     /// <summary>
     /// Gets the name of the builtin template to start.
@@ -37,19 +39,17 @@ public sealed class StartWorld : WorldVerb
     /// </summary>
     /// <param name="template">The name of the builtin template to start.</param>
     /// <param name="url">The record URL of the world to start.</param>
-    /// <inheritdoc cref="WorldVerb(string, string, ushort, string, bool)" path="/param" />
+    /// <inheritdoc cref=".ctor(ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
     public StartWorld
     (
         string? template,
         Uri? url,
-        string? name,
-        string? id,
         ushort port,
         string server,
-        bool verbose
+        OutputFormat outputFormat
     )
-        : base(name, id, port, server, verbose)
+        : base(port, server, outputFormat)
     {
         this.Template = template;
         this.Url = url;
@@ -88,7 +88,11 @@ public sealed class StartWorld : WorldVerb
             return (Result)awaitJob;
         }
 
-        await outputWriter.WriteLineAsync("World started");
+        if (this.OutputFormat is OutputFormat.Verbose)
+        {
+            await outputWriter.WriteLineAsync("World started");
+        }
+
         return Result.FromSuccess();
     }
 }

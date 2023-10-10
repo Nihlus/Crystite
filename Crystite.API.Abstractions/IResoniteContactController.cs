@@ -26,6 +26,14 @@ public interface IResoniteContactController
     Task<Result<IReadOnlyList<IRestContact>>> GetContactsAsync(CancellationToken ct = default);
 
     /// <summary>
+    /// Gets the contacts of the current account.
+    /// </summary>
+    /// <param name="userIdOrName">The ID or username of the contact to modify.</param>
+    /// <param name="ct">The cancellation token for this operation.</param>
+    /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+    Task<Result<IRestContact>> GetContactAsync(string userIdOrName, CancellationToken ct = default);
+
+    /// <summary>
     /// Modifies the given contact.
     /// </summary>
     /// <param name="userIdOrName">The ID or username of the contact to modify.</param>

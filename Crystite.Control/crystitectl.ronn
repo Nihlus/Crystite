@@ -1,0 +1,261 @@
+crystitectl(1) -- control Crystite from a terminal
+================================================================================
+
+## SYNOPSIS
+
+`crystitectl` <verb> [<flag>...]
+
+## DESCRIPTION
+`crystitectl` is a companion application for Crystite, enabling control of the 
+server from a terminal. The program is a simplified frontend for the REST API,
+and can be used to control both local and remote servers (depending on the 
+configuration of the target server instance).
+
+All functionality is accessed by using a *command verb*, which are short 
+positional options that select the operation mode. Each verb then has zero or 
+more flags associated with it that control the operation of the verb.
+
+Generally, every available REST endpoint has some type of corresponding command
+verb in `crystitectl`. Certain command verbs may not map to any single REST API
+endpoint , however.
+
+Beyond the basic verb-options syntax, all option parsing follows the standard
+GNU behaviour.
+
+## OPTIONS
+Verbs come in four primary forms - general verbs, verbs related to global users, 
+verbs related to worlds, and verbs related to users *in* worlds. User and world 
+identity is defined by either their names or their system IDs - the latter is 
+more exact but less readable.
+
+General verbs don't target anything in particular, and typically list multiple
+pieces of information or perform some other action.
+
+### Common options for all verbs
+* `-p`, `--port`=<port>:
+  The port to connect to.
+* `-s`, `--server`=<hostname>:
+  The hostname to connect to.
+* `-o`, `--output-format`=<format>:
+  The output format that the program should use. <format> can be one of
+  the following:
+
+  * _Simple_: 
+    Default. Minimizes output and only prints basic information when output is 
+    explicitly requested, such as with `show-worlds`. 
+  * _Verbose_:
+    Adds more information where applicable, such as IDs and descriptions.
+  * _Json_: 
+    Prints the actual received JSON payloads from the server in lieu of 
+    user-friendly output, which can be useful for scripting purposes.
+
+### Common Options for Global User Verbs
+* `-n`, `--name`=<name>:
+  The name of the user to target.
+* `-i`, `--id`=<id>:
+  The ID of the user to target. You can use this as a more exact alternative to
+  `--name`. If both are specified, `--id` takes precedence.
+
+### Common Options for World Verbs
+* `-n`, `--name`=<name>:
+  The name of the world to target.
+* `-i`, `--id`=<id>:
+  The ID of the world to target. You can use this as a more exact alternative to
+  `--name`. If both are specified, `--id` takes precedence.
+
+### Common Options for World User Verbs
+* `-n`, `--name`=<name>:
+  The name of the world to target.
+* `-i`, `--id`=<id>:
+  The ID of the world to target. You can use this as a more exact alternative to
+  `--name`. If both are specified, `--id` takes precedence.
+* `-u`, `--user-name`=<username>:
+  The name of the user to target.
+* `--user-id`=<userid>:
+  The ID of the user to target. You can use this as a more exact alternative to
+  `--user-name`. If both are specified, `--user-id` takes precedence.
+
+### accept-friend
+Accepts an incoming friend request.
+
+_This is a global user verb._
+
+### block-user
+Blocks the given user; equivalent to blocking someone in your contacts list.
+
+_This is a global user verb._
+
+### ignore-user
+Blocks the given user; equivalent to ignoring someone in your contacts list.
+
+_This is a global user verb._
+
+### reject-friend
+Rejects an incoming friend request.
+
+_This is a global user verb._
+
+### show-blocked
+Lists all blocked users.
+
+_This is a general verb._
+
+### show-contacts
+Lists all contacts, regardless of status.
+
+_This is a general verb._
+
+### show-friends
+Lists all friends.
+
+_This is a general verb._
+
+### show-ignored
+Lists all ignored users.
+
+_This is a general verb._
+
+### show-requested
+Lists all pending friend requests.
+
+_This is a general verb._
+
+### show-requested
+Shows a list of currently pending friend requests.
+
+### ban
+Bans the given user from all sessions hosted by the headless server.
+
+_This is a global user verb._
+
+### show-banned
+Lists all globally banned users.
+
+_This is a general verb._
+
+### unban
+Unbans the given user from all sessions hosted by the headless server.
+
+_This is a global user verb._
+
+### ban-from
+Bans the given user from the given world.
+
+_This is a world user verb._
+
+### kick-from
+Kicks the given user from the given world.
+
+_This is a world user verb._
+
+### respawn
+Respawns the given user in the given world.
+
+_This is a world user verb._
+
+### set-role
+Sets the role of the given user in the given world.
+
+* `-r`, `--role`=<role>
+  <role> can be one of the following:
+
+  * _Admin_:
+  * _Builder_:
+  * _Moderator_:
+  * _Guest_:
+  * _Spectator_:
+
+### close-world
+Closes the given world.
+
+_This is a world verb._
+
+### focus-world
+Focuses the given world.
+
+_This is a world verb._
+
+### modify-world
+Modifies properties on the given world.
+
+* [`--new-name`=<name>]:
+  The new name of the world.
+* [`-d`, `--description`=<description>]:
+  The new description of the world.
+* [`-a`, `--access-level`=<level>]:
+  The new access level of the world. Can be one of the following:
+  
+  * _Private_:
+  * _LAN_:
+  * _Contacts_:
+  * _ContactsPlus_:
+  * _RegisteredUsers_:
+  * _Anyone_:
+* [`-k`,`--away-kick-interval`=<interval>]:
+  The new kick interval for away users (in minutes).
+* [`-h`, `--hide-from-listing`=_true_|_false_]:
+  Whether to hide the world from public listing.
+* [`-m`, `--max-users`=<count>]:
+  The new maximum number of users allowed in the world.
+
+### restart-world
+Restarts the given world.
+
+_This is a world verb._
+
+### save-world
+Saves the given world.
+
+_This is a world verb._
+
+### show-users
+Lists all users in the given world.
+
+_This is a world verb._
+
+### show-world
+Shows information about the given world.
+
+_This is a world verb._
+
+### show-worlds
+Lists all active worlds.
+
+_This is a general verb._
+
+### start-world
+Starts a new world.
+
+* `-t`, `--template`=<name>
+  The world preset to base the world on. World presets are built into the client 
+  and tend to be simple, mostly featureless areas.
+
+  This option is mutually exclusive with `--url`.
+* `-u`, `--url`=<url>
+  The record URL of the world to start. The world must be accessible by the 
+  currently logged-in account on the server.
+
+  This option is mutually exclusive with `--template`.
+
+## EXIT STATUS
+The exit status is 0 if the command completed successfully; otherwise, it is 1
+and error information is printed to standard error.
+
+## EXAMPLES
+
+$ `crystitectl` show-requested
+
+$ `crystitectl` accept-friend --name _Jax_
+
+$ `crystitectl` start-world -t _Grid_
+
+$ `crystitectl` modify-world --id _S-5d21e6b1-b62b-4a0f-86f4-14f1d1c5d21f_ --new-name _GridWorld_
+
+$ `crystitectl` restart-world --name _GridWorld_
+
+$ `crystitectl` set-role --name _GridWorld_ --user-name _Jax_ --role _Builder_
+
+$ `crystitectl` list-worlds --server _somewhere.else_ --port _1234_
+
+## SEE ALSO
+jq(1)

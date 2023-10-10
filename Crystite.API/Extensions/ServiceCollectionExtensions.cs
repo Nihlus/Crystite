@@ -34,6 +34,7 @@ public static class ServiceCollectionExtensions
             .AddSingleton<IResoniteApplicationController, TApplicationController>()
             .AddSingleton<IResoniteBanController, ResoniteBanController>()
             .AddSingleton<IResoniteContactController, ResoniteContactController>()
+            .AddSingleton<IResoniteUserController, ResoniteUserController>()
             .AddSingleton<IResoniteWorldController, TWorldController>()
             .AddSingleton<IJobService, JobService>();
     }

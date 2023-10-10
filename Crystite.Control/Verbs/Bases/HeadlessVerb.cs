@@ -29,20 +29,20 @@ public abstract class HeadlessVerb : IExecutableVerb
     /// <summary>
     /// Gets a value indicating whether more detailed information should be displayed.
     /// </summary>
-    [Option('v', "verbose", Default = false, HelpText = "Whether to output detailed information")]
-    public bool Verbose { get; }
+    [Option('o', "output-format", Default = OutputFormat.Simple, HelpText = "The desired output format")]
+    public OutputFormat OutputFormat { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="HeadlessVerb"/> class.
     /// </summary>
     /// <param name="port">The port.</param>
     /// <param name="server">The server.</param>
-    /// <param name="verbose">Whether to output detailed information.</param>
-    protected HeadlessVerb(ushort port, string server, bool verbose)
+    /// <param name="outputFormat">The desired output format.</param>
+    protected HeadlessVerb(ushort port, string server, OutputFormat outputFormat)
     {
         this.Port = port;
         this.Server = server;
-        this.Verbose = verbose;
+        this.OutputFormat = outputFormat;
     }
 
     /// <inheritdoc />

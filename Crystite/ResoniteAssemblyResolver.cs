@@ -7,7 +7,6 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
-using CSGL;
 using Mono.Cecil;
 
 namespace Crystite;

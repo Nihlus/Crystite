@@ -42,20 +42,22 @@ public class ResoniteContactController : IResoniteContactController
         return Task.FromResult<Result<IReadOnlyList<IRestContact>>>(contacts.Select(f => f.ToRestContact()).ToArray());
     }
 
+    /// <inheritdoc/>
+    public Task<Result<IRestContact>> GetContactAsync(string userIdOrName, CancellationToken ct = default)
+    {
+        var contact = GetContact(userIdOrName);
+        return contact is null
+            ? Task.FromResult<Result<IRestContact>>(new NotFoundError())
+            : Task.FromResult<Result<IRestContact>>(contact.ToRestContact());
+    }
+
     /// <inheritdoc />
     public async Task<Result<IRestContact>> ModifyContactAsync(string userIdOrName, RestContactStatus status, CancellationToken ct = default)
     {
-        var contacts = new List<Contact>();
-        _engine.Cloud.Contacts.GetContacts(contacts);
-
-        var contact = contacts.FirstOrDefault(f => f.ContactUserId == userIdOrName);
+        var contact = GetContact(userIdOrName);
         if (contact is null)
         {
-            contact = contacts.FirstOrDefault(f => string.Equals(userIdOrName, f.ContactUsername, StringComparison.InvariantCultureIgnoreCase));
-            if (contact is null)
-            {
-                return new NotFoundError();
-            }
+            return new NotFoundError();
         }
 
         if (contact.ContactStatus == status.ToContactStatus())
@@ -96,5 +98,17 @@ public class ResoniteContactController : IResoniteContactController
         }
 
         return contact.ToRestContact() with { Status = status };
+    }
+
+    private Contact? GetContact(string userIdOrName)
+    {
+        var contacts = new List<Contact>();
+        _engine.Cloud.Contacts.GetContacts(contacts);
+
+        var contact = contacts.FirstOrDefault(f => f.ContactUserId == userIdOrName);
+        return contact ?? contacts.FirstOrDefault
+        (
+            f => string.Equals(userIdOrName, f.ContactUsername, StringComparison.InvariantCultureIgnoreCase)
+        );
     }
 }

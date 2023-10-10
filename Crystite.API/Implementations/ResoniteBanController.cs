@@ -14,7 +14,7 @@ using Remora.Results;
 namespace Crystite.API;
 
 /// <summary>
-/// Implements application control logic for the stock headless client.
+/// Implements ban control logic for the stock headless client.
 /// </summary>
 public class ResoniteBanController : IResoniteBanController
 {

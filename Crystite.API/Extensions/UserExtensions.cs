@@ -30,4 +30,21 @@ public static class UserExtensions
             user.Ping
         );
     }
+
+    /// <summary>
+    /// Converts a <see cref="User"/> to a <see cref="RestUser"/>.
+    /// </summary>
+    /// <param name="user">The user to convert.</param>
+    /// <returns>The <see cref="RestUser"/>.</returns>
+    public static RestUser ToRestUser(this SkyFrost.Base.User user)
+    {
+        return new RestUser
+        (
+            user.Id,
+            user.Username,
+            null,
+            false,
+            0
+        );
+    }
 }

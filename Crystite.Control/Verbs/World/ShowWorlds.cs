@@ -9,6 +9,7 @@ using System.Text.Json;
 using CommandLine;
 using Crystite.Control.API;
 using Crystite.Control.Verbs.Bases;
+using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Remora.Results;
@@ -18,16 +19,17 @@ namespace Crystite.Control.Verbs;
 /// <summary>
 /// Shows the running worlds.
 /// </summary>
+[UsedImplicitly]
 [Verb("show-worlds", HelpText = "Shows the running worlds")]
-public class ShowWorlds : HeadlessVerb
+public sealed class ShowWorlds : HeadlessVerb
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowWorlds"/> class.
     /// </summary>
-    /// <inheritdoc cref="HeadlessVerb(ushort, string, bool)" path="/param" />
+    /// <inheritdoc cref=".ctor(ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
-    public ShowWorlds(ushort port, string server, bool verbose)
-        : base(port, server, verbose)
+    public ShowWorlds(ushort port, string server, OutputFormat outputFormat)
+        : base(port, server, outputFormat)
     {
     }
 
@@ -44,19 +46,38 @@ public class ShowWorlds : HeadlessVerb
             return (Result)getWorlds;
         }
 
-        if (this.Verbose)
+        switch (this.OutputFormat)
         {
-            await outputWriter.WriteLineAsync(JsonSerializer.Serialize(worlds, outputOptions));
-        }
-        else
-        {
-            foreach (var world in worlds)
+            case OutputFormat.Json:
             {
-                var description = world.Description is null
-                    ? string.Empty
-                    : $"\t{world.Description}";
+                await outputWriter.WriteLineAsync(JsonSerializer.Serialize(worlds, outputOptions));
+                break;
+            }
+            case OutputFormat.Simple:
+            {
+                foreach (var world in worlds)
+                {
+                    await outputWriter.WriteLineAsync(world.Name);
+                }
 
-                await outputWriter.WriteLineAsync($"{world.Name}\t{world.Id}{description}");
+                break;
+            }
+            case OutputFormat.Verbose:
+            {
+                foreach (var world in worlds)
+                {
+                    var description = world.Description is null
+                        ? string.Empty
+                        : $"\t{world.Description}";
+
+                    await outputWriter.WriteLineAsync($"{world.Name}\t{world.Id}\t{description}");
+                }
+
+                break;
+            }
+            default:
+            {
+                throw new ArgumentOutOfRangeException();
             }
         }
 

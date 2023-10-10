@@ -248,7 +248,7 @@ public class HeadlessWorldAPI : AbstractHeadlessRestAPI
     /// <param name="role">The new role.</param>
     /// <param name="ct">The cancellation token for this operation.</param>
     /// <returns>The user.</returns>
-    public Task<Result> RespawnUserAsync
+    public Task<Result> SetWorldUserRoleAsync
     (
         string id,
         string userId,
@@ -308,37 +308,6 @@ public class HeadlessWorldAPI : AbstractHeadlessRestAPI
         return this.RestHttpClient.PutAsync
         (
             "worlds/focused",
-            r => r.With(m => m.Content = new FormUrlEncodedContent(parameters)),
-            ct: ct
-        );
-    }
-
-    /// <summary>
-    /// Sends a dynamic impulse to the world root.
-    /// </summary>
-    /// <param name="id">The ID of the world.</param>
-    /// <param name="tag">The impulse tag.</param>
-    /// <param name="value">The value to send, if any.</param>
-    /// <param name="ct">The cancellation token for this operation.</param>
-    /// <returns>The result of the operation.</returns>
-    public Task<Result> SendImpulseAsync
-    (
-        string id,
-        string tag,
-        Optional<OneOf<float, int, string>> value = default,
-        CancellationToken ct = default
-    )
-    {
-        if (!value.HasValue)
-        {
-            return this.RestHttpClient.PostAsync($"worlds/{id}/impulses/{tag}", ct: ct);
-        }
-
-        var parameters = new List<KeyValuePair<string, string>> { new("value", value.Value.ToString()!) };
-
-        return this.RestHttpClient.PostAsync
-        (
-            $"worlds/{id}/impulses/{tag}",
             r => r.With(m => m.Content = new FormUrlEncodedContent(parameters)),
             ct: ct
         );
