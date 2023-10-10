@@ -4,3 +4,4 @@ bin/*.deps.json usr/lib/crystite/
 bin/*.runtimeconfig.json usr/lib/crystite/
 bin/steam_appid.txt usr/lib/crystite/
 bin/crystite usr/lib/crystite/
+bin/crystitectl usr/lib/crystite/

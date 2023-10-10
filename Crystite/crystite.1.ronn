@@ -1,0 +1,50 @@
+crystite(1) -- headless Resonite server
+================================================================================
+
+## SYNOPSIS
+
+`crystite` [<flag>...]
+
+## DESCRIPTION
+Crystite is a custom headless server for Resonite for modern .NET. The
+server comes with a variety of benefits, chief among them a faster and more
+efficient runtime. In addition, the server exposes a REST API for programmatic
+control over its execution and configuration.
+
+The server is not a drop-in replacement for the stock headless client and
+requires some additional configuration before you can run it. It does, however,
+aim to be compatible with Resonite's own configuration format, allowing you to
+reuse existing configuration files.
+
+## OPTIONS
+* `--force-sync`:
+  Forcibly synchronizes the locally stored records to the cloud, overwriting any
+  data already uploaded.
+* `--delete-unsynced`:
+  Deletes any unsynchronized records, redownloading them from the cloud.
+* `--repair-database`:
+  Attempts to repair and upgrade the local asset database.
+
+## EXIT STATUS
+0 on success; otherwise, a nonzero value. Error information is printed to
+standard output and to the configured log files.
+
+## ENVIRONMENT
+Crystite loads configuration options from the environment via
+[Microsoft.Extensions.Configuration][1], meaning that any configuration key in
+a file on disk can be overridden by a corresponding environment variable.
+
+Beyond these, Crystite does not read any specific environment variables.
+
+## FILES
+* /etc/crystite/appsettings.json:
+  The main system-wide configuration file.
+* /etc/crystite/conf.d/*.json:
+  Drop-in configuration files; overrides the main configuration file on a
+  key-by-key basis in lexicographical order.
+
+## SEE ALSO
+crystitectl(1),crystite(5)
+
+
+[1]: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration
