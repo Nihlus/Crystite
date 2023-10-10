@@ -9,7 +9,7 @@ ifeq ($(BUILD_HOST_ARCH), amd64)
 else ifeq ($(BUILD_HOST_ARCH), arm64)
 	export RID=linux-arm64
 else
-	$(error unsupported runtime architecture - consult the .NET documentation)
+$(error unsupported runtime architecture - consult the .NET documentation)
 endif
 
 %:
