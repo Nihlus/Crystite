@@ -1,3 +1,11 @@
+crystite (1.0.0+deb11~preview8) UNRELEASED; urgency=medium
+
+  * Initial release of crystitectl
+  * Add manpages for both crystite and crystitectl
+  * Add system-level links to crystite and crystitectl on the path
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Tue, 10 Oct 2023 23:20:00 +0200
+
 crystite (1.0.0+deb11~preview7) UNRELEASED; urgency=medium
 
   * Categorize more log messages.
