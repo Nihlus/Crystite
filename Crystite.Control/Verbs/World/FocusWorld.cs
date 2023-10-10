@@ -26,8 +26,8 @@ public sealed class FocusWorld : WorldVerb
     /// </summary>
     /// <inheritdoc cref=".ctor(string, string, ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
-    public FocusWorld(string? worldName, string? worldID, ushort port, string server, OutputFormat outputFormat)
-        : base(worldName, worldID, port, server, outputFormat)
+    public FocusWorld(string? name, string? id, ushort port, string server, OutputFormat outputFormat)
+        : base(name, id, port, server, outputFormat)
     {
     }
 

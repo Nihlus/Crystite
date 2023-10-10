@@ -26,8 +26,8 @@ public sealed class CloseWorld : WorldVerb
     /// </summary>
     /// <inheritdoc cref=".ctor(string, string, ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
-    public CloseWorld(string? name, string? worldID, ushort port, string server, OutputFormat outputFormat)
-        : base(name, worldID, port, server, outputFormat)
+    public CloseWorld(string? name, string? id, ushort port, string server, OutputFormat outputFormat)
+        : base(name, id, port, server, outputFormat)
     {
     }
 

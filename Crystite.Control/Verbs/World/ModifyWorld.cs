@@ -80,13 +80,13 @@ public sealed class ModifyWorld : WorldVerb
         Optional<float> awayKickInterval,
         Optional<bool> hideFromListing,
         Optional<int> maxUsers,
-        string? worldName,
-        string? worldID,
+        string? name,
+        string? id,
         ushort port,
         string server,
         OutputFormat outputFormat
     )
-        : base(worldName, worldID, port, server, outputFormat)
+        : base(name, id, port, server, outputFormat)
     {
         this.NewName = newName;
         this.Description = description;

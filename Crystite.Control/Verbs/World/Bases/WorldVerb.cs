@@ -26,7 +26,7 @@ public abstract class WorldVerb : HeadlessVerb
      /// <summary>
      /// Gets the ID of the world.
      /// </summary>
-     [Option('i', "id", SetName = "WORLD_IDENTIFIER", HelpText = "The ID of the world")]
+     [Option('i', "id", Group = "WORLD_IDENTIFIER", HelpText = "The ID of the world")]
      public string? ID { get; }
 
      /// <summary>
