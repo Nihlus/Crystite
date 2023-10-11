@@ -1,6 +1,6 @@
 <Project>
     <Sdk Name="Remora.Sdk" Version="2.1.2" />
-    <Sdk Name="Remora.Resonite.Sdk" Version="1.0.0" />
+    <Sdk Name="Remora.Resonite.Sdk" Version="1.0.1" />
     <Sdk Name="Microsoft.NET.Sdk.Web" />
 
     <PropertyGroup>
