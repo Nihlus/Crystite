@@ -1,3 +1,9 @@
+crystite (1.0.0+deb11~preview11) UNRELEASED; urgency=medium
+
+  * Move static data inside the completion function.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Wed, 11 Oct 2023 22:15:00 +0200
+
 crystite (1.0.0+deb11~preview10) UNRELEASED; urgency=medium
 
   * Add bash completion for crystitectl.
