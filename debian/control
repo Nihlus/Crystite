@@ -5,7 +5,8 @@ Maintainer: Jarl Gullberg <jarl.gullberg@gmail.com>
 Build-Depends:
  debhelper-compat (= 13),
  dotnet-sdk-7.0:amd64,
- ronn (>=0.9)
+ ronn (>=0.9),
+ bash-completion (>= 1:2.11)
 Standards-Version: 4.6.0
 Homepage: https://github.com/Nihlus/Crystite
 Vcs-Browser: https://github.com/Nihlus/Crystite
