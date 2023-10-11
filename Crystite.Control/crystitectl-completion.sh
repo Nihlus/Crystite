@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 declare -a _CRYSTITECTL_VERBS=(
   "accept-friend"
   "ban"
