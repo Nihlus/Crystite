@@ -16,10 +16,10 @@ using Remora.Results;
 namespace Crystite.Control.Verbs.User;
 
 /// <summary>
-/// Roles a user from a world.
+/// Sets a new role for the given user.
 /// </summary>
 [UsedImplicitly]
-[Verb("role-user", HelpText = "Roles a user from a world")]
+[Verb("set-role", HelpText = "Sets a new role for the given user")]
 public sealed class SetRole : WorldUserVerb
 {
     /// <summary>
