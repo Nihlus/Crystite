@@ -34,7 +34,7 @@ public abstract class ContactVerb : HeadlessVerb
      /// </summary>
      /// <param name="name">The name of the contact.</param>
      /// <param name="id">The ID of the contact.</param>
-     /// <inheritdoc cref=".ctor(ushort, string, OutputFormat)" path="/param" />
+     /// <inheritdoc cref="HeadlessVerb(ushort, string, OutputFormat)" path="/param" />
      [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
      protected ContactVerb
      (

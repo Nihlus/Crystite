@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Remora.Results;
 
-namespace Crystite.Control.Verbs.Users.Bans;
+namespace Crystite.Control.Verbs.User.Ban;
 
 /// <summary>
 /// Shows the running banned.
@@ -26,7 +26,7 @@ public sealed class ShowBanned : HeadlessVerb
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowBanned"/> class.
     /// </summary>
-    /// <inheritdoc cref=".ctor(ushort, string, OutputFormat)" path="/param" />
+    /// <inheritdoc cref="HeadlessVerb(ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
     public ShowBanned(ushort port, string server, OutputFormat outputFormat)
         : base(port, server, outputFormat)

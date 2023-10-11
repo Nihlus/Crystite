@@ -26,7 +26,7 @@ public sealed class ShowWorlds : HeadlessVerb
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowWorlds"/> class.
     /// </summary>
-    /// <inheritdoc cref=".ctor(ushort, string, OutputFormat)" path="/param" />
+    /// <inheritdoc cref="HeadlessVerb(ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
     public ShowWorlds(ushort port, string server, OutputFormat outputFormat)
         : base(port, server, outputFormat)

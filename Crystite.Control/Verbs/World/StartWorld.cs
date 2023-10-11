@@ -39,7 +39,7 @@ public sealed class StartWorld : HeadlessVerb
     /// </summary>
     /// <param name="template">The name of the builtin template to start.</param>
     /// <param name="url">The record URL of the world to start.</param>
-    /// <inheritdoc cref=".ctor(ushort, string, OutputFormat)" path="/param" />
+    /// <inheritdoc cref="HeadlessVerb(ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
     public StartWorld
     (

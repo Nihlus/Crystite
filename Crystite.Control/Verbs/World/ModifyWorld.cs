@@ -70,7 +70,7 @@ public sealed class ModifyWorld : WorldVerb
     /// <param name="awayKickInterval">The new kick interval for away users.</param>
     /// <param name="hideFromListing">Whether to hide the world from public listing.</param>
     /// <param name="maxUsers">The new maximum number of users allowed in the world.</param>
-    /// <inheritdoc cref=".ctor(string, string, ushort, string, OutputFormat)" path="/param" />
+    /// <inheritdoc cref="WorldVerb(string, string, ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
     public ModifyWorld
     (

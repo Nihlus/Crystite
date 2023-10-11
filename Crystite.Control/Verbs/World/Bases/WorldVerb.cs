@@ -34,7 +34,7 @@ public abstract class WorldVerb : HeadlessVerb
      /// </summary>
      /// <param name="name">The name of the world.</param>
      /// <param name="id">The ID of the world.</param>
-     /// <inheritdoc cref=".ctor(ushort, string, OutputFormat)" path="/param" />
+     /// <inheritdoc cref="HeadlessVerb(ushort, string, OutputFormat)" path="/param" />
      [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
      protected WorldVerb(string? name, string? id, ushort port, string server, OutputFormat outputFormat)
           : base(port, server, outputFormat)

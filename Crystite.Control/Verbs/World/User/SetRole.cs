@@ -13,7 +13,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Remora.Results;
 
-namespace Crystite.Control.Verbs;
+namespace Crystite.Control.Verbs.User;
 
 /// <summary>
 /// Roles a user from a world.
@@ -32,7 +32,7 @@ public sealed class SetRole : WorldUserVerb
     /// Initializes a new instance of the <see cref="SetRole"/> class.
     /// </summary>
     /// <param name="role">The new role of the user.</param>
-    /// <inheritdoc cref=".ctor(string, string, ushort, string, OutputFormat)" path="/param" />
+    /// <inheritdoc cref="WorldUserVerb(string, string, string, string, ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
     public SetRole
     (

@@ -8,13 +8,13 @@ using System.Text.Json;
 using CommandLine;
 using Crystite.Control.API;
 using Crystite.Control.Verbs.Bases;
-using Crystite.Control.Verbs.Users.Bases;
+using Crystite.Control.Verbs.User.Bases;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Remora.Results;
 
-namespace Crystite.Control.Verbs.Users.Bans;
+namespace Crystite.Control.Verbs.User.Ban;
 
 /// <summary>
 /// Bans a user from all sessions on the server.
@@ -26,7 +26,7 @@ public sealed class Ban : UserVerb
     /// <summary>
     /// Initializes a new instance of the <see cref="Ban"/> class.
     /// </summary>
-    /// <inheritdoc cref=".ctor(string, string, ushort, string, OutputFormat)" path="/param" />
+    /// <inheritdoc cref="UserVerb(string, string, ushort, string, OutputFormat)" path="/param" />
     public Ban(string? userName, string? userID, ushort port, string server, OutputFormat outputFormat)
         : base(userName, userID, port, server, outputFormat)
     {

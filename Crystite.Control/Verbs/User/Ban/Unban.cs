@@ -7,12 +7,12 @@
 using CommandLine;
 using Crystite.Control.API;
 using Crystite.Control.Verbs.Bases;
-using Crystite.Control.Verbs.Users.Bases;
+using Crystite.Control.Verbs.User.Bases;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Remora.Results;
 
-namespace Crystite.Control.Verbs.Users.Bans;
+namespace Crystite.Control.Verbs.User.Ban;
 
 /// <summary>
 /// Unbans a user from all sessions on the server.
@@ -24,7 +24,7 @@ public sealed class Unban : UserVerb
     /// <summary>
     /// Initializes a new instance of the <see cref="Unban"/> class.
     /// </summary>
-    /// <inheritdoc cref=".ctor(string, string, ushort, string, OutputFormat)" path="/param" />
+    /// <inheritdoc cref="UserVerb(string, string, ushort, string, OutputFormat)" path="/param" />
     public Unban(string? name, string? id, ushort port, string server, OutputFormat outputFormat)
         : base(name, id, port, server, outputFormat)
     {

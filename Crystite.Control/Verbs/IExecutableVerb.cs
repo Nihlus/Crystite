@@ -6,7 +6,7 @@
 
 using Remora.Results;
 
-namespace Crystite.Control.Verbs.Bases;
+namespace Crystite.Control.Verbs;
 
 /// <summary>
 /// Represents an executable verb.

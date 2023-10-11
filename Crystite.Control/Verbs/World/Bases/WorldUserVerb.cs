@@ -34,7 +34,7 @@ public abstract class WorldUserVerb : WorldVerb
      /// </summary>
      /// <param name="userName">The name of the user.</param>
      /// <param name="userID">The ID of the user.</param>
-     /// <inheritdoc cref=".ctor(string, string, ushort, string, OutputFormat)" path="/param" />
+     /// <inheritdoc cref="WorldVerb(string, string, ushort, string, OutputFormat)" path="/param" />
      [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
      protected WorldUserVerb
      (

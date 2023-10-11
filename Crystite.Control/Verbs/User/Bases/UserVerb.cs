@@ -11,7 +11,7 @@ using Crystite.Control.API;
 using Crystite.Control.Verbs.Bases;
 using Remora.Results;
 
-namespace Crystite.Control.Verbs.Users.Bases;
+namespace Crystite.Control.Verbs.User.Bases;
 
 /// <summary>
 /// Represents a base class for user-related verbs.
@@ -35,7 +35,7 @@ public abstract class UserVerb : HeadlessVerb
      /// </summary>
      /// <param name="name">The name of the user.</param>
      /// <param name="id">The ID of the user.</param>
-     /// <inheritdoc cref=".ctor(ushort, string, OutputFormat)" path="/param" />
+     /// <inheritdoc cref="HeadlessVerb(ushort, string, OutputFormat)" path="/param" />
      [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
      protected UserVerb
      (

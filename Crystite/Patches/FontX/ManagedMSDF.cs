@@ -207,7 +207,6 @@ public static class ManagedMSDF
 
         // TODO: distanceSignCorrection(msdf, *shape, scale, translate, FILL_NONZERO)
         // TODO: msdfErrorCorrection(msdf, edgeThreshold / (scale*range)
-
         var regionOffsetX = MathX.RoundToInt(region.x);
         var regionOffsetY = MathX.RoundToInt(region.y);
         var num12 = MathX.CeilToInt(region.width);

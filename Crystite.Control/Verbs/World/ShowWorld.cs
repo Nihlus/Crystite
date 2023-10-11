@@ -26,7 +26,7 @@ public sealed class ShowWorld : WorldVerb
     /// <summary>
     /// Initializes a new instance of the <see cref="ShowWorld"/> class.
     /// </summary>
-    /// <inheritdoc cref=".ctor(string, string, ushort, string, OutputFormat)" path="/param" />
+    /// <inheritdoc cref="WorldVerb(string, string, ushort, string, OutputFormat)" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
     public ShowWorld(string? name, string? id, ushort port, string server, OutputFormat outputFormat)
         : base(name, id, port, server, outputFormat)
