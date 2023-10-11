@@ -1,3 +1,10 @@
+crystite (1.0.0+deb11~preview10) UNRELEASED; urgency=medium
+
+  * Add bash completion for crystitectl.
+  * Fix incorrect verb name.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Wed, 11 Oct 2023 21:50:00 +0200
+
 crystite (1.0.0+deb11~preview9) UNRELEASED; urgency=medium
 
   * Update Resonite build.
