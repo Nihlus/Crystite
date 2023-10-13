@@ -1,3 +1,9 @@
+crystite (1.0.0+deb11~preview12) UNRELEASED; urgency=medium
+
+  * Update Resonite build.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Fri, 13 Oct 2023 16:50:00 +0200
+
 crystite (1.0.0+deb11~preview11) UNRELEASED; urgency=medium
 
   * Move static data inside the completion function.
