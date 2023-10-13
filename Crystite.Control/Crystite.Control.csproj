@@ -1,4 +1,4 @@
-<Project Sdk="Remora.Sdk/2.1.2">
+<Project Sdk="Remora.Sdk">
   <PropertyGroup>
     <LegalLicense>AGPL-3.0-or-later</LegalLicense>
     <LegalAuthor>Jarl Gullberg</LegalAuthor>

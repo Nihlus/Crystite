@@ -1,4 +1,4 @@
-<Project Sdk="Remora.Tests.Sdk/2.0.6">
+<Project Sdk="Remora.Tests.Sdk">
   <PropertyGroup>
     <LegalLicense>AGPL-3.0-or-later</LegalLicense>
     <LegalAuthor>Jarl Gullberg</LegalAuthor>
