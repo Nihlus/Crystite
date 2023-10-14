@@ -68,7 +68,14 @@ public class ShowContacts : HeadlessVerb
             {
                 foreach (var contact in contacts)
                 {
-                    await outputWriter.WriteLineAsync($"{contact.Username}\t{contact.Status}");
+                    if (this.StatusFilter is null)
+                    {
+                        await outputWriter.WriteLineAsync($"{contact.Username}\t{contact.Status}");
+                    }
+                    else
+                    {
+                        await outputWriter.WriteLineAsync($"{contact.Username}");
+                    }
                 }
                 break;
             }
