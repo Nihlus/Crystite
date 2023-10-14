@@ -30,8 +30,8 @@ public sealed class RejectFriend : ModifyContactBase
     /// </summary>
     /// <inheritdoc cref="HeadlessVerb" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
-    public RejectFriend(string contactName, string contactID, ushort port, string server, OutputFormat outputFormat)
-        : base(contactName, contactID, port, server, outputFormat)
+    public RejectFriend(string name, string id, ushort port, string server, OutputFormat outputFormat)
+        : base(name, id, port, server, outputFormat)
     {
     }
 }

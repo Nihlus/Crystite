@@ -27,8 +27,8 @@ public sealed class Ban : UserVerb
     /// Initializes a new instance of the <see cref="Ban"/> class.
     /// </summary>
     /// <inheritdoc cref="UserVerb(string, string, ushort, string, OutputFormat)" path="/param" />
-    public Ban(string? userName, string? userID, ushort port, string server, OutputFormat outputFormat)
-        : base(userName, userID, port, server, outputFormat)
+    public Ban(string? name, string? id, ushort port, string server, OutputFormat outputFormat)
+        : base(name, id, port, server, outputFormat)
     {
     }
 

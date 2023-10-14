@@ -30,8 +30,8 @@ public sealed class BlockUser : ModifyContactBase
     /// </summary>
     /// <inheritdoc cref="HeadlessVerb" path="/param" />
     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
-    public BlockUser(string contactName, string id, ushort port, string server, OutputFormat outputFormat)
-        : base(contactName, id, port, server, outputFormat)
+    public BlockUser(string name, string id, ushort port, string server, OutputFormat outputFormat)
+        : base(name, id, port, server, outputFormat)
     {
     }
 }
