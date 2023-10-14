@@ -1,3 +1,9 @@
+crystite (1.0.0+deb11~preview13) UNRELEASED; urgency=medium
+
+  * Handle world shutdown manually instead of through a shutdown task.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 14 Oct 2023 15:00:00 +0200
+
 crystite (1.0.0+deb11~preview12) UNRELEASED; urgency=medium
 
   * Update Resonite build.
