@@ -1,3 +1,10 @@
+crystite (1.0.0+deb11~preview14) UNRELEASED; urgency=medium
+
+  * Don't write out the contact status when filtering.
+  * Fix parameter names.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 14 Oct 2023 15:50:00 +0200
+
 crystite (1.0.0+deb11~preview13) UNRELEASED; urgency=medium
 
   * Handle world shutdown manually instead of through a shutdown task.
