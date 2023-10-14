@@ -113,7 +113,15 @@ public class WorldService
             return new InvalidOperationError($"Internal startup failure: {world.FailState.ToString()}");
         }
 
-        startupParameters = await world.SetParametersAsync(startupParameters, _log);
+        // wait for at least one update so that the engine has time to process the newly started world
+        startupParameters = await _engine.GlobalCoroutineManager.StartBackgroundTask
+        (
+            async () =>
+            {
+                await default(NextUpdate);
+                return await world.SetParametersAsync(startupParameters, _log);
+            }
+        );
 
         var session = new ActiveSession(startupParameters, world);
         var sessionCancellation = new CancellationTokenSource();
