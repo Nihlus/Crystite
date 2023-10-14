@@ -298,6 +298,7 @@ public class StandaloneFrooxEngineService : BackgroundService
 
         using var tickTimer = new PeriodicTimer(TimeSpan.FromSeconds(1.0 / _config.TickRate));
 
+        var worldStopTask = Task.CompletedTask;
         var isShuttingDown = false;
         while (!ct.IsCancellationRequested || !_engineShutdownComplete)
         {
@@ -330,18 +331,21 @@ public class StandaloneFrooxEngineService : BackgroundService
                 DummyAudioConnector.UpdateCallback((DateTimeOffset.UtcNow - audioStartTime).TotalMilliseconds * 1000);
             }
 
-            if (!ct.IsCancellationRequested || isShuttingDown)
+            if (!ct.IsCancellationRequested || isShuttingDown || !worldStopTask.IsCompleted)
             {
                 continue;
             }
 
             // explicitly terminate all worlds here so we don't have any leftovers once the engine starts to dispose
             // things
-            _engine.RegisterShutdownTask(_worldService.StopAllWorldsAsync(CancellationToken.None));
+            worldStopTask = _worldService.StopAllWorldsAsync(CancellationToken.None);
 
             isShuttingDown = true;
             Userspace.ExitApp(false);
         }
+
+        // observe any results from shutting down the worlds.
+        await worldStopTask;
     }
 
     /// <summary>
