@@ -1,3 +1,9 @@
+crystite (1.0.0+deb11~preview15) UNRELEASED; urgency=medium
+
+  * Push the initial world updates to a background task.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 14 Oct 2023 16:15:00 +0200
+
 crystite (1.0.0+deb11~preview14) UNRELEASED; urgency=medium
 
   * Don't write out the contact status when filtering.
