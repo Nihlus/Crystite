@@ -20,6 +20,9 @@ namespace Crystite.Configuration;
 /// <param name="EnableSteam">Whether to enable Steam API integration.</param>
 /// <param name="EnableYoutubeDL">Whether to enable YoutubeDL integration.</param>
 /// <param name="YoutubeDLPaths">The paths to consider when looking for valid YoutubeDL executables.</param>
+/// <param name="ManageResoniteInstallation">Whether to automatically install and update the Resonite installation used by the program.</param>
+/// <param name="SteamCredential">The username to use when logging into Steam.</param>
+/// <param name="SteamPassword">The password to use when logging into Steam.</param>
 public record HeadlessApplicationConfiguration
 (
     string ResonitePath,
@@ -32,7 +35,10 @@ public record HeadlessApplicationConfiguration
     bool Invisible = false,
     bool EnableSteam = false,
     bool EnableYoutubeDL = true,
-    IReadOnlyList<string>? YoutubeDLPaths = null
+    IReadOnlyList<string>? YoutubeDLPaths = null,
+    bool ManageResoniteInstallation = true,
+    string? SteamCredential = null,
+    string? SteamPassword = null
 )
 {
     /// <summary>
