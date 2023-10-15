@@ -13,12 +13,17 @@ using Crystite.API.Abstractions;
 using Crystite.Configuration;
 using Crystite.Extensions;
 using Crystite.OptionConfigurators;
+using Crystite.ResoniteInstallation;
 using Hardware.Info;
 using Microsoft.Extensions.Configuration.CommandLine;
 using Microsoft.Extensions.Options;
 using Remora.Extensions.Options.Immutable;
 using Remora.Rest.Extensions;
 using Remora.Rest.Json.Policies;
+using Serilog;
+using SteamKit2;
+
+#pragma warning disable ASP0000
 
 var hardwareInfo = new HardwareInfo();
 hardwareInfo.RefreshCPUList();
@@ -68,7 +73,6 @@ applicationBuilder.Configuration.AddCommandLineOptions
 
 applicationBuilder.Host
     .UseSystemd()
-    .ConfigureResoniteDependentCode()
     .ConfigureServices
     (
         (config, services) =>
@@ -76,8 +80,17 @@ applicationBuilder.Host
             services.ConfigureRestJsonConverters(ApiJsonMvcJsonOptionsConfigurator.Name);
 
             services
+                .AddHttpClient()
                 .AddSingleton(assemblyResolver)
                 .AddSingleton<IHardwareInfo>(hardwareInfo)
+                .AddTransient
+                (
+                    s => SteamConfiguration.Create
+                        (c => c.WithHttpClientFactory(s.GetRequiredService<IHttpClientFactory>().CreateClient))
+                )
+                .AddTransient<SteamClient>()
+                .AddSingleton<ResoniteSteamClient>()
+                .AddSingleton<ResoniteInstallationManager>()
                 .Configure<CommandLineOptions>(o => applicationBuilder.Configuration.Bind(o))
                 .Configure<ResoniteHeadlessConfig>(config.Configuration.GetSection("Resonite"))
                 .Configure
@@ -163,6 +176,26 @@ applicationBuilder.Host
                 });
         }
     );
+
+// enclose this part in a block to ensure the temporary services used are disposed
+{
+    await using var genericServiceProvider = applicationBuilder.Services.BuildServiceProvider();
+
+    if (headlessConfig.ManageResoniteInstallation)
+    {
+        var installationManager = genericServiceProvider.GetRequiredService<ResoniteInstallationManager>();
+        var genericLogger = genericServiceProvider.GetRequiredService<ILogger<Program>>();
+
+        var updateResonite = await installationManager.UpdateResoniteInstallationAsync();
+        if (!updateResonite.IsSuccess)
+        {
+            genericLogger.LogError("Failed to update Resonite: {Error}", updateResonite.Error);
+        }
+    }
+}
+
+// at this point, the Resonite assemblies *must* be available in the configured directory
+applicationBuilder.Host.ConfigureResoniteDependentCode();
 
 var host = applicationBuilder.Build();
 
