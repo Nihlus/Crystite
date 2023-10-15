@@ -1,3 +1,10 @@
+crystite (1.0.0+deb11~preview16) UNRELEASED; urgency=medium
+
+  * Implement installation and management of Resonite from Crystite itself,
+    eliminating the need for SteamCMD or similar tools.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 15 Oct 2023 22:50:00 +0200
+
 crystite (1.0.0+deb11~preview15) UNRELEASED; urgency=medium
 
   * Push the initial world updates to a background task.
