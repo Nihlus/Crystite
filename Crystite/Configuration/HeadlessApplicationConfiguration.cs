@@ -36,7 +36,7 @@ public record HeadlessApplicationConfiguration
     bool EnableSteam = false,
     bool EnableYoutubeDL = true,
     IReadOnlyList<string>? YoutubeDLPaths = null,
-    bool ManageResoniteInstallation = true,
+    bool ManageResoniteInstallation = false,
     string? SteamCredential = null,
     string? SteamPassword = null
 )
