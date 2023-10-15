@@ -25,6 +25,7 @@
     <PackageVersion Include="Remora.Rest" Version="3.3.0" />
     <PackageVersion Include="Remora.Results" Version="7.3.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="7.0.0" />
+    <PackageVersion Include="SteamKit2" Version="2.4.1" />
     <PackageVersion Include="System.Text.Json" Version="7.0.3" />
     <PackageVersion Include="System.Threading" Version="4.3.0" />
   </ItemGroup>
