@@ -20,7 +20,6 @@ using Microsoft.Extensions.Options;
 using Remora.Extensions.Options.Immutable;
 using Remora.Rest.Extensions;
 using Remora.Rest.Json.Policies;
-using Serilog;
 using SteamKit2;
 
 #pragma warning disable ASP0000
