@@ -74,7 +74,7 @@ public abstract class ResoniteWorldController : IResoniteWorldController
             return new InvalidOperationError("The given world cannot be saved.");
         }
 
-        if (!world.CorrespondingRecord.IsSynced)
+        if (world.CorrespondingRecord is not null && !world.CorrespondingRecord.IsSynced)
         {
             return new InvalidOperationError("The world is currently synchronizing.");
         }

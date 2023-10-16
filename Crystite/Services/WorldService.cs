@@ -259,6 +259,11 @@ public class WorldService
 
         void UpdateCorrespondingRecord(Record record)
         {
+            if (world.CorrespondingRecord is null)
+            {
+                return;
+            }
+
             if (world.CorrespondingRecord.IsSameRecord(record))
             {
                 world.CorrespondingRecord = record;
