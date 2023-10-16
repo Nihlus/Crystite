@@ -425,7 +425,7 @@ public class WorldService
         }
 
         // stopping world
-        if (world.SaveOnExit)
+        if (world.SaveOnExit && Userspace.CanSave(world))
         {
             // wait for any pending syncs of this world
             while (!world.CorrespondingRecord.IsSynced)
