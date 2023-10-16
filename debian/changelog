@@ -1,3 +1,12 @@
+crystite (1.0.0+deb11~preview17) UNRELEASED; urgency=medium
+
+  * Fix race condition on early shutdown.
+  * Fix race condition when saving worlds on shutdown.
+  * Fix various problems with null checks against worlds that can't be saved.
+  * Ensure worlds save when closing if SaveOnExit is set.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Mon, 16 Oct 2023 21:20:00 +0200
+
 crystite (1.0.0+deb11~preview16) UNRELEASED; urgency=medium
 
   * Implement installation and management of Resonite from Crystite itself,
