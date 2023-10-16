@@ -307,7 +307,7 @@ public class StandaloneFrooxEngineService : BackgroundService
 
         using var tickTimer = new PeriodicTimer(TimeSpan.FromSeconds(1.0 / _config.TickRate));
 
-        var worldStopTask = Task.CompletedTask;
+        Task? exitEngineTask = null;
         var isShuttingDown = false;
         while (!ct.IsCancellationRequested || !_engineShutdownComplete || !_applicationStartupComplete)
         {
@@ -345,16 +345,36 @@ public class StandaloneFrooxEngineService : BackgroundService
                 continue;
             }
 
-            // explicitly terminate all worlds here so we don't have any leftovers once the engine starts to dispose
-            // things
-            worldStopTask = _worldService.StopAllWorldsAsync(CancellationToken.None);
-
             isShuttingDown = true;
-            Userspace.ExitApp(false);
+            exitEngineTask = ExitEngineAsync();
         }
 
-        // observe any results from shutting down the worlds.
-        await worldStopTask;
+        // observe any results from shutting down the engine.
+        await (exitEngineTask ?? Task.CompletedTask);
+    }
+
+    /// <summary>
+    /// Exits the engine, saving relevant worlds and settings, synchronizing with the cloud, and then requesting an
+    /// environment shutdown.
+    /// </summary>
+    /// <remarks>
+    /// This method is loosely based on what Userspace.ExitApp(false) would do with major simplifications. Primarily,
+    /// the order of some operations have been switched around and the exit will actually wait for all pending uploads
+    /// before terminating. Additionally, all worlds are stopped in a controlled fashion instead of just letting them
+    /// get destroyed on their own.
+    ///
+    /// Once the engine shutdown is complete, <see cref="_engineShutdownComplete"/> will be set to <value>true</value>.
+    /// </remarks>
+    private async Task ExitEngineAsync()
+    {
+        await Userspace.SaveAllSettings();
+        await _worldService.StopAllWorldsAsync();
+
+        await _engine.RecordManager.WaitForPendingUploadsAsync();
+
+        await _engine.Cloud.FinalizeSession();
+
+        _engine.RequestShutdown();
     }
 
     /// <summary>
