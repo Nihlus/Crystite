@@ -34,6 +34,7 @@ public class StandaloneFrooxEngineService : BackgroundService
 
     private readonly ISystemdNotifier? _systemdNotifier;
 
+    private bool _applicationStartupComplete;
     private bool _engineShutdownComplete;
 
     /// <summary>
@@ -201,6 +202,8 @@ public class StandaloneFrooxEngineService : BackgroundService
             }
         }
 
+        _applicationStartupComplete = true;
+
         await engineLoop;
         _applicationLifetime.StopApplication();
     }
@@ -306,7 +309,7 @@ public class StandaloneFrooxEngineService : BackgroundService
 
         var worldStopTask = Task.CompletedTask;
         var isShuttingDown = false;
-        while (!ct.IsCancellationRequested || !_engineShutdownComplete)
+        while (!ct.IsCancellationRequested || !_engineShutdownComplete || !_applicationStartupComplete)
         {
             // Intentional. Ticks should continue until _engineShutdownComplete, so cancelling early here is
             // undesired.
@@ -337,7 +340,7 @@ public class StandaloneFrooxEngineService : BackgroundService
                 DummyAudioConnector.UpdateCallback((DateTimeOffset.UtcNow - audioStartTime).TotalMilliseconds * 1000);
             }
 
-            if (!ct.IsCancellationRequested || isShuttingDown || !worldStopTask.IsCompleted)
+            if (!ct.IsCancellationRequested || isShuttingDown || !_applicationStartupComplete)
             {
                 continue;
             }
