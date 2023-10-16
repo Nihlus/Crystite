@@ -435,15 +435,15 @@ public class WorldService
 
             _log.LogInformation("Saving {World}", world.RawName);
             await Userspace.SaveWorldAuto(world, SaveType.Overwrite, true);
+        }
 
-            wrapper.Session.World.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
-            RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
+        wrapper.Session.World.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
+        RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
 
-            if (!wrapper.Session.World.IsDestroyed)
-            {
-                // destroy the current world
-                wrapper.Session.World.Destroy();
-            }
+        if (!wrapper.Session.World.IsDestroyed)
+        {
+            // destroy the current world
+            wrapper.Session.World.Destroy();
         }
     }
 }
