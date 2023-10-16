@@ -30,6 +30,8 @@ public class StandaloneFrooxEngineService : BackgroundService
     private readonly Engine _engine;
     private readonly HeadlessSystemInfo _systemInfo;
     private readonly WorldService _worldService;
+    private readonly IHostApplicationLifetime _applicationLifetime;
+
     private readonly ISystemdNotifier? _systemdNotifier;
 
     private bool _engineShutdownComplete;
@@ -43,6 +45,7 @@ public class StandaloneFrooxEngineService : BackgroundService
     /// <param name="engine">The engine.</param>
     /// <param name="systemInfo">Information about the system.</param>
     /// <param name="worldService">The world service.</param>
+    /// <param name="applicationLifetime">The application lifetime.</param>
     /// <param name="systemdNotifier">The systemd notifier.</param>
     public StandaloneFrooxEngineService
     (
@@ -52,6 +55,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         Engine engine,
         HeadlessSystemInfo systemInfo,
         WorldService worldService,
+        IHostApplicationLifetime applicationLifetime,
         ISystemdNotifier? systemdNotifier = null
     )
     {
@@ -61,6 +65,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         _engine = engine;
         _systemInfo = systemInfo;
         _worldService = worldService;
+        _applicationLifetime = applicationLifetime;
         _systemdNotifier = systemdNotifier;
     }
 
@@ -197,6 +202,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         }
 
         await engineLoop;
+        _applicationLifetime.StopApplication();
     }
 
     private Task LoginAsync() => _engine.GlobalCoroutineManager.StartTask
