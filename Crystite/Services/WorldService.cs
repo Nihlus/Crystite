@@ -385,19 +385,26 @@ public class WorldService
             lastUserCount = world.UserCount;
         }
 
+        _log.LogInformation("World {World} has stopped", world.Name);
+
         // always remove us first
         _ = _activeWorlds.TryRemove(wrapper.Session.World.SessionId, out _);
 
-        wrapper.Session.World.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
-        RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
-
-        if (!wrapper.Session.World.IsDestroyed)
-        {
-            wrapper.Session.World.Destroy();
-        }
-
+        // plain restart
         if (!ct.IsCancellationRequested && restart)
         {
+            wrapper.Session.World.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
+            RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
+
+            if (!wrapper.Session.World.IsDestroyed)
+            {
+                // destroy the current world
+                wrapper.Session.World.Destroy();
+            }
+
+            await default(NextUpdate);
+
+            // start a new instance of this world
             var restartWorld = await StartWorldAsync(wrapper.Session.StartInfo, ct);
             if (!restartWorld.IsSuccess)
             {
@@ -407,6 +414,30 @@ public class WorldService
                     wrapper.Session.World.RawName,
                     restartWorld.Error
                 );
+            }
+
+            return;
+        }
+
+        // stopping world
+        if (world.SaveOnExit)
+        {
+            // wait for any pending syncs of this world
+            while (!world.CorrespondingRecord.IsSynced)
+            {
+                await Task.Delay(TimeSpan.FromSeconds(1), CancellationToken.None);
+            }
+
+            _log.LogInformation("Saving {World}", world.RawName);
+            await Userspace.SaveWorldAuto(world, SaveType.Overwrite, true);
+
+            wrapper.Session.World.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
+            RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
+
+            if (!wrapper.Session.World.IsDestroyed)
+            {
+                // destroy the current world
+                wrapper.Session.World.Destroy();
             }
         }
     }
