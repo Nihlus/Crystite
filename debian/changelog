@@ -1,3 +1,9 @@
+crystite (1.0.0+deb11~preview18) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2023.10.17.464.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Tue, 17 Oct 2023 19:20:00 +0200
+
 crystite (1.0.0+deb11~preview17) UNRELEASED; urgency=medium
 
   * Fix race condition on early shutdown.
