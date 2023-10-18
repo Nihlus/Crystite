@@ -1,3 +1,9 @@
+crystite (1.0.0+deb11~preview19) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2023.10.18.449.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Wed, 18 Oct 2023 21:40:00 +0200
+
 crystite (1.0.0+deb11~preview18) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2023.10.17.464.
