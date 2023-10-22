@@ -37,7 +37,7 @@ ProtectKernelLogs=true
 ProtectControlGroups=true
 
 RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
-RestrictNamespaces=true
+RestrictNamespaces=mnt
 RestrictRealtime=true
 
 ReadWritePaths=/var/lib/crystite /var/log/crystite
