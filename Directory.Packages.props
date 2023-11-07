@@ -17,6 +17,7 @@
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
     <PackageVersion Include="Microsoft.Extensions.Hosting.Systemd" Version="7.0.0" />
+    <PackageVersion Include="Mono.Cecil" Version="0.11.5" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NVorbis" Version="0.10.5" />
     <PackageVersion Include="OneOf" Version="3.0.263" />
