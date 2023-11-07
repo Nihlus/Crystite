@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using CommandLine;
 using Crystite.API.Abstractions;
@@ -71,7 +70,7 @@ public sealed class ModifyWorld : WorldVerb
     /// <param name="hideFromListing">Whether to hide the world from public listing.</param>
     /// <param name="maxUsers">The new maximum number of users allowed in the world.</param>
     /// <inheritdoc cref="WorldVerb(string, string, ushort, string, OutputFormat)" path="/param" />
-    [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
+    #pragma warning disable CS1573
     public ModifyWorld
     (
         Optional<string> newName,
@@ -95,6 +94,7 @@ public sealed class ModifyWorld : WorldVerb
         this.HideFromListing = hideFromListing;
         this.MaxUsers = maxUsers;
     }
+    #pragma warning restore CS1573
 
     /// <inheritdoc />
     public override async ValueTask<Result> ExecuteAsync(IServiceProvider services, CancellationToken ct = default)

@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Crystite.API.Abstractions;
 using Crystite.Control.API;
@@ -33,7 +32,7 @@ public sealed class SetRole : WorldUserVerb
     /// </summary>
     /// <param name="role">The new role of the user.</param>
     /// <inheritdoc cref="WorldUserVerb(string, string, string, string, ushort, string, OutputFormat)" path="/param" />
-    [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
+    #pragma warning disable CS1573
     public SetRole
     (
         RestUserRole role,
@@ -49,6 +48,7 @@ public sealed class SetRole : WorldUserVerb
     {
         this.Role = role;
     }
+    #pragma warning restore CS1573
 
     /// <inheritdoc/>
     public override async ValueTask<Result> ExecuteAsync(IServiceProvider services, CancellationToken ct = default)

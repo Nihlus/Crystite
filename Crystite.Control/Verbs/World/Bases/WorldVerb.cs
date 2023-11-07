@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Crystite.API.Abstractions;
 using Crystite.Control.API;
@@ -35,13 +34,14 @@ public abstract class WorldVerb : HeadlessVerb
      /// <param name="name">The name of the world.</param>
      /// <param name="id">The ID of the world.</param>
      /// <inheritdoc cref="HeadlessVerb(ushort, string, OutputFormat)" path="/param" />
-     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
+     #pragma warning disable CS1573
      protected WorldVerb(string? name, string? id, ushort port, string server, OutputFormat outputFormat)
           : base(port, server, outputFormat)
      {
           this.Name = name;
           this.ID = id;
      }
+     #pragma warning restore CS1573
 
      /// <summary>
      /// Gets the world targeted by the command.

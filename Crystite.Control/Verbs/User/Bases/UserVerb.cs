@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Crystite.API.Abstractions;
 using Crystite.Control.API;
@@ -36,7 +35,7 @@ public abstract class UserVerb : HeadlessVerb
      /// <param name="name">The name of the user.</param>
      /// <param name="id">The ID of the user.</param>
      /// <inheritdoc cref="HeadlessVerb(ushort, string, OutputFormat)" path="/param" />
-     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
+     #pragma warning disable CS1573
      protected UserVerb
      (
           string? name,
@@ -50,6 +49,7 @@ public abstract class UserVerb : HeadlessVerb
           this.Name = name;
           this.ID = id;
      }
+     #pragma warning restore CS1573
 
      /// <summary>
      /// Gets the user targeted by the command.

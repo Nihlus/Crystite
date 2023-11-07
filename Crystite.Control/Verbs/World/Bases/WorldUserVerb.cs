@@ -4,7 +4,6 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using System.Diagnostics.CodeAnalysis;
 using CommandLine;
 using Crystite.API.Abstractions;
 using Crystite.Control.API;
@@ -35,7 +34,7 @@ public abstract class WorldUserVerb : WorldVerb
      /// <param name="userName">The name of the user.</param>
      /// <param name="userID">The ID of the user.</param>
      /// <inheritdoc cref="WorldVerb(string, string, ushort, string, OutputFormat)" path="/param" />
-     [SuppressMessage("Documentation", "CS1573", Justification = "Copied from base class")]
+     #pragma warning disable CS1573
      protected WorldUserVerb
      (
           string? userName,
@@ -51,6 +50,7 @@ public abstract class WorldUserVerb : WorldVerb
           this.UserName = userName;
           this.UserID = userID;
      }
+     #pragma warning restore CS1573
 
      /// <summary>
      /// Gets the user targeted by the command.
