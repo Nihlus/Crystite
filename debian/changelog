@@ -1,3 +1,10 @@
+crystite (1.0.0+deb11~preview22) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2023.11.7.274.
+  * Update some libraries.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Wed, 07 Nov 2023 20:00:00 +0200
+
 crystite (1.0.0+deb11~preview21) UNRELEASED; urgency=medium
 
   * Enable the use of mount namespaces in the systemd service.
