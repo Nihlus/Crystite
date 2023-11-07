@@ -41,7 +41,9 @@
 
     <ItemGroup>
       <PackageReference Include="CommandLiners.Posix" />
-      <PackageReference Include="CSGL.MSDFGen" ExcludeAssets="build" />
+      <PackageReference Include="CSGL.MSDFGen" ExcludeAssets="build" >
+          <NoWarn>NU1701</NoWarn>
+      </PackageReference>
       <PackageReference Include="CSharpGameLibrary" ExcludeAssets="build" GeneratePathProperty="true" />
       <PackageReference Include="Hardware.Info" />
       <PackageReference Include="Humanizer.Core" />
