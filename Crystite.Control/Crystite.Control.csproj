@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" />
-    <PackageReference Include="ConsoleTables" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <PackageReference Include="OneOf" />
     <PackageReference Include="Remora.Rest" />
