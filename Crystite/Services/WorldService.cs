@@ -26,14 +26,6 @@ public class WorldService
     private readonly Engine _engine;
     private readonly ConcurrentDictionary<string, SessionWrapper> _activeWorlds;
 
-    private record SessionWrapper(ActiveSession Session, CancellationTokenSource CancellationSource)
-    {
-        /// <summary>
-        /// Gets or sets the session handler loop.
-        /// </summary>
-        public Task? Handler { get; set; }
-    }
-
     /// <summary>
     /// Initializes a new instance of the <see cref="WorldService"/> class.
     /// </summary>
@@ -229,8 +221,58 @@ public class WorldService
     /// <param name="ct">The cancellation token for this operation.</param>
     private async Task SessionHandlerAsync(SessionWrapper wrapper, CancellationToken ct = default)
     {
-        var restart = false;
+        async Task RestartSessionAsync(SessionWrapper sessionWrapper, CancellationToken cancellationToken)
+        {
+            var world = sessionWrapper.Session.World;
 
+            world.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
+            RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
+
+            if (!world.IsDestroyed)
+            {
+                world.Destroy();
+            }
+
+            await default(NextUpdate);
+
+            // start a new instance of this world
+            var restartWorld = await StartWorldAsync(sessionWrapper.Session.StartInfo, cancellationToken);
+            if (!restartWorld.IsSuccess)
+            {
+                _log.LogError
+                (
+                    "Failed to restart world {World}: {Reason}",
+                    world.RawName,
+                    restartWorld.Error
+                );
+            }
+        }
+
+        async Task StopSessionAsync(SessionWrapper sessionWrapper)
+        {
+            var world = sessionWrapper.Session.World;
+            if (world.SaveOnExit && Userspace.CanSave(world))
+            {
+                // wait for any pending syncs of this world
+                while (!world.CorrespondingRecord.IsSynced)
+                {
+                    await Task.Delay(TimeSpan.FromSeconds(1), CancellationToken.None);
+                }
+
+                _log.LogInformation("Saving {World}", world.RawName);
+                await Userspace.SaveWorldAuto(sessionWrapper.Session.World, SaveType.Overwrite, true);
+            }
+
+            world.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
+            RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
+
+            if (!world.IsDestroyed)
+            {
+                world.Destroy();
+            }
+        }
+
+        var restart = false;
         var world = wrapper.Session.World;
         var autoRecover = wrapper.Session.StartInfo.AutoRecover;
 
@@ -273,14 +315,6 @@ public class WorldService
         wrapper.Session.World.WorldManager.WorldFailed += MarkAutoRecoverRestart;
         RecordStoreNotifications.RecordStored += UpdateCorrespondingRecord;
 
-        var autosaveInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.AutosaveInterval);
-        var idleRestartInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.IdleRestartInterval);
-        var forceRestartInterval = TimeSpan.FromSeconds(wrapper.Session.StartInfo.ForcedRestartInterval);
-
-        var lastUserCount = 1;
-        DateTimeOffset? idleBeginTime = null;
-        var lastSaveTime = DateTimeOffset.UtcNow;
-
         while (!ct.IsCancellationRequested && !wrapper.Session.World.IsDestroyed)
         {
             try
@@ -322,17 +356,7 @@ public class WorldService
                 }
             };
 
-            if (!_activeWorlds.TryUpdate(world.SessionId, wrapper, originalWrapper))
-            {
-                _log.LogError
-                (
-                    "Failed to update an active session's information ({World})! This is probably a concurrency bug",
-                    world.RawName
-                );
-            }
-
-            var timeSinceLastSave = DateTimeOffset.UtcNow - lastSaveTime;
-            if (autosaveInterval > TimeSpan.Zero && timeSinceLastSave > autosaveInterval && Userspace.CanSave(world))
+            if (wrapper.HasAutosaveIntervalElapsed && Userspace.CanSave(world))
             {
                 // only attempt a save if the last save has been synchronized and we're not shutting down
                 if (world.CorrespondingRecord.IsSynced && !(Userspace.IsExitingApp || _engine.ShutdownRequested))
@@ -341,44 +365,29 @@ public class WorldService
                     await Userspace.SaveWorldAuto(world, SaveType.Overwrite, false);
                 }
 
-                lastSaveTime = DateTimeOffset.UtcNow;
+                wrapper = wrapper with
+                {
+                    LastSaveTime = DateTimeOffset.UtcNow
+                };
             }
 
-            idleBeginTime = world.UserCount switch
+            wrapper = wrapper with
             {
-                1 when lastUserCount > 1 => DateTimeOffset.UtcNow,
-                > 1 => null,
-                _ => idleBeginTime
+                IdleBeginTime = world.UserCount switch
+                {
+                    1 when wrapper.LastUserCount > 1 => DateTimeOffset.UtcNow,
+                    > 1 => null,
+                    _ => wrapper.IdleBeginTime
+                }
             };
 
-            if (idleBeginTime is not null && idleRestartInterval > TimeSpan.Zero)
-            {
-                var timeSpentIdle = DateTimeOffset.UtcNow - idleBeginTime.Value;
-
-                if (idleRestartInterval > TimeSpan.Zero && timeSpentIdle > idleRestartInterval)
-                {
-                    _log.LogInformation
-                    (
-                        "World {World} has been idle for {Time} seconds, restarting",
-                        world.RawName,
-                        (long)timeSpentIdle.TotalSeconds
-                    );
-
-                    restart = true;
-                    world.Destroy();
-
-                    break;
-                }
-            }
-
-            var timeRunning = DateTimeOffset.UtcNow - world.Time.LocalSessionBeginTime;
-            if (forceRestartInterval > TimeSpan.Zero && timeRunning > forceRestartInterval)
+            if (wrapper.HasIdleTimeElapsed)
             {
                 _log.LogInformation
                 (
-                    "World {World} has been running for {Time:1:F0} seconds, forcing a restart",
+                    "World {World} has been idle for {Time} seconds, restarting",
                     world.RawName,
-                    forceRestartInterval.TotalSeconds
+                    (long)wrapper.TimeSpentIdle.TotalSeconds
                 );
 
                 restart = true;
@@ -387,7 +396,34 @@ public class WorldService
                 break;
             }
 
-            lastUserCount = world.UserCount;
+            if (wrapper.HasForcedRestartIntervalElapsed)
+            {
+                _log.LogInformation
+                (
+                    "World {World} has been running for {Time:1:F0} seconds, forcing a restart",
+                    world.RawName,
+                    wrapper.ForceRestartInterval.TotalSeconds
+                );
+
+                restart = true;
+                world.Destroy();
+
+                break;
+            }
+
+            wrapper = wrapper with
+            {
+                LastUserCount = world.UserCount
+            };
+
+            if (!_activeWorlds.TryUpdate(world.SessionId, wrapper, originalWrapper))
+            {
+                _log.LogError
+                (
+                    "Failed to update an active session's information ({World})! This is probably a concurrency bug",
+                    world.RawName
+                );
+            }
         }
 
         _log.LogInformation("World {World} has stopped", world.Name);
@@ -395,55 +431,92 @@ public class WorldService
         // always remove us first
         _ = _activeWorlds.TryRemove(wrapper.Session.World.SessionId, out _);
 
-        // plain restart
         if (!ct.IsCancellationRequested && restart)
         {
-            wrapper.Session.World.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
-            RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
-
-            if (!wrapper.Session.World.IsDestroyed)
-            {
-                // destroy the current world
-                wrapper.Session.World.Destroy();
-            }
-
-            await default(NextUpdate);
-
-            // start a new instance of this world
-            var restartWorld = await StartWorldAsync(wrapper.Session.StartInfo, ct);
-            if (!restartWorld.IsSuccess)
-            {
-                _log.LogError
-                (
-                    "Failed to restart world {World}: {Reason}",
-                    wrapper.Session.World.RawName,
-                    restartWorld.Error
-                );
-            }
-
+            await RestartSessionAsync(wrapper, ct);
             return;
         }
 
-        // stopping world
-        if (world.SaveOnExit && Userspace.CanSave(world))
-        {
-            // wait for any pending syncs of this world
-            while (!world.CorrespondingRecord.IsSynced)
-            {
-                await Task.Delay(TimeSpan.FromSeconds(1), CancellationToken.None);
-            }
+        await StopSessionAsync(wrapper);
+    }
 
-            _log.LogInformation("Saving {World}", world.RawName);
-            await Userspace.SaveWorldAuto(world, SaveType.Overwrite, true);
-        }
+    /// <summary>
+    /// Wraps an active session with additional varying information used by the world service to manage the session.
+    /// </summary>
+    /// <param name="Session">The managed session.</param>
+    /// <param name="CancellationSource">The cancellation token source for the session.</param>
+    /// <param name="LastSaveTime">The last time at which the session was saved and synchronized.</param>
+    /// <param name="IdleBeginTime">The time at which the current idle period began.</param>
+    /// <param name="LastUserCount">The last known user count.</param>
+    private record SessionWrapper
+    (
+        ActiveSession Session,
+        CancellationTokenSource CancellationSource,
+        DateTimeOffset LastSaveTime = default,
+        DateTimeOffset? IdleBeginTime = default,
+        int LastUserCount = 0
+    )
+    {
+        /// <summary>
+        /// Gets or sets the session handler loop.
+        /// </summary>
+        public Task? Handler { get; set; }
 
-        wrapper.Session.World.WorldManager.WorldFailed -= MarkAutoRecoverRestart;
-        RecordStoreNotifications.RecordStored -= UpdateCorrespondingRecord;
+        /// <summary>
+        /// Gets the interval at which the world should automatically save.
+        /// </summary>
+        public TimeSpan AutosaveInterval { get; } = TimeSpan.FromSeconds(Session.StartInfo.AutosaveInterval);
 
-        if (!wrapper.Session.World.IsDestroyed)
-        {
-            // destroy the current world
-            wrapper.Session.World.Destroy();
-        }
+        /// <summary>
+        /// Gets the time after which an idle world should restart.
+        /// </summary>
+        public TimeSpan IdleRestartInterval { get; } = TimeSpan.FromSeconds(Session.StartInfo.IdleRestartInterval);
+
+        /// <summary>
+        /// Gets the absolute time after which a world should unconditionally restart.
+        /// </summary>
+        public TimeSpan ForceRestartInterval { get; } = TimeSpan.FromSeconds(Session.StartInfo.ForcedRestartInterval);
+
+        /// <summary>
+        /// Gets the uptime of the session.
+        /// </summary>
+        public TimeSpan TimeRunning => DateTimeOffset.UtcNow - this.Session.World.Time.LocalSessionBeginTime;
+
+        /// <summary>
+        /// Gets the time elapsed since the last time the session saved.
+        /// </summary>
+        public TimeSpan TimeSinceLastSave => DateTimeOffset.UtcNow - this.LastSaveTime;
+
+        /// <summary>
+        /// Gets the time spent by the world in the current idle state.
+        /// </summary>
+        public TimeSpan TimeSpentIdle => this.IdleBeginTime is null
+            ? TimeSpan.Zero
+            : DateTimeOffset.UtcNow - this.IdleBeginTime.Value;
+
+        /// <summary>
+        /// Gets a value indicating whether the forced restart interval has elapsed.
+        /// </summary>
+        public bool HasForcedRestartIntervalElapsed => this.ForceRestartInterval > TimeSpan.Zero &&
+                                                       this.TimeRunning > this.ForceRestartInterval;
+
+        /// <summary>
+        /// Gets a value indicating whether the autosave interval has elapsed.
+        /// </summary>
+        public bool HasAutosaveIntervalElapsed => this.AutosaveInterval > TimeSpan.Zero &&
+                                                  this.TimeSinceLastSave > this.AutosaveInterval;
+
+        /// <summary>
+        /// Gets a value indicating whether the idle restart interval has elapsed.
+        /// </summary>
+        public bool HasIdleTimeElapsed => this.IdleRestartInterval > TimeSpan.Zero &&
+                                          this.TimeSpentIdle > this.IdleRestartInterval;
+
+        /// <summary>
+        /// Gets the last time at which the world was successfully saved and synchronized.
+        /// </summary>
+        public DateTimeOffset LastSaveTime { get; init; } = LastSaveTime == default
+            ? DateTimeOffset.UtcNow
+            : LastSaveTime;
     }
 }
