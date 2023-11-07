@@ -12,7 +12,7 @@ namespace Crystite.Patches.AssimpLibraryLinuxImplementation;
 /// <summary>
 /// Fixes a bad library pathname.
 /// </summary>
-[HarmonyPatch("AssimpLibraryLinuxImplementation", "NativeLoadLibrary")]
+[HarmonyPatch("UnmanagedLibraryImplementation", "LoadLibrary")]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public class FixLibraryName
 {
@@ -22,7 +22,7 @@ public class FixLibraryName
     /// <param name="path">The path name argument.</param>
     public static void Prefix(ref string path)
     {
-        if (path is "Assimp64.so" or "Assimp32.so")
+        if (path is "Assimp64.so" or "Assimp32.so" or "libassimp.so")
         {
             path = "libassimp.so.5";
         }
