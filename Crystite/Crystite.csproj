@@ -65,6 +65,9 @@
     <ItemGroup>
         <!-- bring in Newtonsoft.Json as a ship-only dependency to ensure we always have a strongly-named copy -->
         <PackageReference Include="Newtonsoft.Json" IncludeAssets="runtime" />
+
+        <!-- bring in Mono.Cecil to ensure we use the same version as FrooxEngine.Weaver -->
+        <PackageReference Include="Mono.Cecil" />
     </ItemGroup>
 
     <ItemGroup>
