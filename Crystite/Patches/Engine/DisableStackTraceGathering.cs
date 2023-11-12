@@ -16,7 +16,7 @@ namespace Crystite.Patches.Engine;
 /// <summary>
 /// Disables stack trace gathering for threads other than the current one.
 /// </summary>
-[HarmonyPatch("FrooxEngine.Engine+<<RunUpdateLoop>b__358_0>d", "MoveNext")]
+[HarmonyPatch("FrooxEngine.Engine+<<RunUpdateLoop>b__363_0>d", "MoveNext")]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public static class DisableStackTraceGathering
 {
