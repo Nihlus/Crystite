@@ -1,3 +1,10 @@
+crystite (1.0.0+deb11~preview26) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2023.11.18.1263.
+  * Upgrade various nuget packages.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 18 Nov 2023 23:25:00 +0200
+
 crystite (1.0.0+deb11~preview25) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2023.11.15.1158.
@@ -22,7 +29,7 @@ crystite (1.0.0+deb11~preview22) UNRELEASED; urgency=medium
   * Rebuild for Resonite 2023.11.7.274.
   * Update some libraries.
 
- -- Jarl Gullberg <jarl.gullberg@gmail.com>  Wed, 07 Nov 2023 20:00:00 +0200
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Tue, 07 Nov 2023 20:00:00 +0200
 
 crystite (1.0.0+deb11~preview21) UNRELEASED; urgency=medium
 
