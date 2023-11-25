@@ -16,6 +16,7 @@ using Crystite.Patches.VideoTextureProvider;
 using Crystite.Services;
 using Elements.Core;
 using FrooxEngine;
+using FrooxEngine.Store;
 using HarmonyLib;
 using Microsoft.Extensions.Options;
 using Serilog;

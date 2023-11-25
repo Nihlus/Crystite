@@ -4,6 +4,8 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
+#pragma warning disable SA1402
+
 namespace Crystite.ResoniteInstallation;
 
 /// <summary>

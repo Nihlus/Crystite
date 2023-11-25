@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using HarmonyLib;
 using JetBrains.Annotations;
 
-using UploadTask = SkyFrost.Base.RecordUploadTaskBase<FrooxEngine.Record>;
+using UploadTask = SkyFrost.Base.RecordUploadTaskBase<FrooxEngine.Store.Record>;
 
 namespace Crystite.Patches.RecordUploadTaskBase;
 

@@ -12,7 +12,7 @@ using FrooxEngine;
 using Microsoft.Extensions.Options;
 using Remora.Results;
 using SkyFrost.Base;
-using Record = FrooxEngine.Record;
+using Record = FrooxEngine.Store.Record;
 
 namespace Crystite.Services;
 

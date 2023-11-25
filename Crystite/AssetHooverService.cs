@@ -7,6 +7,7 @@
 using System.Reflection;
 using Crystite.Configuration;
 using FrooxEngine;
+using FrooxEngine.Store;
 using Humanizer;
 using LiteDB.Async;
 using Microsoft.Extensions.Options;

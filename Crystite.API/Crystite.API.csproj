@@ -36,6 +36,7 @@
         <ResoniteReference Include="Elements.Core" />
         <ResoniteReference Include="SkyFrost.Base" />
         <ResoniteReference Include="FrooxEngine" />
+        <ResoniteReference Include="FrooxEngine.Store" />
     </ItemGroup>
 
     <ItemGroup>

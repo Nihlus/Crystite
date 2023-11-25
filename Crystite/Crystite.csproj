@@ -11,6 +11,7 @@
         <OutputType>Exe</OutputType>
         <AssemblyName>crystite</AssemblyName>
         <TargetFramework />
+        <ExecutableFrameworks>net7.0</ExecutableFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
@@ -33,6 +34,7 @@
 
     <ItemGroup>
         <ResoniteReference Include="FrooxEngine" Private="false" />
+        <ResoniteReference Include="FrooxEngine.Store" Private="false" />
         <ResoniteReference Include="Elements.Core" Private="false" />
         <ResoniteReference Include="Elements.Assets" Private="false" />
         <ResoniteReference Include="SkyFrost.Base" Private="false" />
