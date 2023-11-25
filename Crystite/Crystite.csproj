@@ -69,6 +69,7 @@
 
         <!-- bring in some extra packages to ensure we use the same version as Resonite -->
         <PackageReference Include="Mono.Cecil" />
+        <PackageReference Include="System.Threading.Tasks.Dataflow" />
     </ItemGroup>
 
     <ItemGroup>
