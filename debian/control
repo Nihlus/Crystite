@@ -5,6 +5,7 @@ Maintainer: Jarl Gullberg <jarl.gullberg@gmail.com>
 Build-Depends:
  debhelper-compat (= 13),
  dotnet-sdk-7.0:amd64,
+ dotnet-sdk-8.0:amd64,
  ronn (>=0.9),
  bash-completion (>= 1:2.11)
 Standards-Version: 4.6.0
@@ -19,7 +20,9 @@ Depends:
  ${shlibs:Depends},
  ${misc:Depends},
  dotnet-runtime-7.0,
+ dotnet-runtime-8.0,
  aspnetcore-runtime-7.0,
+ aspnetcore-runtime-8.0,
  libassimp5,
  libfreeimage3,
  libfreetype6,
