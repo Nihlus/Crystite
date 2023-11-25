@@ -38,6 +38,50 @@ public class StandaloneFrooxEngineService : BackgroundService
     private bool _engineShutdownComplete;
 
     /// <summary>
+    /// Forwards logged initialization phases of the engine to the logging subsystem.
+    /// </summary>
+    private class LoggerEngineInitProgress : IEngineInitProgress
+    {
+        private readonly ILogger _log;
+
+        /// <inheritdoc />
+        public int FixedPhaseIndex { get; private set; }
+
+        /// <summary>
+        /// Initializes an instance of the <see cref="LoggerEngineInitProgress"/> class.
+        /// </summary>
+        /// <param name="log">The logging instance to forward to.</param>
+        public LoggerEngineInitProgress(ILogger log)
+        {
+            _log = log;
+        }
+
+        /// <inheritdoc />
+        public void SetFixedPhase(string phase)
+        {
+            ++this.FixedPhaseIndex;
+            _log.LogDebug("{Phase}", phase);
+        }
+
+        /// <inheritdoc />
+        public void SetSubphase(string? subphase, bool alwaysShow = false)
+        {
+            if (subphase is null)
+            {
+                return;
+            }
+
+            _log.LogDebug("\t{Subphase}", subphase);
+        }
+
+        /// <inheritdoc />
+        public void EngineReady()
+        {
+            _log.LogInformation("Engine ready");
+        }
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="StandaloneFrooxEngineService"/> class.
     /// </summary>
     /// <param name="log">The logging instance for this type.</param>
@@ -130,7 +174,7 @@ public class StandaloneFrooxEngineService : BackgroundService
             launchOptions,
             _systemInfo,
             null,
-            null // TODO: pass an init progress implementation that forwards to ILogger<Engine> here
+            new LoggerEngineInitProgress(_log)
         );
 
         var userspaceWorld = Userspace.SetupUserspace(_engine);
