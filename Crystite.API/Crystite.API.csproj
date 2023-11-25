@@ -22,7 +22,6 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <DisableImplicitFrameworkReferences Condition="'$(TargetFramework)' == 'net462'">true</DisableImplicitFrameworkReferences>
         <IsPackable>false</IsPackable>
         <IsPublishable>false</IsPublishable>

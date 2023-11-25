@@ -1,4 +1,8 @@
 <Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageVersion Include="CommandLineParser" Version="2.9.1" />
     <PackageVersion Include="CommandLiners.Posix" Version="1.0.36" />
@@ -21,9 +25,10 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NVorbis" Version="0.10.5" />
     <PackageVersion Include="OneOf" Version="3.0.263" />
-    <PackageVersion Include="Remora.Extensions.Options.Immutable" Version="1.0.7" />
-    <PackageVersion Include="Remora.Rest" Version="3.3.1" />
-    <PackageVersion Include="Remora.Results" Version="7.4.0" />
+    <PackageVersion Include="Remora.Extensions.Options.Immutable" Version="1.0.8" />
+    <PackageVersion Include="Remora.Rest" Version="3.3.2" />
+    <PackageVersion Include="Remora.Rest.Xunit" Version="3.0.3" />
+    <PackageVersion Include="Remora.Results" Version="7.4.1" />
     <PackageVersion Include="Serilog.AspNetCore" Version="8.0.0" />
     <PackageVersion Include="SteamKit2" Version="2.5.0" />
     <PackageVersion Include="System.Text.Json" Version="8.0.0" />

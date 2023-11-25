@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Remora.Rest.Xunit" Version="3.0.1" />
+    <PackageReference Include="Remora.Rest.Xunit" />
   </ItemGroup>
 
   <ItemGroup>

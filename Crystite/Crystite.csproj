@@ -28,7 +28,6 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
