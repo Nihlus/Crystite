@@ -1,7 +1,11 @@
-bin/appsettings.json etc/crystite/
-bin/*.dll usr/lib/crystite/
-bin/*.deps.json usr/lib/crystite/
-bin/*.runtimeconfig.json usr/lib/crystite/
-bin/steam_appid.txt usr/lib/crystite/
-bin/crystite usr/lib/crystite/
-bin/crystitectl usr/lib/crystite/
+bin/crystite/appsettings.json etc/crystite/
+bin/crystite/*.dll usr/lib/crystite/
+bin/crystite/*.deps.json usr/lib/crystite/
+bin/crystite/*.runtimeconfig.json usr/lib/crystite/
+bin/crystite/steam_appid.txt usr/lib/crystite/
+bin/crystite/crystite usr/lib/crystite/
+
+bin/crystitectl/*.dll usr/lib/crystitectl/
+bin/crystitectl/*.deps.json usr/lib/crystitectl/
+bin/crystitectl/*.runtimeconfig.json usr/lib/crystitectl/
+bin/crystitectl/crystitectl usr/lib/crystitectl/

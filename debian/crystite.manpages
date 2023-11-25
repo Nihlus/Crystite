@@ -1,2 +1,2 @@
-bin/crystite.1
-bin/crystitectl.1
+bin/crystite/crystite.1
+bin/crystitectl/crystitectl.1
