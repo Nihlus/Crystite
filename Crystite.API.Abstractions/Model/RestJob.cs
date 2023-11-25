@@ -8,6 +8,8 @@ using System;
 using System.Text.Json.Serialization;
 using Crystite.API.Abstractions.Services;
 
+#pragma warning disable SA1402
+
 namespace Crystite.API.Abstractions;
 
 /// <inheritdoc />
