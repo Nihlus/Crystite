@@ -48,7 +48,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         public int FixedPhaseIndex { get; private set; }
 
         /// <summary>
-        /// Initializes an instance of the <see cref="LoggerEngineInitProgress"/> class.
+        /// Initializes a new instance of the <see cref="LoggerEngineInitProgress"/> class.
         /// </summary>
         /// <param name="log">The logging instance to forward to.</param>
         public LoggerEngineInitProgress(ILogger log)
