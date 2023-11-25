@@ -1,7 +1,7 @@
 {
     "msbuild-sdks": {
-        "Remora.Sdk": "2.1.2",
-        "Remora.Tests.Sdk": "2.0.6",
-        "Remora.Resonite.Sdk": "1.1.8"
+        "Remora.Sdk": "3.0.1",
+        "Remora.Tests.Sdk": "3.0.1",
+        "Remora.Resonite.Sdk": "1.1.9"
     }
 }
