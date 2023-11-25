@@ -1,9 +1,5 @@
 <Project Sdk="Remora.Sdk">
     <PropertyGroup>
-        <LibraryFrameworks>$(LibraryFrameworks);netstandard2.0</LibraryFrameworks>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <LegalLicense>AGPL-3.0-or-later</LegalLicense>
         <LegalAuthor>Jarl Gullberg</LegalAuthor>
         <LegalEmail>jarl.gullberg@gmail.com</LegalEmail>
