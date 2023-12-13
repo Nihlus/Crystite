@@ -22,6 +22,11 @@ namespace Crystite.Patches.WorkerManager;
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public static class ForwardedTypeSerialization
 {
+    /// <summary>
+    /// Gets or sets the logging instance for this type.
+    /// </summary>
+    public static ILogger Log { get; set; } = null!;
+
     private const string _mscorlib = "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
 
     private static readonly IReadOnlyDictionary<Type, TypeForwardedFromAttribute> _typeForwardedFromOverrides = new Dictionary<Type, TypeForwardedFromAttribute>
@@ -136,6 +141,18 @@ public static class ForwardedTypeSerialization
         var assemblyName = forwardedFrom is not null
             ? forwardedFrom.AssemblyFullName
             : type.Assembly.FullName;
+
+        if (forwardedFrom is null && type.Assembly.Location.Contains("Microsoft.NETCore.App.Ref"))
+        {
+            Log.LogWarning
+            (
+                "The framework-originating type {Type} was serialized with an assembly name of {AssemblyName} and no "
+                + "forwarding information was available. This is likely an error, and should be reported on the "
+                + "Crystite repository",
+                type.Name,
+                assemblyName
+            );
+        }
 
         if (assemblyName is null)
         {

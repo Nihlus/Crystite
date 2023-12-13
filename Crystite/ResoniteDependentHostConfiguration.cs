@@ -13,6 +13,7 @@ using Crystite.Patches.RecordUploadTaskBase;
 using Crystite.Patches.ResoniteAssemblyPostProcessor;
 using Crystite.Patches.SteamConnector;
 using Crystite.Patches.VideoTextureProvider;
+using Crystite.Patches.WorkerManager;
 using Crystite.Services;
 using Elements.Core;
 using FrooxEngine;
@@ -138,6 +139,8 @@ public static class ResoniteDependentHostConfiguration
             .CurrentValue;
 
         var logFactory = host.Services.GetRequiredService<ILoggerFactory>();
+
+        ForwardedTypeSerialization.Log = logFactory.CreateLogger(typeof(ForwardedTypeSerialization));
 
         CorrectErrorHandling.Log = logFactory.CreateLogger(typeof(CorrectErrorHandling));
         CorrectErrorHandling.MaxUploadRetries = headlessConfig.MaxUploadRetries ?? 3;
