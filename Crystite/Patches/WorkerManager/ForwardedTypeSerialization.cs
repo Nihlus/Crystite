@@ -24,7 +24,10 @@ public static class ForwardedTypeSerialization
 {
     private const string _mscorlib = "mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089";
 
-    private static readonly IReadOnlyDictionary<Type, TypeForwardedFromAttribute> _typeForwardedFromOverrides = new Dictionary<Type, TypeForwardedFromAttribute>();
+    private static readonly IReadOnlyDictionary<Type, TypeForwardedFromAttribute> _typeForwardedFromOverrides = new Dictionary<Type, TypeForwardedFromAttribute>
+    {
+        { typeof(System.Net.HttpStatusCode), new TypeForwardedFromAttribute("System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089") }
+    };
 
     private static readonly ConcurrentDictionary<Type, string> _qualifiedForwardedTypeNameCache = new();
     private static readonly ConcurrentDictionary<Type, string> _typeNameCache = new();
