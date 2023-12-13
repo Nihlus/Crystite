@@ -1,3 +1,11 @@
+crystite (1.0.0+deb11~preview30) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2023.12.13.87.
+  * Fix an issue with typename serialization of HttpStatusCode.
+  * Log a warning if likely-incompatible type names are serialized.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Wed, 13 Dec 2023 22:40:00 +0200
+
 crystite (1.0.0+deb11~preview29) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2023.12.11.1259.
