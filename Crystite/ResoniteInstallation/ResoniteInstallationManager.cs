@@ -138,7 +138,14 @@ public sealed class ResoniteInstallationManager
         return Result.FromSuccess();
     }
 
-    private async Task<Result<Version?>> GetLocalBuildVersionAsync()
+    /// <summary>
+    /// Gets the version of the local Resonite installation.
+    /// </summary>
+    /// <returns>
+    /// The version, or <value>null</value> if no version information is available (typically due to Resonite not being
+    /// installed).
+    /// </returns>
+    public async Task<Result<Version?>> GetLocalBuildVersionAsync()
     {
         var localVersionPath = Path.Combine(_config.ResonitePath, "Build.version");
         if (!File.Exists(localVersionPath))

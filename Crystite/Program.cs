@@ -12,6 +12,7 @@ using Crystite;
 using Crystite.API.Abstractions;
 using Crystite.Configuration;
 using Crystite.Extensions;
+using Crystite.Helpers;
 using Crystite.OptionConfigurators;
 using Crystite.ResoniteInstallation;
 using Hardware.Info;
@@ -180,17 +181,21 @@ applicationBuilder.Host
 {
     await using var genericServiceProvider = applicationBuilder.Services.BuildServiceProvider();
 
+    var installationManager = genericServiceProvider.GetRequiredService<ResoniteInstallationManager>();
+    var genericLogger = genericServiceProvider.GetRequiredService<ILogger<Program>>();
+
     if (headlessConfig.ManageResoniteInstallation)
     {
-        var installationManager = genericServiceProvider.GetRequiredService<ResoniteInstallationManager>();
-        var genericLogger = genericServiceProvider.GetRequiredService<ILogger<Program>>();
-
         var updateResonite = await installationManager.UpdateResoniteInstallationAsync();
         if (!updateResonite.IsSuccess)
         {
             genericLogger.LogError("Failed to update Resonite: {Error}", updateResonite.Error);
         }
     }
+
+    // check the version and notify the user if it doesn't match. We do this unconditionally to catch failed updates as
+    // well as non-managed installations
+    await CheckAndNotifyResoniteVersionMatch(installationManager, genericLogger);
 }
 
 // at this point, the Resonite assemblies *must* be available in the configured directory
@@ -213,3 +218,39 @@ host.PostConfigureHost();
 
 await host.RunAsync();
 return 0;
+
+static async Task CheckAndNotifyResoniteVersionMatch(ResoniteInstallationManager installationManager, ILogger log)
+{
+    var getLocalVersion = await installationManager.GetLocalBuildVersionAsync();
+    switch (getLocalVersion)
+    {
+        case { IsSuccess: false }:
+        {
+            log.LogWarning("Failed to get the local Resonite version");
+            break;
+        }
+        case { Entity: null }:
+        {
+            log.LogWarning("No Resonite version information available. Is Resonite properly installed?");
+            break;
+        }
+        case { Entity: not null }:
+        {
+            if (getLocalVersion.Entity == VersionHelpers.ResoniteVersion)
+            {
+                break;
+            }
+
+            log.LogWarning
+            (
+                "The installed Resonite version ({LocalVersion}) does not match the version Crystite was compiled "
+                + "with ({CompiledVersion}). The program may malfunction unexpectedly, and you should install a "
+                + "compatible version as soon as is convenient",
+                getLocalVersion.Entity,
+                VersionHelpers.ResoniteVersion
+            );
+
+            break;
+        }
+    }
+}
