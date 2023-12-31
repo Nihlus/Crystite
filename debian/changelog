@@ -1,3 +1,11 @@
+crystite (1.0.0+deb11~preview31) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2023.12.21.1127.
+  * Check version compatibility on startup and notify the end user in case of
+    mismatches.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 31 Dec 2023 15:50:00 +0200
+
 crystite (1.0.0+deb11~preview30) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2023.12.13.87.
