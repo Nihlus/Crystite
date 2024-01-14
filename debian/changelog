@@ -1,3 +1,10 @@
+crystite (1.0.0+deb12~preview34) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2024.1.13.83.
+  * Initial Debian 12 release.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Fri, 05 Jan 2024 15:20:00 +0200
+
 crystite (1.0.0+deb11~preview33) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2024.1.3.1265.
