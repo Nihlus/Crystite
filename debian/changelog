@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview37) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2024.1.24.834.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Thu, 25 Jan 2024 17:55:00 +0200
+
 crystite (1.0.0+deb12~preview36) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2024.1.19.687.
