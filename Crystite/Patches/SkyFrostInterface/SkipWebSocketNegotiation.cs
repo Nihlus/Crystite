@@ -19,7 +19,7 @@ namespace Crystite.Patches.SkyFrostInterface;
 ///
 /// See <see href="https://github.com/dotnet/aspnetcore/issues/23679"/> for more information regarding the rationale.
 /// </summary>
-[HarmonyPatch("SkyFrost.Base.SkyFrostInterface+<>c__DisplayClass153_0", "<ConnectToHub>b__0")]
+[HarmonyPatch("SkyFrost.Base.SkyFrostInterface+<>c__DisplayClass154_0", "<ConnectToHub>b__0")]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public static class SkipWebSocketNegotiation
 {

@@ -1,3 +1,10 @@
+crystite (1.0.0+deb12~preview39) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2024.1.27.1114.
+  * Remove upstreamed patch.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 28 Jan 2024 12:10:00 +0200
+
 crystite (1.0.0+deb12~preview38) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2024.1.27.608.
