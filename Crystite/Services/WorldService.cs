@@ -91,7 +91,7 @@ public class WorldService
         var world = await Userspace.OpenWorld(startSettings);
         if (world is null)
         {
-            return new InvalidOperationError("World startup failed. Refer to the log for more context.");
+            return new InvalidOperationError("Could not open world. Is the record or template valid and accessible to the logged-in account?");
         }
 
         // wait for the world to initialize
