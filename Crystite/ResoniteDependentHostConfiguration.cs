@@ -21,6 +21,7 @@ using FrooxEngine.Store;
 using HarmonyLib;
 using Microsoft.Extensions.Options;
 using Serilog;
+using SkyFrost.Base;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Crystite;
