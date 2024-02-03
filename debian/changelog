@@ -1,3 +1,10 @@
+crystite (1.0.0+deb12~preview40) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2024.2.2.1015.
+  * Improve error message.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 03 Feb 2024 14:00:00 +0200
+
 crystite (1.0.0+deb12~preview39) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2024.1.27.1114.
