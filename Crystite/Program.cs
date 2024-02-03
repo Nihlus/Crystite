@@ -98,7 +98,7 @@ applicationBuilder.Host
                     () => config.Configuration
                         .GetSection("Headless")
                         .Get<HeadlessApplicationConfiguration>()
-                          ?? throw new InvalidOperationException()
+                          ?? throw new InvalidOperationException("No default configuration available. Check if appsettings.json is available")
                 )
                 .PostConfigure<HeadlessApplicationConfiguration>(c =>
                     {
