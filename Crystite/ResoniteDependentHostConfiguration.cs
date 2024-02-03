@@ -243,6 +243,7 @@ public static class ResoniteDependentHostConfiguration
 
         SuppressStackTrace.Configure<WorldConfiguration>("FieldChanged");
         SuppressStackTrace.Configure<UserRoot>("Slot_OnPrepareDestroy");
+        SuppressStackTrace.Configure<ContactData>("UpdateStatus");
         SuppressStackTrace.PatchAll(harmony);
 
         UseThreadInterrupt.Configure(AccessTools.Inner(typeof(WorkProcessor), "ThreadWorker"), "Abort");
