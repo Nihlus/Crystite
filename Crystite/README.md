@@ -19,11 +19,11 @@ reuse existing configuration files.
 > any issues, please open an issue and describe the problem.
 
 ## Installation
-Binary releases are currently only available for Debian 11. To install the
+Binary releases are currently only available for Debian 12. To install the
 server, run the following commands.
 
 ```bash
-echo 'deb [signed-by=/usr/share/keyrings/algiz.gpg] https://repo.algiz.nu/crystite bullseye main' | sudo tee /etc/apt/sources.list.d/crystite.list
+echo 'deb [signed-by=/usr/share/keyrings/algiz.gpg] https://repo.algiz.nu/crystite bookworm main' | sudo tee /etc/apt/sources.list.d/crystite.list
 sudo mkdir -p /usr/share/keyrings
 sudo wget -O /usr/share/keyrings/algiz.gpg https://repo.algiz.nu/algiz.gpg
 
