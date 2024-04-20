@@ -263,7 +263,7 @@ public abstract class ResoniteWorldController : IResoniteWorldController
         }
 
         user.Ban();
-        return Task.FromResult<Result<IRestBan>>(new RestBan(user.UserID, user.UserName, user.MachineID));
+        return Task.FromResult<Result<IRestBan>>(new RestBan(user.UserID, user.UserName, new[] { user.MachineID }));
     }
 
     /// <inheritdoc />

@@ -66,7 +66,10 @@ public sealed class ShowBanned : HeadlessVerb
             {
                 foreach (var ban in bans)
                 {
-                    await outputWriter.WriteLineAsync($"{ban.Username}\t{ban.Id}\t{ban.MachineId}");
+                    await outputWriter.WriteLineAsync
+                    (
+                        $"{ban.Username}\t{ban.Id}\t{string.Join(", ", ban.MachineIds ?? Array.Empty<string>())}"
+                    );
                 }
 
                 break;

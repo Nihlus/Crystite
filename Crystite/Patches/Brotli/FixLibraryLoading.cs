@@ -100,8 +100,8 @@ public static class FixLibraryLoading
 
         foreach (var encoderCall in encoderCalls)
         {
-            yield return encoderCall.First;     // ldsflda
-            yield return encoderCall.Second;    // callvirt
+            yield return encoderCall.First; // ldsflda
+            yield return encoderCall.Second; // callvirt
 
             yield return new CodeInstruction(OpCodes.Dup);
         }
@@ -117,8 +117,8 @@ public static class FixLibraryLoading
 
         foreach (var decoderCall in decoderCalls)
         {
-            yield return decoderCall.First;     // ldsflda
-            yield return decoderCall.Second;    // callvirt
+            yield return decoderCall.First; // ldsflda
+            yield return decoderCall.Second; // callvirt
 
             yield return new CodeInstruction(OpCodes.Dup);
         }

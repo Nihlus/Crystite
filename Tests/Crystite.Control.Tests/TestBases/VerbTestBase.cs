@@ -50,10 +50,16 @@ public abstract class VerbTestBase : IDisposable
             .AddSingleton<TextWriter>(new StreamWriter(_outputStream, Encoding.UTF8))
             .AddSingleton(fixture);
 
-        Program.ConfigureHeadlessAPIServices(1, "xunit", serviceCollection, b => b.ConfigurePrimaryHttpMessageHandler
+        Program.ConfigureHeadlessAPIServices
         (
-            _ => _mockHandler
-        ));
+            1,
+            "xunit",
+            serviceCollection,
+            b => b.ConfigurePrimaryHttpMessageHandler
+            (
+                _ => _mockHandler
+            )
+        );
 
         serviceCollection.AddSingleton<IOptionsFactory<JsonSerializerOptions>, OptionsFactory<JsonSerializerOptions>>();
         Decorate<IOptionsFactory<JsonSerializerOptions>, CachedOptionsFactory>(serviceCollection);

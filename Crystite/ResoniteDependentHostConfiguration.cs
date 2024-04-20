@@ -191,51 +191,59 @@ public static class ResoniteDependentHostConfiguration
         RedirectCommandLineParsing.Configure<LNL_Connection>(_ => { });
 
         // set args based on proper configuration keys
-        RedirectCommandLineParsing.Configure<LocalDB>(nameof(LocalDB.Initialize), args =>
-        {
-            if (!flags.RepairDatabase)
+        RedirectCommandLineParsing.Configure<LocalDB>
+        (
+            nameof(LocalDB.Initialize),
+            args =>
             {
-                return;
-            }
+                if (!flags.RepairDatabase)
+                {
+                    return;
+                }
 
-            logger.LogWarning
-            (
-                "The local database will be repaired. Ensure you remove the --force-sync flag once your instance "
-                + "is in a reliable state again"
-            );
-
-            args.Add("repairdatabase");
-        });
-
-        RedirectCommandLineParsing.Configure<Userspace>(new[] { "OnAttach", "Bootstrap" }, args =>
-        {
-            args.Add("noui");
-            args.Add("skipintrotutorial");
-            args.Add("dontautoopencloudhome");
-
-            if (flags.DeleteUnsynced)
-            {
                 logger.LogWarning
                 (
-                    "Unsynchronized records will be deleted. Ensure you remove the --delete-unsynced flag once your "
-                    + "instance is in a reliable state again"
+                    "The local database will be repaired. Ensure you remove the --force-sync flag once your instance "
+                    + "is in a reliable state again"
                 );
 
-                args.Add("deleteunsyncedcloudrecords");
+                args.Add("repairdatabase");
             }
+        );
 
-            // ReSharper disable once InvertIf
-            if (flags.ForceSync)
+        RedirectCommandLineParsing.Configure<Userspace>
+        (
+            ["OnAttach", "Bootstrap"],
+            args =>
             {
-                logger.LogWarning
-                (
-                    "Unsynchronized records will be forcibly synced. Ensure you remove the --force-sync flag once your "
-                    + "instance is in a reliable state again"
-                );
+                args.Add("noui");
+                args.Add("skipintrotutorial");
+                args.Add("dontautoopencloudhome");
 
-                args.Add("forcesyncconflictingcloudrecords");
+                if (flags.DeleteUnsynced)
+                {
+                    logger.LogWarning
+                    (
+                        "Unsynchronized records will be deleted. Ensure you remove the --delete-unsynced flag once your "
+                        + "instance is in a reliable state again"
+                    );
+
+                    args.Add("deleteunsyncedcloudrecords");
+                }
+
+                // ReSharper disable once InvertIf
+                if (flags.ForceSync)
+                {
+                    logger.LogWarning
+                    (
+                        "Unsynchronized records will be forcibly synced. Ensure you remove the --force-sync flag once your "
+                        + "instance is in a reliable state again"
+                    );
+
+                    args.Add("forcesyncconflictingcloudrecords");
+                }
             }
-        });
+        );
 
         RedirectCommandLineParsing.Configure<UserspaceRadiantDash>(_ => { });
 

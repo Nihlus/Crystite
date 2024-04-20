@@ -4,6 +4,7 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JetBrains.Annotations;
 
@@ -17,7 +18,7 @@ public sealed record RestBan
 (
     [property: JsonPropertyName("id")] string Id,
     [property: JsonPropertyName("username")] string Username,
-    [property: JsonPropertyName("machine_id")] string? MachineId = null
+    [property: JsonPropertyName("machine_ids")] IReadOnlyList<string>? MachineIds = null
 ) : IRestBan;
 
 /// <summary>
@@ -37,7 +38,7 @@ public interface IRestBan
     string Username { get; }
 
     /// <summary>
-    /// Gets the machine ID of the banned user, if available.
+    /// Gets the machine IDs of the banned user, if available.
     /// </summary>
-    string? MachineId { get; }
+    IReadOnlyList<string>? MachineIds { get; }
 }

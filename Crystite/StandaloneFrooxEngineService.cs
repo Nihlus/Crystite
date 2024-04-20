@@ -207,7 +207,13 @@ public class StandaloneFrooxEngineService : BackgroundService
                         allowedUrlHost.Port
                     );
 
-                    args.Engine.Security.AllowHost(allowedUrlHost.Host, allowedUrlHost.Port);
+                    await args.Engine.Security.RequestAccessPermission
+                    (
+                        allowedUrlHost.Host,
+                        allowedUrlHost.Port,
+                        HostAccessScope.Everything,
+                        "Sourced from configuration file"
+                    );
                 }
             },
             (Config: _config, Log: _log, Engine: _engine)
@@ -302,7 +308,8 @@ public class StandaloneFrooxEngineService : BackgroundService
 
         var connectDelegate = AccessTools.MethodDelegate<Func<string, Task>>
         (
-            AccessTools.DeclaredMethod(typeof(SkyFrostInterface), "ConnectToHub"), _engine.Cloud
+            AccessTools.DeclaredMethod(typeof(SkyFrostInterface), "ConnectToHub"),
+            _engine.Cloud
         );
 
         connection.Closed += async error =>
@@ -411,7 +418,6 @@ public class StandaloneFrooxEngineService : BackgroundService
     /// </remarks>
     private async Task ExitEngineAsync()
     {
-        await Userspace.SaveAllSettings();
         await _worldService.StopAllWorldsAsync();
 
         await _engine.RecordManager.WaitForPendingUploadsAsync();

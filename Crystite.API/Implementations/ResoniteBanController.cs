@@ -33,15 +33,9 @@ public class ResoniteBanController : IResoniteBanController
     public Task<IReadOnlyList<IRestBan>> GetBansAsync(CancellationToken ct = default)
     {
         var bans = new List<IRestBan>();
-        foreach (var listSetting in Settings.ListSettings("Security.Ban.Blacklist"))
+        foreach (var entry in BanManager.CurrentRestrictions.Entries)
         {
-            var banPath = "Security.Ban.Blacklist." + listSetting + ".";
-
-            var username = Settings.ReadValue<string>(banPath + "Username", "N/A");
-            var id = Settings.ReadValue<string>(banPath + "UserId", "N/A");
-            var machineId = Settings.ReadValue<string?>(banPath + "MachineId", null);
-
-            bans.Add(new RestBan(id, username, machineId));
+            bans.Add(new RestBan(entry.UserId, entry.Username, entry.MachineIDs));
         }
 
         return Task.FromResult<IReadOnlyList<IRestBan>>(bans);
@@ -68,7 +62,7 @@ public class ResoniteBanController : IResoniteBanController
             return new InvalidOperationError("The user is already banned.");
         }
 
-        BanManager.AddToBanList(fingerprint);
+        BanManager.Ban(fingerprint);
         return new RestBan(user.Id, user.Username);
     }
 
@@ -93,7 +87,7 @@ public class ResoniteBanController : IResoniteBanController
             return new InvalidOperationError("The user is not banned.");
         }
 
-        BanManager.RemoveBanByUserId(user.Id);
+        BanManager.RemoveBan(fingerprint);
         return Result.FromSuccess();
     }
 }

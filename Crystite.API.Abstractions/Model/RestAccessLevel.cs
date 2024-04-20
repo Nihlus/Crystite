@@ -27,7 +27,7 @@ public enum RestAccessLevel
     Contacts,
 
     /// <summary>
-    /// Contacts and contacts of contacts of the session owner can join the world.
+    /// Contacts and contacts of the session owner can join the world.
     /// </summary>
     ContactsPlus,
 
