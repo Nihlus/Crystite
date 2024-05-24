@@ -666,7 +666,7 @@ public sealed class ResoniteSteamClient : IAsyncDisposable
 
         _log.LogInformation("Disconnecting from Steam");
 
-        _callbackRunnerTokenSource.Cancel();
+        await _callbackRunnerTokenSource.CancelAsync();
 
         try
         {

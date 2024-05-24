@@ -126,7 +126,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         {
             var fieldRef = AccessTools.FieldRefAccess<CancellationTokenSource>(typeof(BackgroundService), "_stoppingCts");
             var tokenSource = fieldRef.Invoke(this);
-            tokenSource.Cancel();
+            await tokenSource.CancelAsync();
         }
         finally
         {

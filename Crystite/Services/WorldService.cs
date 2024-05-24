@@ -168,7 +168,7 @@ public class WorldService
             return new NotFoundError("No matching world found.");
         }
 
-        wrapper.CancellationSource.Cancel();
+        await wrapper.CancellationSource.CancelAsync();
         await (wrapper.Handler ?? Task.CompletedTask);
 
         return await StartWorldAsync(wrapper.Session.StartInfo, ct);
@@ -186,7 +186,7 @@ public class WorldService
             return new NotFoundError("No matching world found.");
         }
 
-        wrapper.CancellationSource.Cancel();
+        await wrapper.CancellationSource.CancelAsync();
         await (wrapper.Handler ?? Task.CompletedTask);
 
         return Result.FromSuccess();
@@ -207,7 +207,7 @@ public class WorldService
                 break;
             }
 
-            wrapper.CancellationSource.Cancel();
+            await wrapper.CancellationSource.CancelAsync();
             await (wrapper.Handler ?? Task.CompletedTask);
 
             _ = _activeWorlds.TryRemove(wrapper.Session.World.SessionId, out _);
