@@ -19,6 +19,11 @@ reuse existing configuration files.
 > any issues, please open an issue and describe the problem.
 
 ## Installation
+
+
+### Docker/Podman container
+
+### Debian package
 Binary releases are currently only available for Debian 12. To install the
 server, run the following commands.
 
@@ -56,7 +61,7 @@ sudo -u crystite /usr/games/steamcmd \
   +force_install_dir /var/lib/crystite/Resonite \
   +login USERNAME PASSWORD \
   +app_update 2519830 \
-  -beta headless-client \
+  -beta headless \
   -betapassword BETA_PASSWORD \
   +validate \
   +quit
