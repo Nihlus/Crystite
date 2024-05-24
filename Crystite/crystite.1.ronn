@@ -24,6 +24,10 @@ reuse existing configuration files.
   Deletes any unsynchronized records, redownloading them from the cloud.
 * `--repair-database`:
   Attempts to repair and upgrade the local asset database.
+* `--install-only`:
+  Exit after the game is installed/updated. Only useful if `manageResoniteInstallation` is set to true in appsettings.json.
+* `--allow-unsupported-resonite-version`:
+  Don't halt if the game version differs from the version Crystite was built against.
 
 ## EXIT STATUS
 0 on success; otherwise, a nonzero value. Error information is printed to

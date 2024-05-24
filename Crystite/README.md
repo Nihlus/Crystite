@@ -249,7 +249,7 @@ information.
 normal headless mods. Compatibility is not guaranteed, however, depending on 
 what the mods do - as always, use with caution and your mileage may vary.
 
-To install NML, follow their guide but replace step 4 (where you add the 
+To install NML, follow their guide but replace step 3 (where you add the 
 command-line argument) with an appropriate modification to `appsettings.json`'s
 `pluginAssemblies` property. Add the full path to the NML assembly there.
 
@@ -294,11 +294,13 @@ sync conflicts or repairing local databases.
 > `--option=value`
 
 ### Command-Line Options
-| Option            | Value | Description                                                                          |
-|-------------------|-------|--------------------------------------------------------------------------------------|
-| --force-sync      | none  | Forces synchronization of conflicting records, overwriting the versions on the cloud |
-| --delete-unsynced | none  | Deletes local conflicting records, replacing them with the versions on the cloud     |
-| --repair-database | none  | Repairs the local database, correcting any inconsistencies in its contents           |
+| Option                               | Value | Description                                                                          |
+|--------------------------------------|-------|--------------------------------------------------------------------------------------|
+| --force-sync                         | none  | Forces synchronization of conflicting records, overwriting the versions on the cloud |
+| --delete-unsynced                    | none  | Deletes local conflicting records, replacing them with the versions on the cloud     |
+| --repair-database                    | none  | Repairs the local database, correcting any inconsistencies in its contents           |
+| --install-only                       | none  | Exits after installing/updating the game.                                            |
+| --allow-unsupported-resonite-version | none  | Don't halt if the game version differs from the version Crystite was built against.  |
 
 ## API Usage
 See the [API documentation][5] for information related to the available 
@@ -318,7 +320,7 @@ Required dependencies will be downloaded automatically, so you will need an
 internet connection to build.
 
 ```bash
-dotnet publish -f net7.0 -c Release -r linux-x64 --self-contained false -o bin Crystite
+dotnet publish -f net8.0 -c Release -r linux-x64 --self-contained false -o bin Crystite
 ```
 
 Replace `linux-x64` with the target OS you want to run the server on. Do note

@@ -15,7 +15,16 @@ namespace Crystite.Configuration;
 /// <param name="ForceSync">Force synchronization of local records to the cloud, regardless of the remote version.</param>
 /// <param name="DeleteUnsynced">Delete any local records that have not yet been synchronized to the cloud.</param>
 /// <param name="RepairDatabase">Repair the local database.</param>
-public record CommandLineOptions(bool ForceSync = false, bool DeleteUnsynced = false, bool RepairDatabase = false)
+/// <param name="InstallOnly">Whether to only install Resonite and then quit.</param>
+/// <param name="AllowUnsupportedResoniteVersion">Allows download and installation of an unsupported Resonite version.</param>
+public record CommandLineOptions
+(
+    bool ForceSync = false,
+    bool DeleteUnsynced = false,
+    bool RepairDatabase = false,
+    bool InstallOnly = false,
+    bool AllowUnsupportedResoniteVersion = false
+)
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="CommandLineOptions"/> class.

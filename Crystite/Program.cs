@@ -68,6 +68,8 @@ applicationBuilder.Configuration.AddCommandLineOptions
             .Add("force-sync", o => o.ForceSync)
             .Add("delete-unsynced", o => o.DeleteUnsynced)
             .Add("repair-database", o => o.RepairDatabase)
+            .Add("install-only", o => o.InstallOnly)
+            .Add("allow-unsupported-resonite-version", o => o.AllowUnsupportedResoniteVersion)
     )
 );
 
@@ -196,6 +198,13 @@ applicationBuilder.Host
     // check the version and notify the user if it doesn't match. We do this unconditionally to catch failed updates as
     // well as non-managed installations
     await CheckAndNotifyResoniteVersionMatch(installationManager, genericLogger);
+
+    var options = genericServiceProvider.GetRequiredService<IOptions<CommandLineOptions>>().Value;
+    if (options.InstallOnly)
+    {
+        genericLogger.LogInformation("Installation only requested; exiting");
+        return 0;
+    }
 }
 
 // at this point, the Resonite assemblies *must* be available in the configured directory

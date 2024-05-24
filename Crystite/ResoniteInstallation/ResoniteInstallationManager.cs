@@ -27,6 +27,7 @@ public sealed class ResoniteInstallationManager
     private readonly ResoniteSteamClient _client;
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly HeadlessApplicationConfiguration _config;
+    private readonly CommandLineOptions _commandLine;
 
     private bool _isInitialized;
 
@@ -37,12 +38,21 @@ public sealed class ResoniteInstallationManager
     /// <param name="client">The Resonite steam client.</param>
     /// <param name="jsonOptions">The JSON serialization config.</param>
     /// <param name="config">The application configuration.</param>
-    public ResoniteInstallationManager(ILogger<ResoniteInstallationManager> log, ResoniteSteamClient client, IOptions<JsonSerializerOptions> jsonOptions, IOptions<HeadlessApplicationConfiguration> config)
+    /// <param name="commandLine">The command-line options.</param>
+    public ResoniteInstallationManager
+    (
+        ILogger<ResoniteInstallationManager> log,
+        ResoniteSteamClient client,
+        IOptions<JsonSerializerOptions> jsonOptions,
+        IOptions<HeadlessApplicationConfiguration> config,
+        IOptions<CommandLineOptions> commandLine
+    )
     {
         _log = log;
         _client = client;
         _jsonOptions = jsonOptions.Value;
         _config = config.Value;
+        _commandLine = commandLine.Value;
     }
 
     /// <summary>
@@ -102,9 +112,16 @@ public sealed class ResoniteInstallationManager
         if (isLatestNewer)
         {
             _log.LogWarning("The latest Resonite version is newer than the one Crystite is built against");
-            _log.LogWarning("Cowardly refusing to install a version we might not be compatible with");
 
-            return Result.FromSuccess();
+            if (!_commandLine.AllowUnsupportedResoniteVersion)
+            {
+                _log.LogWarning("Cowardly refusing to install a version we might not be compatible with");
+
+                return Result.FromSuccess();
+            }
+
+            _log.LogWarning("Being brave and installing anyway as you requested");
+            _log.LogWarning("If anything breaks, you get to keep all the pieces!");
         }
 
         var localVersion = getLocalVersion.Entity;
