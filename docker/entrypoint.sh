@@ -7,8 +7,6 @@ echo "=== INSTALLING HEADLESS CONFIG FILE ==="
 echo "Selected file: Config/${CONFIG_FILE:=Config.json}"
 RESONITE_CONFIG=$(grep -v " null," "/Config/$CONFIG_FILE")
 echo "{ \"Resonite\": $RESONITE_CONFIG }" > /etc/crystite/conf.d/resonite.json
-
-echo "=== INSATLLING/UPDATING RESONITE ==="
 cat >/etc/crystite/conf.d/steamcreds.json <<EOF
 {
     "Headless": {
@@ -19,7 +17,8 @@ cat >/etc/crystite/conf.d/steamcreds.json <<EOF
     },
 }
 EOF
-/usr/lib/crystite/crystite --install-only --ignore-version-mismatch
+
+test ! -d /var/lib/crystite/Resonite && echo "=== INSATLLING RESONITE ===" && /usr/lib/crystite/crystite --install-only --allow-unsupported-resonite-version
 
 # test -e /var/lib/crystite/Resonite/modloader && LAST_MODLOADER=$(cat /var/lib/crystite/Resonite/modloader)
 # if [ ${MODLOADER:=None} != ${LAST_MODLOADER:=None} ]; then
