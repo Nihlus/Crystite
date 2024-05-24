@@ -19,9 +19,10 @@ reuse existing configuration files.
 > any issues, please open an issue and describe the problem.
 
 ## Installation
-
+Crystite can be installed as a Debian 12 package, or run from a container.
 
 ### Docker/Podman container
+TODO document container setup, [use compose repo in the mean time.](https://github.com/djsime1/Crystite-Compose)
 
 ### Debian package
 Binary releases are currently only available for Debian 12. To install the
