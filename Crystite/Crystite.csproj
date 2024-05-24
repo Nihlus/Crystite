@@ -11,7 +11,7 @@
         <OutputType>Exe</OutputType>
         <AssemblyName>crystite</AssemblyName>
         <TargetFramework />
-        <ExecutableFrameworks>net7.0</ExecutableFrameworks>
+        <ExecutableFrameworks>net8.0</ExecutableFrameworks>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
@@ -48,7 +48,7 @@
       <PackageReference Include="CSharpGameLibrary" ExcludeAssets="build" GeneratePathProperty="true" />
       <PackageReference Include="Hardware.Info" />
       <PackageReference Include="Humanizer.Core" />
-      <PackageReference Include="Lib.Harmony" />
+      <PackageReference Include="Lib.Harmony.Thin" />
       <PackageReference Include="LiteDB" />
       <PackageReference Include="LiteDB.Async" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Connections.Client" />
