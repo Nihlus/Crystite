@@ -19,7 +19,7 @@ override_dh_auto_clean:
 	dotnet clean
 
 override_dh_auto_build:
-	dotnet publish -f net7.0 -c Release -r $(RID) --self-contained false -o bin/crystite Crystite/Crystite.csproj
+	dotnet publish -f net8.0 -c Release -r $(RID) --self-contained false -o bin/crystite Crystite/Crystite.csproj
 	ronn -r -o bin/crystite/ Crystite/crystite.1.ronn
 	chmod -x bin/crystite/*.dll
 	chmod 640 bin/crystite/appsettings.json
