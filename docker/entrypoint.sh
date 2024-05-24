@@ -18,7 +18,10 @@ cat >/etc/crystite/conf.d/steamcreds.json <<EOF
 }
 EOF
 
-test ! -d /var/lib/crystite/Resonite && echo "=== INSATLLING RESONITE ===" && /usr/lib/crystite/crystite --install-only --allow-unsupported-resonite-version
+if [ ! -d /var/lib/crystite/Resonite ] || [ ! -e /var/lib/crystite/Resonite/Resonite.x86_64 ]; then
+echo "=== INSATLLING RESONITE ==="
+/usr/lib/crystite/crystite --install-only --allow-unsupported-resonite-version
+fi
 
 # test -e /var/lib/crystite/Resonite/modloader && LAST_MODLOADER=$(cat /var/lib/crystite/Resonite/modloader)
 # if [ ${MODLOADER:=None} != ${LAST_MODLOADER:=None} ]; then
