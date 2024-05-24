@@ -10,10 +10,10 @@ RUN wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod
     dpkg -i packages-microsoft-prod.deb && \
     rm packages-microsoft-prod.deb
 RUN apt-get update
-RUN apt-get install -y dotnet-sdk-7.0 dotnet-sdk-8.0
+RUN apt-get install -y dotnet-sdk-8.0
 COPY . /root/Crystite
 WORKDIR /root/Crystite
-RUN dotnet publish -f net7.0 -c Release -r linux-x64 --self-contained false -o bin/crystite Crystite/Crystite.csproj
+RUN dotnet publish -f net8.0 -c Release -r linux-x64 --self-contained false -o bin/crystite Crystite/Crystite.csproj
 RUN dotnet publish -f net8.0 -c Release -r linux-x64 --self-contained false -o bin/crystitectl Crystite.Control/Crystite.Control.csproj
 
 # Second stage - Copy build artifacts and configure application container
@@ -30,15 +30,10 @@ RUN apt-get install -y wget
 RUN wget https://packages.microsoft.com/config/debian/12/packages-microsoft-prod.deb -O packages-microsoft-prod.deb && \
     dpkg -i packages-microsoft-prod.deb && \
     rm packages-microsoft-prod.deb
-RUN echo "deb http://ftp.us.debian.org/debian bookworm main non-free" | tee /etc/apt/sources.list.d/non-free.list
-RUN dpkg --add-architecture i386
-# Automatically agree to steamcmd EULA prompt during install
-RUN echo steam steam/question select "I AGREE" | debconf-set-selections
-RUN echo steam steam/license note '' | debconf-set-selections
 RUN apt-get update
-RUN apt-get install -y dotnet-runtime-7.0 dotnet-runtime-8.0 aspnetcore-runtime-7.0 aspnetcore-runtime-8.0 libassimp5 libfreeimage3 libfreetype6 libopus0 libbrotli1 zlib1g yt-dlp steamcmd
-RUN mkdir /Config /Data /Cache /Logs
-VOLUME [ "/Data", "/Logs" ]
+RUN apt-get install -y dotnet-runtime-8.0 aspnetcore-runtime-8.0 libassimp5 libfreeimage3 libfreetype6 libopus0 libbrotli1 zlib1g yt-dlp jq
+RUN mkdir /Config /Data /Cache /Logs /var/lib/crystite /var/lib/crystite/Resonite
+VOLUME [ "/Data", "/Logs", "/var/lib/crystite/Resonite" ]
 COPY docker/appsettings.json /etc/crystite/appsettings.json
 COPY docker/Config.json /Config/Config.json
 COPY docker/entrypoint.sh /entrypoint.sh
