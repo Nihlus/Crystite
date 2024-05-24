@@ -33,8 +33,8 @@ RUN apt-get install -y dotnet-runtime-8.0 aspnetcore-runtime-8.0
 COPY --from=0 /root/Crystite/bin/crystite /usr/lib/crystite
 COPY --from=0 /root/Crystite/bin/crystitectl /usr/lib/crystitectl
 
-RUN mkdir /Config /Data /Cache /Logs /var/lib/crystite /var/lib/crystite/Resonite
-VOLUME [ "/Data", "/Logs", "/var/lib/crystite/Resonite" ]
+RUN mkdir /Config /Data /Cache /Logs /var/lib/crystite
+VOLUME [ "/Data", "/Logs", "/var/lib/crystite" ]
 COPY docker/appsettings.json /etc/crystite/appsettings.json
 COPY docker/Config.json /Config/Config.json
 COPY docker/entrypoint.sh /entrypoint.sh
