@@ -19,6 +19,11 @@ reuse existing configuration files.
 > any issues, please open an issue and describe the problem.
 
 ## Installation
+
+
+### Docker/Podman container
+
+### Debian package
 Binary releases are currently only available for Debian 12. To install the
 server, run the following commands.
 
@@ -56,7 +61,7 @@ sudo -u crystite /usr/games/steamcmd \
   +force_install_dir /var/lib/crystite/Resonite \
   +login USERNAME PASSWORD \
   +app_update 2519830 \
-  -beta headless-client \
+  -beta headless \
   -betapassword BETA_PASSWORD \
   +validate \
   +quit
@@ -362,11 +367,11 @@ It contains a bit of a dive into some internals and has a couple of explanations
 that could be useful for future work with Resonite and headless servers.
 
 
-[1]: https://raw.githubusercontent.com/Neos-Metaverse/JSONSchemas/main/schemas/NeosHeadlessConfig.schema.json
+[1]: https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json
 [2]: https://learn.microsoft.com/en-us/dotnet/core/extensions/logging#configure-logging
 [3]: https://github.com/serilog/serilog-settings-configuration
 [4]: https://learn.microsoft.com/en-us/aspnet/core/fundamentals/servers/kestrel/options
 [5]: docs/index.md
 [6]: docs/nitty-gritty.md
-[7]: https://github.com/neos-modding-group/NeosModLoader
+[7]: https://github.com/resonite-modding-group/ResoniteModLoader
 [8]: https://github.com/dotnet/runtime/issues/36569
