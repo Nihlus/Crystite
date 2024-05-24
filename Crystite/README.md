@@ -255,9 +255,9 @@ information.
 normal headless mods. Compatibility is not guaranteed, however, depending on 
 what the mods do - as always, use with caution and your mileage may vary.
 
-To install NML, follow their guide but replace step 3 (where you add the 
+To install ResoniteModLoader, follow their guide but replace step 3 (where you add the 
 command-line argument) with an appropriate modification to `appsettings.json`'s
-`pluginAssemblies` property. Add the full path to the NML assembly there.
+`pluginAssemblies` property. Add the full path to the ResoniteModLoader assembly there.
 
 There are some use cases that are affected by the security hardening options in 
 use by the systemd service. Primarily, you cannot store mod files outside of 
