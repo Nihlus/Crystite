@@ -40,10 +40,12 @@ public class ShowWorldTests : VerbTestBase
     /// <param name="expected">The expected output, or null if it should match the payload.</param>
     /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Theory]
-    [InlineData(new[] { "-n", "SpaceWorld" }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62\twith description!" })]
-    [InlineData(new[] { "-v", "-n", "SpaceWorld" }, null)]
-    [InlineData(new[] { "-i", "S-9801807d-fd97-40de-a46a-aed4b5ab4a62" }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62\twith description!" })]
-    [InlineData(new[] { "-v", "-i", "S-9801807d-fd97-40de-a46a-aed4b5ab4a62" }, null)]
+    [InlineData(new[] { "-n", "SpaceWorld" }, new[] { "SpaceWorld" })]
+    [InlineData(new[] { "-o", "Verbose", "-n", "SpaceWorld" }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62\twith description!" })]
+    [InlineData(new[] { "-o", "Json", "-n", "SpaceWorld" }, null)]
+    [InlineData(new[] { "-i", "S-9801807d-fd97-40de-a46a-aed4b5ab4a62" }, new[] { "SpaceWorld" })]
+    [InlineData(new[] { "-o", "Verbose", "-i", "S-9801807d-fd97-40de-a46a-aed4b5ab4a62" }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62\twith description!" })]
+    [InlineData(new[] { "-o", "Json", "-i", "S-9801807d-fd97-40de-a46a-aed4b5ab4a62" }, null)]
     public async Task DisplaysCorrectOutput(string[] arguments, string[]? expected)
     {
         var args = new[] { "show-world" }.Concat(GetFixtureConnectionArguments()).Concat(arguments);

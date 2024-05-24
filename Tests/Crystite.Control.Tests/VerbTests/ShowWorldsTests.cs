@@ -41,11 +41,13 @@ public class ShowWorldsTests : VerbTestBase
     /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
     [Theory]
     [InlineData("no-running-worlds.json", new string[] { }, new string[] { })]
-    [InlineData("no-running-worlds.json", new[] { "-v" }, null)]
-    [InlineData("single-running-world.json", new string[] { }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62" })]
-    [InlineData("multiple-running-worlds.json", new string[] { }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62", "OtherWorld\tS-84b4a57b-af87-4638-bcbb-4ec079c1bb4b\twith description!" })]
-    [InlineData("single-running-world.json", new[] { "-v" }, null)]
-    [InlineData("multiple-running-worlds.json", new[] { "-v" }, null)]
+    [InlineData("no-running-worlds.json", new[] { "-o", "Json" }, null)]
+    [InlineData("single-running-world.json", new string[] { }, new[] { "SpaceWorld" })]
+    [InlineData("single-running-world.json", new[] { "-o", "Verbose" }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62\t" })]
+    [InlineData("multiple-running-worlds.json", new string[] { }, new[] { "SpaceWorld", "OtherWorld" })]
+    [InlineData("multiple-running-worlds.json", new[] { "-o", "Verbose" }, new[] { "SpaceWorld\tS-9801807d-fd97-40de-a46a-aed4b5ab4a62\t", "OtherWorld\tS-84b4a57b-af87-4638-bcbb-4ec079c1bb4b\t\twith description!" })]
+    [InlineData("single-running-world.json", new[] { "-o", "Json" }, null)]
+    [InlineData("multiple-running-worlds.json", new[] { "-o", "Json" }, null)]
     public async Task DisplaysCorrectOutput(string payloadFile, string[] arguments, string[]? expected)
     {
         var payload = GetResponsePayload(Path.Combine("show_worlds", payloadFile));
