@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview54) UNRELEASED; urgency=medium
+
+  * Downgrade LiteDB to a known good version.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 25 May 2024 21:25:00 +0200
+
 crystite (1.0.0+deb12~preview53) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2024.5.24.202.
