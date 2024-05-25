@@ -1,3 +1,4 @@
+#! /bin/sh
 if [ ${STEAM_CRED:-SteamUsername} = "SteamUsername" ] && [ ${STEAM_PASS:-SteamPassword} = "SteamPassword" ]; then
     echo "Required Steam credentials have not been set! Are you sure they are in the \".env\" file? (STEAM_CRED and STEAM_PASS)"
     exit 1
@@ -39,7 +40,7 @@ fi
 # fi
 # echo $MODLOADER > /var/lib/crystite/Resonite/modloader
 
-if [ $MODLOADER != "None" ]; then
+if [ ${MODLOADER:=None} != "None" ]; then
 echo "=== INSTALLING MODLOADER ==="
 case $MODLOADER in
   ResoniteModLoader|RML)
