@@ -1,6 +1,7 @@
 crystite (1.0.0+deb12~preview55) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2024.5.28.94.
+  * Patch the websocket component to fix configured security protocols.
 
  -- Jarl Gullberg <jarl.gullberg@gmail.com>  Tue, 28 May 2024 21:50:00 +0200
 
