@@ -201,7 +201,7 @@ public class StandaloneFrooxEngineService : BackgroundService
                 foreach (var allowedUrlHost in args.Config.AllowedUrlHosts ?? Array.Empty<string>())
                 {
                     string extractedHost = string.Empty;
-                    int extractedPort = 0;
+                    int extractedPort = 443;
 
                     if (Uri.TryCreate(allowedUrlHost, UriKind.Absolute, out var uri) && !string.IsNullOrEmpty(uri.Host))
                     {
@@ -215,6 +215,12 @@ public class StandaloneFrooxEngineService : BackgroundService
                         {
                             case 1:
                                 extractedHost = urlSegments[0];
+                                args.Log.LogWarning
+                                (
+                                    "Could not determine port for allowed host entry \"{Host}\". Defaulting to port {Port}.",
+                                    allowedUrlHost,
+                                    extractedPort
+                                );
                                 break;
                             case 2:
                                 extractedHost = urlSegments[0];
@@ -225,6 +231,20 @@ public class StandaloneFrooxEngineService : BackgroundService
 
                     if (!string.IsNullOrEmpty(extractedHost))
                     {
+                        // Non-exhaustive check so people don't unintentionally expose Crystite's API
+                        string[] localHosts = { "localhost", "127.0.0.1", "[::1]" };
+                        if (localHosts.Contains(extractedHost.ToLower()))
+                        {
+                            args.Log.LogWarning
+                            (
+                                "!!! WARNING !!! You may be putting this machine at risk"
+                                + "\n\tAllowed host entry \"{Entry}\" allows access to localhost!"
+                                + "\n\tHTTP requests ignore the specified port, meaning Crystite's API and other sensitive services can be accessed even if you allowed a different port."
+                                + "\n\tSomeone could give themselves admin or cause other serious harm! **Proceed with extreme caution.**",
+                                allowedUrlHost
+                            );
+                        }
+
                         args.Log.LogInformation
                         (
                             "Allowing host: {Host}, Port: {Port}",
