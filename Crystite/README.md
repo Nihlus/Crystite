@@ -126,6 +126,7 @@ The following keys are defined for this section.
 | manageResoniteInstallation | bool      | Whether to manage the Resonite installation at resonitePath automatically | false                      | no       |
 | steamCredential            | string    | The username to use when authenticating with Steam                        | null                       | no       |
 | steamPassword              | string    | The password to use when authenticating with Steam                        | null                       | no       |
+| allowUnsafeHosts           | bool      | Whether to allow preemptive whitelisting of unsafe API hosts.             | no                         |          |
 
 > It is an absolute requirement that `resonitePath` points to a valid Resonite 
 > installation. The server will not run without access to Resonite's assemblies.
@@ -149,6 +150,13 @@ periodically clean up. This property can be used to limit cleaning to one or the
 other of the data and cache directories.
 
 By default, all locations are cleaned up.
+
+`allowUnsafeHosts` can be quite dangerous. Enabling this option is functionally 
+the same as giving everyone that joins any session hosted by the headless full 
+control over the headless. 
+
+You should not enable this option unless you have complete trust in everyone who
+joins your sessions and any and all items they bring with them.
 
 #### `AssetCleanupType`
 | Value      | Description          |

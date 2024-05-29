@@ -6,6 +6,7 @@
 
 using System.Reflection;
 using System.Runtime.Loader;
+using System.Text.RegularExpressions;
 using Crystite.Configuration;
 using Crystite.Extensions;
 using Crystite.Services;
@@ -192,80 +193,7 @@ public class StandaloneFrooxEngineService : BackgroundService
         await LoginAsync();
         OverrideSignalRReconnectRoutine();
 
-        await _engine.GlobalCoroutineManager.StartTask
-        (
-            static async args =>
-            {
-                await default(NextUpdate);
-
-                foreach (var allowedUrlHost in args.Config.AllowedUrlHosts ?? Array.Empty<string>())
-                {
-                    string extractedHost = string.Empty;
-                    int extractedPort = 443;
-
-                    if (Uri.TryCreate(allowedUrlHost, UriKind.Absolute, out var uri) && !string.IsNullOrEmpty(uri.Host))
-                    {
-                        extractedHost = uri.Host;
-                        extractedPort = uri.Port;
-                    }
-                    else
-                    {
-                        string[] urlSegments = allowedUrlHost.Split(':');
-                        switch (urlSegments.Length)
-                        {
-                            case 1:
-                                extractedHost = urlSegments[0];
-                                args.Log.LogWarning
-                                (
-                                    "Could not determine port for allowed host entry \"{Host}\". Defaulting to port {Port}.",
-                                    allowedUrlHost,
-                                    extractedPort
-                                );
-                                break;
-                            case 2:
-                                extractedHost = urlSegments[0];
-                                extractedPort = int.Parse(urlSegments[1]);
-                                break;
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(extractedHost))
-                    {
-                        // Non-exhaustive check so people don't unintentionally expose Crystite's API
-                        string[] localHosts = { "localhost", "127.0.0.1", "[::1]" };
-                        if (localHosts.Contains(extractedHost.ToLower()))
-                        {
-                            args.Log.LogWarning
-                            (
-                                "!!! WARNING !!! You may be putting this machine at risk"
-                                + "\n\tAllowed host entry \"{Entry}\" allows access to localhost!"
-                                + "\n\tHTTP requests ignore the specified port, meaning Crystite's API and other sensitive services can be accessed even if you allowed a different port."
-                                + "\n\tSomeone could give themselves admin or cause other serious harm! **Proceed with extreme caution.**",
-                                allowedUrlHost
-                            );
-                        }
-
-                        args.Log.LogInformation
-                        (
-                            "Allowing host: {Host}, Port: {Port}",
-                            extractedHost,
-                            extractedPort
-                        );
-                        args.Engine.Security.TemporarilyAllowHTTP(extractedHost);
-                        args.Engine.Security.TemporarilyAllowWebsocket(extractedHost, extractedPort);
-                    }
-                    else
-                    {
-                        args.Log.LogWarning
-                        (
-                            "Unable to parse allowed host entry: \"{Host}\"",
-                            allowedUrlHost
-                        );
-                    }
-                }
-            },
-            (Config: _config, Log: _log, Engine: _engine)
-        );
+        await ConfigureAllowedHostsAsync();
 
         await _engine.LocalDB.WriteVariableAsync
         (
@@ -306,20 +234,126 @@ public class StandaloneFrooxEngineService : BackgroundService
         _applicationLifetime.StopApplication();
     }
 
+    private async Task ConfigureAllowedHostsAsync()
+    {
+        await _engine.GlobalCoroutineManager.StartTask
+        (
+            static async args =>
+            {
+                var (applicationConfiguration, configuration, log, engine) = args;
+
+                await default(NextUpdate);
+
+                foreach (var allowedUrlHost in configuration.AllowedUrlHosts ?? Array.Empty<string>())
+                {
+                    var extractedHost = string.Empty;
+                    var extractedPort = 443;
+
+                    if (Uri.TryCreate(allowedUrlHost, UriKind.Absolute, out var uri) && !string.IsNullOrEmpty(uri.Host))
+                    {
+                        extractedHost = uri.Host;
+                        extractedPort = uri.Port;
+                    }
+                    else
+                    {
+                        var urlSegments = allowedUrlHost.Split(':');
+                        switch (urlSegments.Length)
+                        {
+                            case 1:
+                            {
+                                extractedHost = urlSegments[0];
+                                log.LogWarning
+                                (
+                                    "Could not determine port for allowed host entry \"{Host}\". Defaulting to port {Port}",
+                                    allowedUrlHost,
+                                    extractedPort
+                                );
+
+                                break;
+                            }
+                            case 2:
+                            {
+                                extractedHost = urlSegments[0];
+                                extractedPort = int.Parse(urlSegments[1]);
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(extractedHost))
+                    {
+                        log.LogWarning
+                        (
+                            "Unable to parse allowed host entry: \"{Host}\"",
+                            allowedUrlHost
+                        );
+
+                        return;
+                    }
+
+                    // Non-exhaustive check so people don't unintentionally expose Crystite's API - the
+                    string[] dangerousHostPatterns =
+                    {
+                        "localhost",
+                        @"127\.\d{1,3}\.\d{1,3}\.\d{1,3}",
+                        "ip6-localhost",
+                        "ip6-loopback",
+                        "[::1]",
+                        Environment.MachineName
+                    };
+
+                    if (dangerousHostPatterns.Any(p => Regex.IsMatch(allowedUrlHost, p)))
+                    {
+                        log.LogError("WARNING - you may be putting this machine at risk");
+                        log.LogError("Allowed host entry \"{Entry}\" allows access to localhost", allowedUrlHost);
+                        log.LogError
+                        (
+                            "HTTP requests ignore the specified port, meaning Crystite's API and other sensitive "
+                            + "services can be accessed even if you allowed a different port"
+                        );
+                        log.LogError
+                        (
+                            "Having this entry whitelisted could allow arbitrary users to give themselves "
+                            + "administrator privileges or cause other serious harm. Proceed with extreme caution"
+                        );
+
+                        if (!applicationConfiguration.AllowUnsafeHosts)
+                        {
+                            log.LogInformation("Skipping whitelisting of \"{Entry}\"", allowedUrlHost);
+                            continue;
+                        }
+                    }
+
+                    log.LogInformation
+                    (
+                        "Allowing host: {Host}, Port: {Port}",
+                        extractedHost,
+                        extractedPort
+                    );
+
+                    engine.Security.TemporarilyAllowHTTP(extractedHost);
+                    engine.Security.TemporarilyAllowWebsocket(extractedHost, extractedPort);
+                }
+            },
+            (ApplicationConfiguration: _applicationConfig, Configuration: _config, Log: _log, Engine: _engine)
+        );
+    }
+
     private Task LoginAsync() => _engine.GlobalCoroutineManager.StartTask
     (
         static async args =>
         {
             await default(NextUpdate);
 
-            if (!string.IsNullOrWhiteSpace(args.Config.LoginCredential) && !string.IsNullOrWhiteSpace(args.Config.LoginPassword))
+            if (!string.IsNullOrWhiteSpace(args.Configuration.LoginCredential) && !string.IsNullOrWhiteSpace(args.Configuration.LoginPassword))
             {
-                args.Log.LogInformation("Logging in as {Credential}", args.Config.LoginCredential);
+                args.Log.LogInformation("Logging in as {Credential}", args.Configuration.LoginCredential);
 
                 var login = await args.Engine.Cloud.Session.Login
                 (
-                    args.Config.LoginCredential,
-                    new PasswordLogin(args.Config.LoginPassword),
+                    args.Configuration.LoginCredential,
+                    new PasswordLogin(args.Configuration.LoginPassword),
                     args.Engine.LocalDB.SecretMachineID,
                     false,
                     null
@@ -335,7 +369,7 @@ public class StandaloneFrooxEngineService : BackgroundService
                 }
             }
         },
-        (Config: _config, Log: _log, Engine: _engine)
+        (Configuration: _config, Log: _log, Engine: _engine)
     );
 
     private void OverrideSignalRReconnectRoutine()

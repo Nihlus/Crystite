@@ -23,6 +23,12 @@ namespace Crystite.Configuration;
 /// <param name="ManageResoniteInstallation">Whether to automatically install and update the Resonite installation used by the program.</param>
 /// <param name="SteamCredential">The username to use when logging into Steam.</param>
 /// <param name="SteamPassword">The password to use when logging into Steam.</param>
+/// <param name="AllowUnsafeHosts">
+/// Whether to allow preemptive whitelisting of unsafe API hosts. Enabling this option is functionally the same as
+/// giving everyone that joins any session hosted by the headless full control over the headless. You should not enable
+/// this option unless you have complete trust in everyone who joins your sessions and any and all items they bring with
+/// them.
+/// </param>
 public record HeadlessApplicationConfiguration
 (
     string ResonitePath,
@@ -38,7 +44,8 @@ public record HeadlessApplicationConfiguration
     IReadOnlyList<string>? YoutubeDLPaths = null,
     bool ManageResoniteInstallation = false,
     string? SteamCredential = null,
-    string? SteamPassword = null
+    string? SteamPassword = null,
+    bool AllowUnsafeHosts = false
 )
 {
     /// <summary>
