@@ -45,7 +45,7 @@ public record ResoniteHeadlessConfig
     string? DataFolder = null,
     string? CacheFolder = null,
     string? LogsFolder = null,
-    IReadOnlyList<Uri>? AllowedUrlHosts = null,
+    IReadOnlyList<string>? AllowedUrlHosts = null,
     IReadOnlyList<Uri>? AutoSpawnItems = null,
     IReadOnlyList<string>? PluginAssemblies = null,
     bool? GeneratePreCache = null,
