@@ -15,7 +15,7 @@ namespace Crystite.Configuration;
 /// <remarks>
 /// The base schema has been extended with some more properties, enabling further configuration.
 /// </remarks>
-/// <a href="https://raw.githubusercontent.com/Neos-Metaverse/JSONSchemas/main/schemas/NeosHeadlessConfig.schema.json"/>
+/// <a href="https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json"/>
 /// <param name="IsEnabled">When set to false, this will disable this world entry from starting.</param>
 /// <param name="SessionName">The name of the session as shown in the World/Session Browser.</param>
 /// <param name="CustomSessionID">An optional custom session id for this session.</param>
