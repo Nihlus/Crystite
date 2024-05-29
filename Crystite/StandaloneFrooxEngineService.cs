@@ -215,6 +215,13 @@ public class StandaloneFrooxEngineService : BackgroundService
                         {
                             case 1:
                                 extractedHost = urlSegments[0];
+                                extractedPort = urlSegments[0] == "localhost" ? 80 : 443;
+                                args.Log.LogWarning
+                                (
+                                    "Could not determine port for allowed host entry \"{Host}\". Defaulting to port {Port}.",
+                                    allowedUrlHost,
+                                    extractedPort
+                                );
                                 break;
                             case 2:
                                 extractedHost = urlSegments[0];
