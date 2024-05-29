@@ -198,22 +198,50 @@ public class StandaloneFrooxEngineService : BackgroundService
             {
                 await default(NextUpdate);
 
-                foreach (var allowedUrlHost in args.Config.AllowedUrlHosts ?? Array.Empty<Uri>())
+                foreach (var allowedUrlHost in args.Config.AllowedUrlHosts ?? Array.Empty<string>())
                 {
-                    args.Log.LogInformation
-                    (
-                        "Allowing host: {Host}, Port: {Port}",
-                        allowedUrlHost.Host,
-                        allowedUrlHost.Port
-                    );
+                    string extractedHost = string.Empty;
+                    int extractedPort = 0;
 
-                    await args.Engine.Security.RequestAccessPermission
-                    (
-                        allowedUrlHost.Host,
-                        allowedUrlHost.Port,
-                        HostAccessScope.Everything,
-                        "Sourced from configuration file"
-                    );
+                    if (Uri.TryCreate(allowedUrlHost, UriKind.Absolute, out var uri) && !string.IsNullOrEmpty(uri.Host))
+                    {
+                        extractedHost = uri.Host;
+                        extractedPort = uri.Port;
+                    }
+                    else
+                    {
+                        string[] urlSegments = allowedUrlHost.Split(':');
+                        switch (urlSegments.Length)
+                        {
+                            case 1:
+                                extractedHost = urlSegments[0];
+                                break;
+                            case 2:
+                                extractedHost = urlSegments[0];
+                                extractedPort = int.Parse(urlSegments[1]);
+                                break;
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(extractedHost))
+                    {
+                        args.Log.LogInformation
+                        (
+                            "Allowing host: {Host}, Port: {Port}",
+                            extractedHost,
+                            extractedPort
+                        );
+                        args.Engine.Security.TemporarilyAllowHTTP(extractedHost);
+                        args.Engine.Security.TemporarilyAllowWebsocket(extractedHost, extractedPort);
+                    }
+                    else
+                    {
+                        args.Log.LogWarning
+                        (
+                            "Unable to parse allowed host entry: \"{Host}\"",
+                            allowedUrlHost
+                        );
+                    }
                 }
             },
             (Config: _config, Log: _log, Engine: _engine)
