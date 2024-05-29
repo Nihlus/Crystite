@@ -1,3 +1,11 @@
+crystite (1.0.0+deb12~preview56) UNRELEASED; urgency=medium
+
+  * Rebuild for Resonite 2024.5.29.130.
+  * Fix URL whitelisting.
+  * Add an option to bypass safety checks for URL whitelisting.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Wed, 29 May 2024 20:00:00 +0200
+
 crystite (1.0.0+deb12~preview55) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2024.5.28.94.
