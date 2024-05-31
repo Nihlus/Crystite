@@ -141,6 +141,21 @@ public static class ResoniteDependentHostConfiguration
 
         var logFactory = host.Services.GetRequiredService<ILoggerFactory>();
 
+        ApplyPatches(logger, logFactory, headlessConfig, flags);
+
+        UniLog.OnLog += message => ClassifyAndLogMessage(logger, message);
+        UniLog.OnWarning += warning => ClassifyAndLogWarning(logger, warning);
+        UniLog.OnError += error => ClassifyAndLogError(logger, error);
+    }
+
+    private static void ApplyPatches
+    (
+        ILogger<Program> logger,
+        ILoggerFactory logFactory,
+        HeadlessApplicationConfiguration headlessConfig,
+        CommandLineOptions commandLineOptions
+    )
+    {
         ForwardedTypeSerialization.Log = logFactory.CreateLogger(typeof(ForwardedTypeSerialization));
 
         CorrectErrorHandling.Log = logFactory.CreateLogger(typeof(CorrectErrorHandling));
@@ -196,14 +211,14 @@ public static class ResoniteDependentHostConfiguration
             nameof(LocalDB.Initialize),
             args =>
             {
-                if (!flags.RepairDatabase)
+                if (!commandLineOptions.RepairDatabase)
                 {
                     return;
                 }
 
                 logger.LogWarning
                 (
-                    "The local database will be repaired. Ensure you remove the --force-sync flag once your instance "
+                    "The local database will be repaired. Ensure you remove the --repair-database flag once your instance "
                     + "is in a reliable state again"
                 );
 
@@ -220,24 +235,24 @@ public static class ResoniteDependentHostConfiguration
                 args.Add("skipintrotutorial");
                 args.Add("dontautoopencloudhome");
 
-                if (flags.DeleteUnsynced)
+                if (commandLineOptions.DeleteUnsynced)
                 {
                     logger.LogWarning
                     (
-                        "Unsynchronized records will be deleted. Ensure you remove the --delete-unsynced flag once your "
-                        + "instance is in a reliable state again"
+                        "Unsynchronized records will be deleted. Ensure you remove the --delete-unsynced flag once "
+                        + "your instance is in a reliable state again"
                     );
 
                     args.Add("deleteunsyncedcloudrecords");
                 }
 
                 // ReSharper disable once InvertIf
-                if (flags.ForceSync)
+                if (commandLineOptions.ForceSync)
                 {
                     logger.LogWarning
                     (
-                        "Unsynchronized records will be forcibly synced. Ensure you remove the --force-sync flag once your "
-                        + "instance is in a reliable state again"
+                        "Unsynchronized records will be forcibly synced. Ensure you remove the --force-sync flag once "
+                        + "your instance is in a reliable state again"
                     );
 
                     args.Add("forcesyncconflictingcloudrecords");
@@ -256,10 +271,6 @@ public static class ResoniteDependentHostConfiguration
 
         UseThreadInterrupt.Configure(AccessTools.Inner(typeof(WorkProcessor), "ThreadWorker"), "Abort");
         UseThreadInterrupt.PatchAll(harmony);
-
-        UniLog.OnLog += message => ClassifyAndLogMessage(logger, message);
-        UniLog.OnWarning += warning => ClassifyAndLogWarning(logger, warning);
-        UniLog.OnError += error => ClassifyAndLogError(logger, error);
     }
 
     /// <summary>

@@ -1,3 +1,11 @@
+crystite (1.0.0+deb12~preview58) bookworm; urgency=medium
+
+  * Rebuild for Resonite 2024.5.31.202.
+  * Switch to bookworm from UNRELEASED to indicate that we're actually releasing
+    versions now. Still in preview, though.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Fri, 31 May 2024 18:00:00 +0200
+
 crystite (1.0.0+deb12~preview57) UNRELEASED; urgency=medium
 
   * Rebuild for Resonite 2024.5.30.68.
