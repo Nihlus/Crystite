@@ -338,6 +338,7 @@ public class WorldService
                         Description = world.Description,
                         MaxUsers = world.MaxUsers,
                         AccessLevel = world.AccessLevel,
+                        UseCustomJoinVerifier = world.UseCustomJoinVerifier,
                         HideFromPublicListing = world.HideFromListing,
                         Tags = world.Tags.ToList(),
                         MobileFriendly = world.MobileFriendly,

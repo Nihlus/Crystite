@@ -39,6 +39,7 @@ public static class WorldExtensions
         }
 
         world.AccessLevel = startupParameters.AccessLevel;
+        world.UseCustomJoinVerifier = startupParameters.UseCustomJoinVerifier;
         world.HideFromListing = startupParameters.HideFromPublicListing is true;
         world.MaxUsers = startupParameters.MaxUsers;
         world.MobileFriendly = startupParameters.MobileFriendly;

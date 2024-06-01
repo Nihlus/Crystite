@@ -22,6 +22,7 @@ namespace Crystite.Configuration;
 /// <param name="Description">An optional description of this session, displayed within the world/session browser.</param>
 /// <param name="MaxUsers">The maximum number of users, allowed to join this session.</param>
 /// <param name="AccessLevel">The access level for this session. Please see <see cref="SessionAccessLevel"/> for more information.</param>
+/// <param name="UseCustomJoinVerifier">When set to true, the VerifyJoinRequest ProtoFlux Node will be used in place of default session access rules.</param>
 /// <param name="HideFromPublicListing">Determines if this session should be hidden from the world/session browser or not.</param>
 /// <param name="Tags">A list of tags, to assist with searching or discovering sessions.</param>
 /// <param name="MobileFriendly">Determines if this session is friendly for mobile/quest users.</param>
@@ -59,6 +60,7 @@ public record WorldStartupParameters
     int MaxUsers = 32,
     [property: JsonConverter(typeof(JsonStringEnumConverter))]
     SessionAccessLevel AccessLevel = SessionAccessLevel.Private,
+    bool UseCustomJoinVerifier = false,
     bool? HideFromPublicListing = null,
     IReadOnlyList<string>? Tags = null,
     bool MobileFriendly = false,
