@@ -1,6 +1,8 @@
 # First stage - Build Crystite from source
 FROM public.ecr.aws/docker/library/debian:12
 
+ENV DOTNET_CLI_TELEMETRY_OPTOUT=1
+
 USER root
 WORKDIR /root
 
@@ -18,6 +20,10 @@ RUN dotnet publish -f net8.0 -c Release -r linux-x64 --self-contained false -o b
 
 # Second stage - Copy build artifacts and configure application container
 FROM public.ecr.aws/docker/library/debian:12-slim
+
+LABEL org.opencontainers.image.authors="Jarl Gullberg & djsime1"
+LABEL org.opencontainers.image.source="https://github.com/djsime1/Crystite"
+LABEL org.opencontainers.image.description="Custom headless server for the VR sandbox Resonite"
 
 USER root
 WORKDIR /root
@@ -42,4 +48,4 @@ RUN chmod +x /entrypoint.sh
 WORKDIR /var/lib/crystite
 
 ENTRYPOINT [ "sh", "/entrypoint.sh" ]
-CMD ["/usr/lib/crystite/crystite"]
+CMD [ "/usr/lib/crystite/crystite" ]
