@@ -295,11 +295,11 @@ public class StandaloneFrooxEngineService : BackgroundService
                     // Non-exhaustive check so people don't unintentionally expose Crystite's API - the
                     string[] dangerousHostPatterns =
                     {
-                        "localhost",
-                        @"127\.\d{1,3}\.\d{1,3}\.\d{1,3}",
-                        "ip6-localhost",
-                        "ip6-loopback",
-                        "[::1]",
+                        "^localhost$",
+                        @"^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$",
+                        "^ip6-localhost$",
+                        "^ip6-loopback$",
+                        @"^\[::1\]$",
                         Environment.MachineName
                     };
 
