@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview59) bookworm; urgency=medium
+
+  * Fix host pattern matching.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 01 Jun 2024 11:50:00 +0200
+
 crystite (1.0.0+deb12~preview58) bookworm; urgency=medium
 
   * Rebuild for Resonite 2024.5.31.202.
