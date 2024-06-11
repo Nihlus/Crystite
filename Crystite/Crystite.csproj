@@ -37,6 +37,7 @@
         <ResoniteReference Include="Elements.Core" Private="false" />
         <ResoniteReference Include="Elements.Assets" Private="false" />
         <ResoniteReference Include="SkyFrost.Base" Private="false" />
+        <ResoniteReference Include="SkyFrost.Base.Models" Private="false" />
         <ResoniteReference Include="FrooxEngine.Weaver" Private="false" />
     </ItemGroup>
 

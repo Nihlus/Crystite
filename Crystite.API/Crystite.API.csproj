@@ -28,6 +28,7 @@
     <ItemGroup>
         <ResoniteReference Include="Elements.Core" />
         <ResoniteReference Include="SkyFrost.Base" />
+        <ResoniteReference Include="SkyFrost.Base.Models" />
         <ResoniteReference Include="FrooxEngine" />
         <ResoniteReference Include="FrooxEngine.Store" />
     </ItemGroup>
