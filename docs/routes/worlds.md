@@ -1,10 +1,10 @@
 # Worlds
-Contains routes and objects for interacting with NeosVR worlds, such as loading,
+Contains routes and objects for interacting with Resonite worlds, such as loading,
 focusing, saving, closing or modifying them.
 
 ## Objects
 ### RestWorld
-A subset of fields from Neos's `World` object.
+A subset of fields from Resonite's `World` object.
 
 | Field              | Type                                      | Description                                              |
 |--------------------|-------------------------------------------|----------------------------------------------------------|
@@ -26,7 +26,7 @@ A subset of fields from Neos's `World` object.
 ```
 
 ### RestUser
-A subset of fields from Neos's `User` object.
+A subset of fields from Resonite's `User` object.
 
 | Field      | Type    | Description                              |
 |------------|---------|------------------------------------------|
@@ -55,12 +55,12 @@ An enumeration of session access levels.
 |------------------|-------|
 | Private          | 0     |
 | LAN              | 1     | 
-| Friends          | 2     |
-| FriendsOfFriends | 3     |
+| Contacts         | 2     |
+| ContactsPlus     | 3     |
 | RegisteredUsers  | 4     |
 | Anyone           | 5     |
 
-  > This type is defined by NeosVR in CloudX.Shared.
+  > This type is defined by Resonite in SkyFrost.Base.
 
 ### RestUserRole
 An enumeration of available roles.
@@ -73,7 +73,7 @@ An enumeration of available roles.
 | Guest      | 4      |
 | Spectator  | 5      |
 
-  > NeosVR does not define a true enumeration for this type; the values here
+  > Resonite does not define a true enumeration for this type; the values here
   > have been picked for this mod only.
 
 ## Routes
@@ -132,10 +132,10 @@ A [RestWorld](#restworld) object.
 Starts a new world.
 
 #### Parameters
-| Field    | Type   | Description                               |
-|----------|--------|-------------------------------------------|
-| url      | string | the Neos record URI of the world to start |
-| template | string | the name of a builtin world template      |
+| Field    | Type   | Description                                   |
+|----------|--------|-----------------------------------------------|
+| url      | string | the `resrec` record URI of the world to start |
+| template | string | the name of a builtin world template          |
 
 > `url` and `template` are mutually exclusive.
 

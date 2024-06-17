@@ -14,7 +14,7 @@ namespace Crystite.Configuration;
 /// <remarks>
 /// The base schema has been extended with some more properties, enabling further configuration.
 /// </remarks>
-/// <a href="https://raw.githubusercontent.com/Neos-Metaverse/JSONSchemas/main/schemas/NeosHeadlessConfig.schema.json"/>
+/// <a href="https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json"/>
 /// <param name="Comment">An optional free form comment for this file. Used for identification for your configuration.</param>
 /// <param name="UniverseID">Optionally, specifies which universe this Headless Server will be in. See our wiki article on Universes for more info.</param>
 /// <param name="TickRate">Configures how many ticks(updates), should occur per second. Default is 60.</param>
@@ -59,7 +59,7 @@ public record ResoniteHeadlessConfig
     [JsonInclude]
     public static Uri Schema => new
     (
-        "https://raw.githubusercontent.com/Neos-Metaverse/JSONSchemas/main/schemas/NeosHeadlessConfig.schema.json"
+        "https://raw.githubusercontent.com/Yellow-Dog-Man/JSONSchemas/main/schemas/HeadlessConfig.schema.json"
     );
 
     /// <summary>
