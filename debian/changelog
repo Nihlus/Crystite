@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview64) bookworm; urgency=medium
+
+  * Add explict reference to TwitchLib.PubSub to ensure we always have it.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Wed, 26 Jun 2024 21:50:00 +0200
+
 crystite (1.0.0+deb12~preview63) bookworm; urgency=medium
 
   * Add explict reference to TwitchLib to ensure we always have it.
