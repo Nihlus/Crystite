@@ -63,6 +63,7 @@
       <PackageReference Include="Serilog.AspNetCore" />
       <PackageReference Include="SteamKit2" />
       <PackageReference Include="TwitchLib.Client" />
+      <PackageReference Include="TwitchLib.PubSub" />
     </ItemGroup>
 
     <ItemGroup>

@@ -34,5 +34,6 @@
     <PackageVersion Include="System.Threading" Version="4.3.0" />
     <PackageVersion Include="System.Threading.Tasks.Dataflow" Version="8.0.0" />
     <PackageVersion Include="TwitchLib.Client" Version="3.3.1" />
+    <PackageVersion Include="TwitchLib.PubSub" Version="3.2.6" />
   </ItemGroup>
 </Project>
