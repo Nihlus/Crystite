@@ -13,6 +13,7 @@ using System.Text.Json;
 using Crystite.Configuration;
 using Crystite.Helpers;
 using Humanizer;
+using Microsoft.Extensions.Hosting.Systemd;
 using Microsoft.Extensions.Options;
 using Remora.Results;
 
@@ -28,8 +29,14 @@ public sealed class ResoniteInstallationManager
     private readonly JsonSerializerOptions _jsonOptions;
     private readonly HeadlessApplicationConfiguration _config;
     private readonly CommandLineOptions _commandLine;
+    private readonly SystemdNotifier? _notifier;
 
     private bool _isInitialized;
+
+    private static readonly ServiceState _fiveMinuteExtension = new ServiceState
+    (
+        $"EXTEND_TIMEOUT_USEC={(long)TimeSpan.FromMinutes(5).TotalMicroseconds}"
+    );
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ResoniteInstallationManager"/> class.
@@ -39,17 +46,20 @@ public sealed class ResoniteInstallationManager
     /// <param name="jsonOptions">The JSON serialization config.</param>
     /// <param name="config">The application configuration.</param>
     /// <param name="commandLine">The command-line options.</param>
+    /// <param name="notifier">The systemd notifier.</param>
     public ResoniteInstallationManager
     (
         ILogger<ResoniteInstallationManager> log,
         ResoniteSteamClient client,
         IOptions<JsonSerializerOptions> jsonOptions,
         IOptions<HeadlessApplicationConfiguration> config,
-        IOptions<CommandLineOptions> commandLine
+        IOptions<CommandLineOptions> commandLine,
+        SystemdNotifier? notifier = null
     )
     {
         _log = log;
         _client = client;
+        _notifier = notifier;
         _jsonOptions = jsonOptions.Value;
         _config = config.Value;
         _commandLine = commandLine.Value;
@@ -62,6 +72,8 @@ public sealed class ResoniteInstallationManager
     /// <returns>A value representing the result of the operation.</returns>
     public async Task<Result> UpdateResoniteInstallationAsync(CancellationToken ct = default)
     {
+        _notifier?.Notify(_fiveMinuteExtension);
+
         if (!_isInitialized)
         {
             var initialize = await _client.InitializeAsync(ct);
@@ -225,6 +237,8 @@ public sealed class ResoniteInstallationManager
         CancellationToken ct = default
     )
     {
+        _notifier?.Notify(_fiveMinuteExtension);
+
         var getChanges = await GetChangesAsync(newAppManifest);
         if (!getChanges.IsDefined(out var changes))
         {
@@ -245,6 +259,8 @@ public sealed class ResoniteInstallationManager
 
         foreach (var (oldFile, newFile) in changes.ChangedFiles)
         {
+            _notifier?.Notify(_fiveMinuteExtension);
+
             var filePath = Path.Combine(_config.ResonitePath, newFile.Path);
 
             try
