@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview66) bookworm; urgency=medium
+
+  * Rebuild for Resonite 2024.7.4.1347.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Fri, 05 Jul 2024 20:45:00 +0200
+
 crystite (1.0.0+deb12~preview65) bookworm; urgency=medium
 
   * Explicitly extend the startup timeout when running as a systemd service
