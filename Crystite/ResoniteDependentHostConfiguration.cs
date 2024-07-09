@@ -13,7 +13,6 @@ using Crystite.Patches.RecordUploadTaskBase;
 using Crystite.Patches.ResoniteAssemblyPostProcessor;
 using Crystite.Patches.SteamConnector;
 using Crystite.Patches.VideoTextureProvider;
-using Crystite.Patches.WorkerManager;
 using Crystite.Services;
 using Elements.Core;
 using FrooxEngine;
@@ -156,8 +155,6 @@ public static class ResoniteDependentHostConfiguration
         CommandLineOptions commandLineOptions
     )
     {
-        ForwardedTypeSerialization.Log = logFactory.CreateLogger(typeof(ForwardedTypeSerialization));
-
         CorrectErrorHandling.Log = logFactory.CreateLogger(typeof(CorrectErrorHandling));
         CorrectErrorHandling.MaxUploadRetries = headlessConfig.MaxUploadRetries ?? 3;
         CorrectErrorHandling.RetryDelay = headlessConfig.RetryDelay ?? TimeSpan.Zero;
@@ -197,6 +194,10 @@ public static class ResoniteDependentHostConfiguration
         harmony.PatchAllUncategorized();
 
         // Generic patches
+        UseSerializableFullName.Log = logFactory.CreateLogger(typeof(UseSerializableFullName));
+        UseSerializableFullName.Configure(typeof(GlobalTypeRegistry), "FinalizeTypes");
+        UseSerializableFullName.Configure<SaveControl>(nameof(SaveControl.StoreTypeVersions));
+        UseSerializableFullName.PatchAll(harmony);
 
         // hide command-line args from various types
         RedirectCommandLineParsing.Configure<CommonAvatarBuilder>(_ => { });
