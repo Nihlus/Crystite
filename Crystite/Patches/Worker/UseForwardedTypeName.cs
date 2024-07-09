@@ -4,7 +4,7 @@
 //  SPDX-License-Identifier: AGPL-3.0-or-later
 //
 
-using Crystite.Patches.WorkerManager;
+using Crystite.Patches.Generic;
 using HarmonyLib;
 using JetBrains.Annotations;
 
@@ -29,7 +29,7 @@ public static class UseForwardedTypeName
     // ReSharper disable RedundantAssignment
     public static bool Prefix(FrooxEngine.Worker __instance, ref string __result)
     {
-        __result = __instance.WorkerType.GetSerializableTypeName();
+        __result = __instance.WorkerType.GetSerializableFullName();
         return false;
     }
 }
