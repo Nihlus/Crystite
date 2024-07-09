@@ -5,14 +5,14 @@
 //
 
 using System;
-using Crystite.Patches.WorkerManager;
+using Crystite.Patches.Generic;
 using FrooxEngine;
 using Xunit;
 
 namespace Crystite.Tests;
 
 /// <summary>
-/// Tests the <see cref="ForwardedTypeSerialization"/> patch's underlying functionality.
+/// Tests the <see cref="UseSerializableFullName"/> patch's underlying functionality.
 /// </summary>
 public class TypeNameSerializationTests
 {
@@ -29,7 +29,7 @@ public class TypeNameSerializationTests
     [InlineData(typeof(DynamicField<string>), false, "FrooxEngine.DynamicField`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]")]
     public void SerializesNameCorrectly(Type type, bool qualifyAssembly, string expected)
     {
-        var actual = type.GetSerializableTypeName(qualifyAssembly);
+        var actual = type.GetSerializableFullName(qualifyAssembly);
         Assert.Equal(expected, actual);
     }
 }
