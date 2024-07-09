@@ -53,6 +53,6 @@ public static class NormalizeGetNiceFullName
         //
         // Mono doesn't place compiler-intrinsic encompassing types in any namespace while modern .NET does, so we need
         // to strip it out in these cases.
-        __result = __result[(__result.IndexOf(type.Namespace, StringComparison.Ordinal) + type.Namespace.Length)..];
+        __result = __result[(__result.IndexOf(type.Namespace, StringComparison.Ordinal) + type.Namespace.Length + 1)..];
     }
 }
