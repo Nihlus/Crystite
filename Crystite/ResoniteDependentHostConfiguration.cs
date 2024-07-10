@@ -196,7 +196,6 @@ public static class ResoniteDependentHostConfiguration
         // Generic patches
         UseSerializableFullName.Log = logFactory.CreateLogger(typeof(UseSerializableFullName));
         UseSerializableFullName.Configure(typeof(GlobalTypeRegistry), "FinalizeTypes");
-        UseSerializableFullName.Configure<SaveControl>(nameof(SaveControl.StoreTypeVersions));
         UseSerializableFullName.PatchAll(harmony);
 
         // hide command-line args from various types
