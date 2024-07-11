@@ -7,6 +7,8 @@
 using Crystite.API.Extensions;
 using Crystite.Configuration;
 using Crystite.Implementations;
+using Crystite.Patches.Brotli;
+using Crystite.Patches.Engine;
 using Crystite.Patches.EngineSkyFrostInterface;
 using Crystite.Patches.Generic;
 using Crystite.Patches.RecordUploadTaskBase;
@@ -192,6 +194,57 @@ public static class ResoniteDependentHostConfiguration
 
         var harmony = new Harmony("nu.algiz.crystite");
         harmony.PatchAllUncategorized();
+
+        // Check application of transpiler patches
+        if (!FixLibraryLoading.Applied)
+        {
+            logger.LogWarning
+            (
+                "{Patch} did not apply cleanly. If you're a developer, check if it needs updating or is no longer "
+                + "required",
+                typeof(FixLibraryLoading).FullName
+            );
+        }
+
+        if (!GuardDisposal.Applied)
+        {
+            logger.LogWarning
+            (
+                "{Patch} did not apply cleanly. If you're a developer, check if it needs updating or is no longer "
+                + "required",
+                typeof(GuardDisposal).FullName
+            );
+        }
+
+        if (!OverrideCecilAssemblyResolver.Applied)
+        {
+            logger.LogWarning
+            (
+                "{Patch} did not apply cleanly. If you're a developer, check if it needs updating or is no longer "
+                + "required",
+                typeof(OverrideCecilAssemblyResolver).FullName
+            );
+        }
+
+        if (!DisableSteamAPI.Applied)
+        {
+            logger.LogWarning
+            (
+                "{Patch} did not apply cleanly. If you're a developer, check if it needs updating or is no longer "
+                + "required",
+                typeof(DisableSteamAPI).FullName
+            );
+        }
+
+        if (!ConfigurableYoutubeDLPath.Applied)
+        {
+            logger.LogWarning
+            (
+                "{Patch} did not apply cleanly. If you're a developer, check if it needs updating or is no longer "
+                + "required",
+                typeof(ConfigurableYoutubeDLPath).FullName
+            );
+        }
 
         // Generic patches
         UseSerializableFullName.Log = logFactory.CreateLogger(typeof(UseSerializableFullName));

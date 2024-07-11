@@ -21,6 +21,11 @@ namespace Crystite.Patches.ResoniteAssemblyPostProcessor;
 public static class OverrideCecilAssemblyResolver
 {
     /// <summary>
+    /// Gets a value indicating whether the patch applied cleanly.
+    /// </summary>
+    public static bool Applied { get; private set; }
+
+    /// <summary>
     /// Gets the overriding assembly resolver in use.
     /// </summary>
     public static IAssemblyResolver? OverridingAssemblyResolver { get; internal set; }
@@ -79,6 +84,8 @@ public static class OverrideCecilAssemblyResolver
             if (instruction.Is(OpCodes.Newobj, defaultConstructor))
             {
                 yield return new CodeInstruction(OpCodes.Call, getter);
+
+                Applied = true;
             }
             else
             {

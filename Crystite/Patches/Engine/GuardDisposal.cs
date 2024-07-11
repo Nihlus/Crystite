@@ -16,8 +16,13 @@ namespace Crystite.Patches.Engine;
 /// </summary>
 [HarmonyPatch(typeof(FrooxEngine.Engine), nameof(FrooxEngine.Engine.Dispose))]
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-public class GuardDisposal
+public static class GuardDisposal
 {
+    /// <summary>
+    /// Gets a value indicating whether the patch applied cleanly.
+    /// </summary>
+    public static bool Applied { get; private set; }
+
     /// <summary>
     /// Guards each nested disposal call with a null check.
     /// </summary>
@@ -53,6 +58,8 @@ public class GuardDisposal
                 yield return new CodeInstruction(OpCodes.Pop);
                 yield return new CodeInstruction(OpCodes.Br_S, nextInstructionLabel);
                 yield return instruction.WithLabels(callLabel);
+
+                Applied = true;
             }
             else
             {

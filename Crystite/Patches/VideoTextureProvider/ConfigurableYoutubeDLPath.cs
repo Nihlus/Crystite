@@ -20,6 +20,11 @@ namespace Crystite.Patches.VideoTextureProvider;
 public static class ConfigurableYoutubeDLPath
 {
     /// <summary>
+    /// Gets a value indicating whether the patch applied cleanly.
+    /// </summary>
+    public static bool Applied { get; private set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether Youtube-DL integration should be enabled.
     /// </summary>
     public static bool EnableYoutubeDL { get; set; } = true;
@@ -154,6 +159,8 @@ public static class ConfigurableYoutubeDLPath
                 // skip the original code
                 index = jumpIndex - 1;
                 hasPatchedInitialCheck = true;
+
+                Applied = true;
             }
             else
             {

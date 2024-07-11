@@ -18,6 +18,11 @@ namespace Crystite.Patches.SteamConnector;
 public static class DisableSteamAPI
 {
     /// <summary>
+    /// Gets a value indicating whether the patch applied cleanly.
+    /// </summary>
+    public static bool Applied { get; private set; }
+
+    /// <summary>
     /// Gets or sets a value indicating whether Steam API initialization should be attempted.
     /// </summary>
     public static bool ShouldAttemptSteamInitialization { get; set; }
@@ -40,6 +45,8 @@ public static class DisableSteamAPI
         {
             if (instruction.Calls(initAttemptedSetter))
             {
+                Applied = true;
+
                 yield return instruction;
 
                 if (ShouldAttemptSteamInitialization)

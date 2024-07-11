@@ -19,6 +19,11 @@ namespace Crystite.Patches.Brotli;
 [UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 public static class FixLibraryLoading
 {
+    /// <summary>
+    /// Gets a value indicating whether the patch applied cleanly.
+    /// </summary>
+    public static bool Applied { get; private set; }
+
     private static readonly Assembly _brotliCore = AppDomain.CurrentDomain.Load("Brotli.Core");
     private static MethodInfo _fillDelegate = null!;
     private static ConstructorInfo _nativeLoaderConstructor = null!;
@@ -84,13 +89,23 @@ public static class FixLibraryLoading
         {
             var fieldName = ((FieldInfo)p.First.operand).Name;
             return fieldName.Contains("BrotliEncoder");
-        });
+        }).ToImmutableArray();
 
         var decoderCalls = callPairs.Where(p =>
         {
             var fieldName = ((FieldInfo)p.First.operand).Name;
             return fieldName.Contains("BrotliDecoder");
-        });
+        }).ToImmutableArray();
+
+        if (encoderCalls.Length <= 0 && decoderCalls.Length <= 0)
+        {
+            foreach (var instruction in enumeratedInstructions)
+            {
+                yield return instruction;
+            }
+
+            yield break;
+        }
 
         // push the encoder calls
         yield return new CodeInstruction(OpCodes.Ldstr, "libbrotlienc.so.1");
@@ -127,5 +142,7 @@ public static class FixLibraryLoading
         yield return new CodeInstruction(OpCodes.Pop); // pop the original
 
         yield return new CodeInstruction(OpCodes.Ret);
+
+        Applied = true;
     }
 }
