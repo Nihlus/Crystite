@@ -1,3 +1,10 @@
+crystite (1.0.0+deb12~preview67) bookworm; urgency=medium
+
+  * Rebuild for Resonite 2024.7.12.933
+  * First release with the new type system, removing a lot of fragile code.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Fri, 12 Jul 2024 19:30:00 +0200
+
 crystite (1.0.0+deb12~preview66) bookworm; urgency=medium
 
   * Rebuild for Resonite 2024.7.4.1347.
