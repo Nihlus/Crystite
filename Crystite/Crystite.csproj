@@ -62,17 +62,6 @@
       <PackageReference Include="Remora.Results" />
       <PackageReference Include="Serilog.AspNetCore" />
       <PackageReference Include="SteamKit2" />
-      <PackageReference Include="TwitchLib.Client" />
-      <PackageReference Include="TwitchLib.PubSub" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <!-- bring in Newtonsoft.Json as a ship-only dependency to ensure we always have a strongly-named copy -->
-        <PackageReference Include="Newtonsoft.Json" IncludeAssets="runtime" />
-
-        <!-- bring in some extra packages to ensure we use the same version as Resonite -->
-        <PackageReference Include="Mono.Cecil" />
-        <PackageReference Include="System.Threading.Tasks.Dataflow" />
     </ItemGroup>
 
     <ItemGroup>
