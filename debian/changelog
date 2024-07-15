@@ -1,6 +1,13 @@
+crystite (1.0.0+deb12~preview69) bookworm; urgency=medium
+
+  * Rebuild for Resonite 2024.7.15.917.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Mon, 15 Jul 2024 19:25:00 +0200
+
 crystite (1.0.0+deb12~preview68) bookworm; urgency=medium
 
   * Rebuild for Resonite 2024.7.12.1147.
+
  -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 13 Jul 2024 22:30:00 +0200
 
 crystite (1.0.0+deb12~preview67) bookworm; urgency=medium
