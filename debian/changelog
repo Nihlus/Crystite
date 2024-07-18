@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview72) bookworm; urgency=medium
+
+  * Rebuild for Resonite 2024.7.17.1173.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Thu, 18 Jul 2024 17:45:00 +0200
+
 crystite (1.0.0+deb12~preview71) bookworm; urgency=medium
 
   * Explicitly reference System.Security.Permissions to ensure we have it on hand.
