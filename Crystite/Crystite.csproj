@@ -43,10 +43,6 @@
 
     <ItemGroup>
       <PackageReference Include="CommandLiners.Posix" />
-      <PackageReference Include="CSGL.MSDFGen" ExcludeAssets="build" >
-          <NoWarn>NU1701</NoWarn>
-      </PackageReference>
-      <PackageReference Include="CSharpGameLibrary" ExcludeAssets="build" GeneratePathProperty="true" />
       <PackageReference Include="Hardware.Info" />
       <PackageReference Include="Humanizer.Core" />
       <PackageReference Include="Lib.Harmony.Thin" />
@@ -58,20 +54,14 @@
       <PackageReference Include="Microsoft.Extensions.Hosting" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" />
       <PackageReference Include="Remora.Extensions.Options.Immutable" />
+      <PackageReference Include="Remora.MSDFGen" />
       <PackageReference Include="Remora.Rest" />
       <PackageReference Include="Remora.Results" />
       <PackageReference Include="Serilog.AspNetCore" />
       <PackageReference Include="SteamKit2" />
       <PackageReference Include="System.Security.Permissions" />
     </ItemGroup>
-
-    <ItemGroup>
-        <!-- something is wrong with this package, so we need to explicitly tell MSBuild where the assembly is -->
-        <Reference Include="CSharpGameLibrary, Version=1.0.0.0, Culture=neutral">
-            <HintPath>$(PkgCSharpGameLibrary)\lib\net452\CSharpGameLibrary.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
+    
     <ItemGroup>
         <Content Include="steam_appid.txt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

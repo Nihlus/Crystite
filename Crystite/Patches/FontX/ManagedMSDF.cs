@@ -7,12 +7,12 @@
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
-using CSGL.Graphics;
 using Elements.Assets;
 using Elements.Core;
 using HarmonyLib;
 using JetBrains.Annotations;
-using MSDFGen;
+using Remora.MSDFGen;
+using Remora.MSDFGen.Graphics;
 
 namespace Crystite.Patches.FontX;
 
@@ -179,13 +179,12 @@ public static class ManagedMSDF
         shape.Normalize();
         shape.InverseYAxis = true;
 
-        var workingBitmap = new Bitmap<Color3>(regionCeiling.x, regionCeiling.y);
+        var workingBitmap = new Pixmap<Color3>(regionCeiling.x, regionCeiling.y);
 
         var scale = new Vector2((float)scaleXY);
         var translate = new Vector2((float)offsetX, (float)offsetY);
 
-        var edgeThreshold = 1001.0 / 1000.0;
-        MSDF.GenerateMSDF(workingBitmap, shape, pixelRange, scale, translate, edgeThreshold);
+        MSDF.GenerateMSDF(workingBitmap, shape, pixelRange, scale, translate);
 
         // auto fix shapes with reversed winding
         var origin = new Vector2(-100000, -100000);
@@ -194,14 +193,14 @@ public static class ManagedMSDF
             .Select(edge => edge.GetSignedDistance(origin, out _))
             .Min(_distanceComparer);
 
-        if (minDistance.distance < 0)
+        if (minDistance.Distance < 0)
         {
             // equivalent to invertColor<3>(msdf)
             for (var i = 0; i < workingBitmap.Data.Length; i++)
             {
-                workingBitmap.Data[i].r = 1.0f - workingBitmap.Data[i].r;
-                workingBitmap.Data[i].g = 1.0f - workingBitmap.Data[i].g;
-                workingBitmap.Data[i].b = 1.0f - workingBitmap.Data[i].b;
+                workingBitmap.Data[i].R = 1.0f - workingBitmap.Data[i].R;
+                workingBitmap.Data[i].G = 1.0f - workingBitmap.Data[i].G;
+                workingBitmap.Data[i].B = 1.0f - workingBitmap.Data[i].B;
             }
         }
 
@@ -221,7 +220,7 @@ public static class ManagedMSDF
                     : workingBitmap.GetIndex(x, y);
 
                 var rgb = workingBitmap.Data[index];
-                bitmap.SetPixel(regionOffsetX + x, regionOffsetY + y, new color(rgb.r, rgb.g, rgb.b));
+                bitmap.SetPixel(regionOffsetX + x, regionOffsetY + y, new color(rgb.R, rgb.G, rgb.B));
             }
         }
 
