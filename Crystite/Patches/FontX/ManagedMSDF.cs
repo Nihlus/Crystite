@@ -167,7 +167,7 @@ public static class ManagedMSDF
         var offsetX = num4 + (pixelRange * 0.5);
         var offsetY = num5 + (pixelRange * 0.5);
 
-        MSDF.EdgeColoringSimple(shape, 3.0, 0);
+        MSDF.EdgeColoringSimple(shape, 3.0);
         var list = Pool.BorrowRawValueList<float3>();
         var regionCeiling = MathX.CeilToInt(in regionSize);
         var area = regionCeiling.x * regionCeiling.y;
