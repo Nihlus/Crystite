@@ -36,8 +36,9 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
     /// <param name="additionalSearchPaths">The additional search paths to look in for native libraries.</param>
     public ResoniteAssemblyResolver(IReadOnlyList<string> additionalSearchPaths)
     {
-        // Add some unity-specific search paths for desktop client compatibility
         var paths = new List<string>(additionalSearchPaths);
+
+        // Add some unity-specific search paths for desktop client compatibility
         paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Resonite_Data", "Managed")));
         paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Resonite_Data", "Plugins", "x86_64")));
         paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Resonite_Data", "Plugins")));
@@ -45,7 +46,8 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
         var ourLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         if (ourLocation is not null)
         {
-            paths.Add(ourLocation);
+            // our files always take priority
+            paths.Insert(0, ourLocation);
         }
 
         _additionalSearchPaths = paths;
