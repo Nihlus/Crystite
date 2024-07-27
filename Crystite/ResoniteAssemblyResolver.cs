@@ -135,7 +135,7 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
         var simpleName = args.Name.Split(',')[0];
         var existing = AppDomain.CurrentDomain
             .GetAssemblies()
-            .FirstOrDefault(a => a.FullName is not null && a.FullName.Contains(simpleName));
+            .FirstOrDefault(a => a.FullName is not null && a.FullName.Contains(simpleName + ','));
 
         if (existing is not null)
         {
