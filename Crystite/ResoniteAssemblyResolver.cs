@@ -132,16 +132,17 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
     private Assembly? ResolveManagedAssembly(object? sender, ResolveEventArgs args)
     {
         // check if it's already loaded
+        var simpleName = args.Name.Split(',')[0];
         var existing = AppDomain.CurrentDomain
             .GetAssemblies()
-            .FirstOrDefault(a => a.FullName is not null && a.FullName.Contains(args.Name));
+            .FirstOrDefault(a => a.FullName is not null && a.FullName.Contains(simpleName));
 
         if (existing is not null)
         {
             return existing;
         }
 
-        var filename = args.Name.Split(',')[0] + ".dll".ToLower();
+        var filename = simpleName + ".dll";
 
         // then, try loading it verbatim from the additional paths
         Assembly? potentialAssembly = null;
@@ -153,14 +154,21 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
                 continue;
             }
 
-            var assembly = Assembly.LoadFrom(libraryPath);
-            if (assembly.FullName == args.Name)
+            try
             {
-                // exact match, prefer this to keep things like strong-naming consistent
-                return assembly;
-            }
+                var assembly = Assembly.LoadFrom(libraryPath);
+                if (assembly.FullName == args.Name)
+                {
+                    // exact match, prefer this to keep things like strong-naming consistent
+                    return assembly;
+                }
 
-            potentialAssembly = assembly;
+                potentialAssembly = assembly;
+            }
+            catch (FileLoadException)
+            {
+                // swallow, we can continue without looking at this as a candidate
+            }
         }
 
         return potentialAssembly;
