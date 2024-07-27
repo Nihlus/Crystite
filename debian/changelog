@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview81) bookworm; urgency=medium
+
+  * Fix too-broad match.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 27 Jul 2024 13:15:00 +0200
+
 crystite (1.0.0+deb12~preview80) bookworm; urgency=medium
 
   * Make the assembly loader more lenient.
