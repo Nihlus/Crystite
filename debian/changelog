@@ -1,3 +1,10 @@
+crystite (1.0.0+deb12~preview79) bookworm; urgency=medium
+
+  * Extend start and stop timeouts.
+  * Improve assembly search algorithm.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 27 Jul 2024 13:00:00 +0200
+
 crystite (1.0.0+deb12~preview78) bookworm; urgency=medium
 
   * Update service file.
