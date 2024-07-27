@@ -42,6 +42,12 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
         paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Resonite_Data", "Plugins", "x86_64")));
         paths.InsertRange(0, additionalSearchPaths.Select(p => Path.Combine(p, "Resonite_Data", "Plugins")));
 
+        var ourLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        if (ourLocation is not null)
+        {
+            paths.Add(ourLocation);
+        }
+
         _additionalSearchPaths = paths;
 
         foreach (var context in AssemblyLoadContext.All)
