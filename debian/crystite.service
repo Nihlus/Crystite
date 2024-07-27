@@ -13,6 +13,10 @@ Group=crystite
 
 WorkingDirectory=/var/lib/crystite
 
+# Allow for 15 minues of startup and shutdown time (installation and sync can take a while)
+TimeoutStartSec=900
+TimeoutStopSec=900
+
 # Various security options. These are mainly recommended becase Resonite contains a complete code execution engine that
 # runs in-process, and is by its very nature always running unknown external user code. ProtoFlux is theoretically
 # already sandboxed, but better safe than sorry.
