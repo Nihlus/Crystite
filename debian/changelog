@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview80) bookworm; urgency=medium
+
+  * Make the assembly loader more lenient.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sat, 27 Jul 2024 13:10:00 +0200
+
 crystite (1.0.0+deb12~preview79) bookworm; urgency=medium
 
   * Extend start and stop timeouts.
