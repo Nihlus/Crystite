@@ -14,7 +14,7 @@ Group=crystite
 WorkingDirectory=/var/lib/crystite
 
 # Various security options. These are mainly recommended becase Resonite contains a complete code execution engine that
-# runs in-process, and is by its very nature always running unknown external user code. ProtoFlux is theoretically 
+# runs in-process, and is by its very nature always running unknown external user code. ProtoFlux is theoretically
 # already sandboxed, but better safe than sorry.
 #
 # In summary, everything including the kitchen sink is restricted, and the only thing that is allowed is network
@@ -36,7 +36,7 @@ ProtectKernelModules=true
 ProtectKernelLogs=true
 ProtectControlGroups=true
 
-RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
 RestrictNamespaces=mnt
 RestrictRealtime=true
 
