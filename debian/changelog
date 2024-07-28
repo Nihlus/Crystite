@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview83) bookworm; urgency=medium
+
+  * Add missing configuration call.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 28 Jul 2024 23:30:00 +0200
+
 crystite (1.0.0+deb12~preview82) bookworm; urgency=medium
 
   * Drop SignalR reconnection patch due to incompatibility issues.
