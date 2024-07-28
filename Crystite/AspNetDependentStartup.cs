@@ -43,6 +43,8 @@ public class AspNetDependentStartup
 
         var applicationBuilder = WebApplication.CreateBuilder(args);
 
+        applicationBuilder.Configuration.ConfigureCrystiteConfigurationSources(args);
+
         applicationBuilder.Host
             .UseSystemd()
             .ConfigureServices
