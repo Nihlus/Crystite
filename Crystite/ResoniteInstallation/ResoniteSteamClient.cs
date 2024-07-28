@@ -9,6 +9,8 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Channels;
 using Crystite.Configuration;
 using Crystite.Extensions;
@@ -242,14 +244,54 @@ public sealed class ResoniteSteamClient : IAsyncDisposable
             depots = productInfo.GetDepots("windows", "64").ToImmutableArray();
         }
 
+        byte[]? branchKey = null;
+        if (_config.SteamBranch is not "public")
+        {
+            var checkPassword = await _steamApps.CheckAppBetaPassword(_resoniteAppid, _config.SteamBranchCode!);
+            if (checkPassword.Result != EResult.OK)
+            {
+                return new InvalidOperationError("Failed to get encoded branch passwords from Steam");
+            }
+
+            if (!checkPassword.BetaPasswords.TryGetValue(_config.SteamBranch, out branchKey))
+            {
+                return new InvalidOperationError("The given branch code was not valid for the given branch.");
+            }
+        }
+
         var depotInformation = new List<ResoniteDepotInfo>();
         foreach (var depot in depots)
         {
             var id = uint.Parse(depot.Name!);
 
-            _ = depot.TryGet("manifests", out KeyValue? manifests);
-            _ = manifests!.TryGet("public", out KeyValue? publicManifest);
-            _ = publicManifest!.TryGet("gid", out ulong? manifestID);
+            var manifestsKey = _config.SteamBranch is null or "public" ? "manifests" : "encryptedmanifests";
+
+            _ = depot.TryGet(manifestsKey, out KeyValue? manifests);
+            _ = manifests!.TryGet(_config.SteamBranch ?? "public", out KeyValue? manifest);
+
+            ulong? manifestID;
+            if (_config.SteamBranch is not "public")
+            {
+                // decode and decrypt
+                var encryptedGid = manifest!["gid"];
+                var decodedEncryptedGid = Convert.FromHexString(encryptedGid.Value!);
+
+                using var aes = Aes.Create();
+                aes.BlockSize = 128;
+                aes.KeySize = 256;
+                aes.Mode = CipherMode.ECB;
+                aes.Padding = PaddingMode.PKCS7;
+
+                using var aesTransform = aes.CreateDecryptor(branchKey!, null);
+                var decryptedGid = aesTransform.TransformFinalBlock(decodedEncryptedGid, 0, decodedEncryptedGid.Length);
+
+                manifestID = BitConverter.ToUInt64(decryptedGid);
+            }
+            else
+            {
+                // use it as-is
+                _ = manifest!.TryGet("gid", out manifestID);
+            }
 
             var getKey = await GetDepotKeyAsync(uint.Parse(depot.Name!));
             if (!getKey.IsDefined(out var key))
@@ -296,12 +338,18 @@ public sealed class ResoniteSteamClient : IAsyncDisposable
             {
                 if (requestCode is 0 || now >= requestCodeExpiration)
                 {
+                    var codeHash = _config.SteamBranchCode is null
+                        ? null
+                        : Convert.ToHexString(SHA1.HashData(Encoding.UTF8.GetBytes(_config.SteamBranchCode)))
+                            .ToLowerInvariant();
+
                     requestCode = await _steamContent.GetManifestRequestCode
                     (
                         depot.ID,
                         _resoniteAppid,
                         depot.ManifestID,
-                        "public"
+                        _config.SteamBranch,
+                        codeHash
                     );
 
                     if (requestCode is 0)

@@ -29,6 +29,8 @@ namespace Crystite.Configuration;
 /// this option unless you have complete trust in everyone who joins your sessions and any and all items they bring with
 /// them.
 /// </param>
+/// <param name="SteamBranch">The name of the Steam branch to download the game from.</param>
+/// <param name="SteamBranchCode">The access code to use when downloading the game.</param>
 public record HeadlessApplicationConfiguration
 (
     string ResonitePath,
@@ -45,7 +47,9 @@ public record HeadlessApplicationConfiguration
     bool ManageResoniteInstallation = false,
     string? SteamCredential = null,
     string? SteamPassword = null,
-    bool AllowUnsafeHosts = false
+    bool AllowUnsafeHosts = false,
+    string SteamBranch = "headless",
+    string? SteamBranchCode = null
 )
 {
     /// <summary>
