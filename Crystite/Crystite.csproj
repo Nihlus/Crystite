@@ -48,8 +48,6 @@
       <PackageReference Include="Lib.Harmony.Thin" />
       <PackageReference Include="LiteDB" />
       <PackageReference Include="LiteDB.Async" />
-      <PackageReference Include="Microsoft.AspNetCore.Http.Connections.Client" />
-      <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
       <PackageReference Include="Microsoft.Extensions.Hosting" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" />
@@ -61,7 +59,7 @@
       <PackageReference Include="SteamKit2" />
       <PackageReference Include="System.Security.Permissions" />
     </ItemGroup>
-    
+
     <ItemGroup>
         <Content Include="steam_appid.txt">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

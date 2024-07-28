@@ -12,8 +12,6 @@ using Crystite.Extensions;
 using Crystite.Services;
 using FrooxEngine;
 using HarmonyLib;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.Hosting.Systemd;
 using Microsoft.Extensions.Options;
 using SkyFrost.Base;
@@ -191,7 +189,6 @@ public class StandaloneFrooxEngineService : BackgroundService
         }
 
         await LoginAsync();
-        OverrideSignalRReconnectRoutine();
 
         await ConfigureAllowedHostsAsync();
 
@@ -371,66 +368,6 @@ public class StandaloneFrooxEngineService : BackgroundService
         },
         (Configuration: _config, Log: _log, Engine: _engine)
     );
-
-    private void OverrideSignalRReconnectRoutine()
-    {
-        if (_engine.Cloud.HubClient is null)
-        {
-            _log.LogDebug("Not logged in; skipping SignalR reconnection override");
-            return;
-        }
-
-        var connection = _engine.Cloud.HubClient.Hub;
-
-        // clear existing events
-        var field = AccessTools.Field(typeof(HubConnection), "Closed");
-        field.SetValue(connection, null);
-
-        var cancellationTokenField = AccessTools.Field(typeof(SkyFrostInterface), "_hubConnectionToken");
-
-        var connectDelegate = AccessTools.MethodDelegate<Func<string, Task>>
-        (
-            AccessTools.DeclaredMethod(typeof(SkyFrostInterface), "ConnectToHub"),
-            _engine.Cloud
-        );
-
-        connection.Closed += async error =>
-        {
-            var tokenSource = AccessTools.FieldRefAccess<SkyFrostInterface, CancellationTokenSource>
-            (
-                _engine.Cloud,
-                cancellationTokenField
-            );
-
-            var cancellationToken = tokenSource.Token;
-
-            _log.LogInformation("SignalR connection closed: {Error}", error);
-            if (cancellationToken.IsCancellationRequested || error is not HubException)
-            {
-                return;
-            }
-
-            _log.LogInformation("Running manual reconnect");
-            try
-            {
-                await connectDelegate("Manual reconnect");
-            }
-            catch (Exception connectException)
-            {
-                _log.LogWarning(connectException, "Failed to reconnect; attempting to relog");
-
-                try
-                {
-                    await LoginAsync();
-                }
-                catch (Exception loginException)
-                {
-                    _log.LogWarning(loginException, "Failed to relog");
-                    throw;
-                }
-            }
-        };
-    }
 
     private async Task EngineLoopAsync(CancellationToken ct = default)
     {
