@@ -51,11 +51,11 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
 
         foreach (var context in AssemblyLoadContext.All)
         {
+            context.Resolving += ResolveManagedAssembly;
             context.ResolvingUnmanagedDll += ResolveNativeAssembly;
         }
 
         AppDomain.CurrentDomain.AssemblyLoad += AddResolverToAssembly;
-        AppDomain.CurrentDomain.AssemblyResolve += ResolveManagedAssembly;
 
         this.ResolveFailure += ResolveCecilAssembly;
     }
@@ -76,6 +76,7 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
             return;
         }
 
+        context.Resolving += ResolveManagedAssembly;
         context.ResolvingUnmanagedDll += ResolveNativeAssembly;
     }
 
@@ -126,20 +127,22 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
             : IntPtr.Zero;
     }
 
-    private Assembly? ResolveManagedAssembly(object? sender, ResolveEventArgs args)
+    private Assembly? ResolveManagedAssembly(AssemblyLoadContext context, AssemblyName requestedName)
     {
         // check if it's already loaded
-        var simpleName = args.Name.Split(',')[0];
         var existing = AppDomain.CurrentDomain
             .GetAssemblies()
-            .FirstOrDefault(a => a.FullName is not null && a.FullName.Contains(simpleName + ','));
+            .FirstOrDefault
+            (
+                a => a.GetName().Name == requestedName.Name && a.GetName().Version >= requestedName.Version
+            );
 
         if (existing is not null)
         {
             return existing;
         }
 
-        var filename = simpleName + ".dll";
+        var filename = requestedName.Name + ".dll";
 
         // then, try loading it verbatim from the additional paths
         Assembly? potentialAssembly = null;
@@ -154,7 +157,7 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
             try
             {
                 var assembly = Assembly.LoadFrom(libraryPath);
-                if (assembly.FullName == args.Name)
+                if (assembly.FullName == requestedName.FullName)
                 {
                     // exact match, prefer this to keep things like strong-naming consistent
                     return assembly;
@@ -183,11 +186,11 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
 
         foreach (var context in AssemblyLoadContext.All)
         {
+            context.Resolving -= ResolveManagedAssembly;
             context.ResolvingUnmanagedDll -= ResolveNativeAssembly;
         }
 
         AppDomain.CurrentDomain.AssemblyLoad -= AddResolverToAssembly;
-        AppDomain.CurrentDomain.AssemblyResolve -= ResolveManagedAssembly;
 
         this.ResolveFailure -= ResolveCecilAssembly;
         _isDisposed = true;
