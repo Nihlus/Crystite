@@ -1,3 +1,10 @@
+crystite (1.0.0+deb12~preview82) bookworm; urgency=medium
+
+  * Drop SignalR reconnection patch due to incompatibility issues.
+  * Add a naive system-level resolver via Cecil.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Sun, 28 Jul 2024 23:20:00 +0200
+
 crystite (1.0.0+deb12~preview81) bookworm; urgency=medium
 
   * Fix too-broad match.
