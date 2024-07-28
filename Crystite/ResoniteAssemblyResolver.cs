@@ -7,6 +7,7 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Loader;
+using Crystite.Extensions;
 using Mono.Cecil;
 
 namespace Crystite;
@@ -132,14 +133,23 @@ public class ResoniteAssemblyResolver : DefaultAssemblyResolver
         // check if it's already loaded
         var existing = AppDomain.CurrentDomain
             .GetAssemblies()
-            .FirstOrDefault
-            (
-                a => a.GetName().Name == requestedName.Name && a.GetName().Version >= requestedName.Version
-            );
+            .FirstOrDefault(a => a.GetName().IsCompatible(requestedName));
 
         if (existing is not null)
         {
             return existing;
+        }
+
+        // try loading it naively (might be in a runtime package)
+        try
+        {
+            var nameReference = new AssemblyNameReference(requestedName.Name, requestedName.Version);
+            var assemblyDefinition = new DefaultAssemblyResolver().Resolve(nameReference);
+
+            return Assembly.LoadFrom(assemblyDefinition.MainModule.FileName);
+        }
+        catch (AssemblyResolutionException)
+        {
         }
 
         var filename = requestedName.Name + ".dll";

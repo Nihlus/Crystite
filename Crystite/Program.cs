@@ -8,8 +8,6 @@ using Crystite;
 using Crystite.Configuration;
 using Crystite.Extensions;
 
-#pragma warning disable ASP0000
-
 var resolver = ConfigureAssemblyResolver(args);
 
 return await AspNetDependentStartup.RunAsync(resolver, args);
