@@ -126,7 +126,9 @@ The following keys are defined for this section.
 | manageResoniteInstallation | bool      | Whether to manage the Resonite installation at resonitePath automatically | false                      | no       |
 | steamCredential            | string    | The username to use when authenticating with Steam                        | null                       | no       |
 | steamPassword              | string    | The password to use when authenticating with Steam                        | null                       | no       |
-| allowUnsafeHosts           | bool      | Whether to allow preemptive whitelisting of unsafe API hosts.             | no                         |          |
+| allowUnsafeHosts           | bool      | Whether to allow preemptive whitelisting of unsafe API hosts.             | no                         | no       |
+| steamBranch                | string    | The name of the Steam branch to use when downloading Resonite             | "public"                   | no       |
+| steamBranchCode            | string    | The access code of the Steam branch to use when downloading Resonite      | null                       | no       |
 
 > It is an absolute requirement that `resonitePath` points to a valid Resonite 
 > installation. The server will not run without access to Resonite's assemblies.
