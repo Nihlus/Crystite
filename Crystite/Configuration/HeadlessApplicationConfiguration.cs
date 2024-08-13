@@ -48,7 +48,7 @@ public record HeadlessApplicationConfiguration
     string? SteamCredential = null,
     string? SteamPassword = null,
     bool AllowUnsafeHosts = false,
-    string SteamBranch = "headless",
+    string SteamBranch = "public",
     string? SteamBranchCode = null
 )
 {
