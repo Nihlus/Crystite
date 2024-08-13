@@ -1,3 +1,10 @@
+crystite (1.0.0+deb12~preview84) bookworm; urgency=medium
+
+  * Rebuild for Resonite 2024.8.5.1341.
+  * Default to the graphical client branch when installing Resonite.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Tue, 13 Aug 2024 14:25:00 +0200
+
 crystite (1.0.0+deb12~preview83) bookworm; urgency=medium
 
   * Add missing configuration call.
