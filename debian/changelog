@@ -1,3 +1,9 @@
+crystite (1.0.0+deb12~preview85) bookworm; urgency=medium
+
+  * Rebuild for Resonite 2024.9.4.357.
+
+ -- Jarl Gullberg <jarl.gullberg@gmail.com>  Wed, 04 Sep 2024 18:20:00 +0200
+
 crystite (1.0.0+deb12~preview84) bookworm; urgency=medium
 
   * Rebuild for Resonite 2024.8.5.1341.
